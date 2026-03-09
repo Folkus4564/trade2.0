@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Bash(gh auth:*)",
+      "Bash(python3:*)",
+      "Bash(winget install:*)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" auth:*)"
+    ]
+  }
+}

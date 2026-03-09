@@ -1,0 +1,21 @@
+{
+  "source": "Dukascopy",
+  "instrument": "XAUUSD",
+  "raw_bars": 35300,
+  "after_cleaning": 35300,
+  "gaps_detected_1H": 374,
+  "duplicates_removed": 0,
+  "date_range_start": "2019-01-01 23:00:00+00:00",
+  "date_range_end": "2024-12-31 21:00:00+00:00",
+  "timeframes_generated": [
+    "1H",
+    "4H",
+    "Daily"
+  ],
+  "train_bars": 23473,
+  "val_bars": 5889,
+  "test_bars": 5938,
+  "train_period": "2019-01-01 23:00:00+00:00 to 2022-12-30 21:00:00+00:00",
+  "val_period": "2023-01-02 23:00:00+00:00 to 2023-12-29 21:00:00+00:00",
+  "test_period": "2024-01-01 23:00:00+00:00 to 2024-12-31 21:00:00+00:00"
+}

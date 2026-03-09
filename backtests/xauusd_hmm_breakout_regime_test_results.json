@@ -1,0 +1,40 @@
+{
+  "strategy": "xauusd_hmm_breakout_regime",
+  "period": "test",
+  "start": "2024-01-01 23:00:00+00:00",
+  "end": "2024-12-31 21:00:00+00:00",
+  "n_bars": 5938,
+  "metrics": {
+    "annualized_return": -0.0153,
+    "total_return": -0.015,
+    "annualized_volatility": 0.0466,
+    "sharpe_ratio": -1.1658,
+    "sortino_ratio": -0.5737,
+    "max_drawdown": -0.0355,
+    "calmar_ratio": -0.4315,
+    "n_years": 0.98,
+    "total_trades": 42,
+    "win_rate": 0.381,
+    "profit_factor": 0.8458,
+    "avg_win_loss_ratio": 1.3744,
+    "avg_trade_pnl": -35.8176,
+    "avg_trade_duration_bars": NaN,
+    "benchmark_return": 0.2774,
+    "alpha_vs_benchmark": -0.2927,
+    "information_ratio": -2.0509
+  },
+  "pass_criteria": {
+    "return": false,
+    "sharpe": false,
+    "drawdown": true,
+    "profit_factor": false,
+    "trade_count": true,
+    "win_rate": false
+  },
+  "verdict": "REVISE",
+  "costs": {
+    "spread_pips": 3,
+    "slippage_pips": 1,
+    "commission_rt": 0.0002
+  }
+}

@@ -1,0 +1,265 @@
+strategy:
+  name: xauusd_smc_hmm_regime
+  version: "1.0"
+  asset: XAUUSD
+  style: regime
+  hypothesis: >
+    Gold (XAUUSD) exhibits persistent directional regimes detectable via Hidden Markov Models.
+    Within each regime, institutional order flow leaves structural footprints in the form of
+    Order Blocks, Fair Value Gaps, and Liquidity Sweeps (Smart Money Concepts). Combining an
+    HMM regime filter with SMC entry triggers yields high-probability mean-reversion and
+    continuation trades aligned with the dominant institutional bias, improving Sharpe ratio
+    and reducing drawdown compared to unfiltered SMC signals alone.
+
+  timeframes:
+    primary: 1H
+    regime_detection: 1H
+    feature_lookback_bars: 200
+
+  regime_filter:
+    model: GaussianHMM
+    n_states: 3
+    states:
+      0: bullish
+      1: bearish
+      2: neutral
+    features:
+      - log_return_1h
+      - atr_14_normalized
+      - volume_ratio_20
+      - hl_range_normalized
+    fitting:
+      dataset: train_only
+      scaler: StandardScaler
+      fit_start: "2019-01-01"
+      fit_end: "2022-12-31"
+    lookahead_prevention: shift(1) applied to all features before HMM inference
+    regime_label_method: persistent_state_majority_5bars
+
+  smart_money_concepts:
+
+    order_blocks:
+      description: >
+        An Order Block (OB) is the last bearish candle before a strong bullish impulse
+        (Bullish OB) or the last bullish candle before a strong bearish impulse (Bearish OB).
+        A strong impulse is defined as a move of >= 1.5x ATR(14) within 3 consecutive bars.
+      bullish_ob_detection:
+        - Identify the last red (close < open) candle before a bullish impulse of >= 1.5 * ATR(14)
+        - OB zone: [low of that candle, high of that candle]
+        - Valid for up to 20 bars after formation
+        - Invalidated if price closes below OB low
+      bearish_ob_detection:
+        - Identify the last green (close > open) candle before a bearish impulse of >= 1.5 * ATR(14)
+        - OB zone: [low of that candle, high of that candle]
+        - Valid for up to 20 bars after formation
+        - Invalidated if price closes above OB high
+      retest_trigger:
+        long: current close enters bullish OB zone (low <= close <= high)
+        short: current close enters bearish OB zone (low <= close <= high)
+
+    fair_value_gaps:
+      description: >
+        A Fair Value Gap (FVG) is a 3-candle pattern indicating an imbalance in price delivery.
+        Bullish FVG: candle[i-2].high < candle[i].low (gap between two candles).
+        Bearish FVG: candle[i-2].low > candle[i].high (gap between two candles).
+        Entry occurs when price retraces back into the gap zone.
+      bullish_fvg_detection:
+        - Gap condition: bar[i-2].high < bar[i].low
+        - FVG zone: [bar[i-2].high, bar[i].low]
+        - Valid for up to 15 bars after formation
+        - Invalidated if price closes below FVG lower boundary
+      bearish_fvg_detection:
+        - Gap condition: bar[i-2].low > bar[i].high
+        - FVG zone: [bar[i].high, bar[i-2].low]
+        - Valid for up to 15 bars after formation
+        - Invalidated if price closes above FVG upper boundary
+      retest_trigger:
+        long: price retraces into bullish FVG zone (fvg_low <= close <= fvg_high)
+        short: price retraces into bearish FVG zone (fvg_low <= close <= fvg_high)
+
+    liquidity_sweeps:
+      description: >
+        A Liquidity Sweep occurs when price briefly exceeds a recent swing high or low
+        (taking out resting orders/stops) then reverses sharply within the same or next bar.
+        This signals institutional stop-hunting followed by reversal intent.
+      swing_detection:
+        lookback_bars: 20
+        swing_high: rolling max of highs over lookback_bars
+        swing_low: rolling min of lows over lookback_bars
+      bullish_sweep_detection:
+        - bar[i].low < swing_low (price wicks below swing low)
+        - bar[i].close > swing_low (price closes back above sweep level)
+        - Reversal confirmation: close > open (bullish close)
+        - Valid signal: current bar only (no carry-forward)
+      bearish_sweep_detection:
+        - bar[i].high > swing_high (price wicks above swing high)
+        - bar[i].close < swing_high (price closes back below sweep level)
+        - Reversal confirmation: close < open (bearish close)
+        - Valid signal: current bar only (no carry-forward)
+
+  signals:
+
+    entry_long: >
+      ALL of:
+        HMM regime == bullish (state 0)
+        ANY of:
+          price retests a valid bullish Order Block (OB retest long)
+          price retraces into a valid bullish Fair Value Gap (FVG retest long)
+          bullish Liquidity Sweep detected on current bar
+      Entry price: close of signal bar (next open in live execution)
+      Max concurrent long positions: 1
+      Signal priority: Liquidity Sweep > Order Block > FVG
+
+    entry_short: >
+      ALL of:
+        HMM regime == bearish (state 1)
+        ANY of:
+          price retests a valid bearish Order Block (OB retest short)
+          price retraces into a valid bearish Fair Value Gap (FVG retest short)
+          bearish Liquidity Sweep detected on current bar
+      Entry price: close of signal bar (next open in live execution)
+      Max concurrent short positions: 1
+      Signal priority: Liquidity Sweep > Order Block > FVG
+
+    exit_long: >
+      ANY of:
+        ATR-based take profit hit: entry + (3.0 * ATR(14))
+        ATR-based stop loss hit:   entry - (1.5 * ATR(14))
+        HMM regime flips to bearish or neutral -> close long immediately
+        Position held for 48 bars without hitting TP/SL -> close at market
+        Price closes below bullish OB low (OB invalidation)
+
+    exit_short: >
+      ANY of:
+        ATR-based take profit hit: entry - (3.0 * ATR(14))
+        ATR-based stop loss hit:   entry + (1.5 * ATR(14))
+        HMM regime flips to bullish or neutral -> close short immediately
+        Position held for 48 bars without hitting TP/SL -> close at market
+        Price closes above bearish OB high (OB invalidation)
+
+    neutral_regime:
+      action: no_new_trades
+      existing_positions: allow to run until TP/SL/time_exit
+
+  risk:
+    stop_loss: "entry - 1.5 * ATR(14)  [long]  |  entry + 1.5 * ATR(14)  [short]"
+    take_profit: "entry + 3.0 * ATR(14)  [long]  |  entry - 3.0 * ATR(14)  [short]"
+    position_size: 1% fixed fractional
+    position_sizing_detail: >
+      Risk 1% of equity per trade.
+      Units = (equity * 0.01) / (stop_loss_distance_in_price * pip_value)
+      pip_value for XAUUSD: $1 per pip per 1 standard lot (100oz)
+    reward_to_risk_ratio: 2.0
+    max_holding_bars: 48
+    max_drawdown_limit: 25%
+    daily_loss_limit: 3%
+    max_open_positions: 1
+
+  execution:
+    spread_pips: 3
+    slippage_pips: 1
+    commission_rt_pips: 2
+    total_round_trip_cost_pips: 6
+    fill_assumption: "Next bar open after signal bar closes"
+    leverage: 1x
+
+  features_engineering:
+    all_features_shifted: true
+    shift_periods: 1
+    features:
+      - name: log_return_1h
+        formula: log(close / close.shift(1))
+        lag: 1
+      - name: atr_14
+        formula: ATR(14)
+        lag: 1
+      - name: atr_14_normalized
+        formula: ATR(14) / close
+        lag: 1
+      - name: hl_range_normalized
+        formula: (high - low) / close
+        lag: 1
+      - name: volume_ratio_20
+        formula: volume / volume.rolling(20).mean()
+        lag: 1
+      - name: ob_bullish_active
+        formula: binary flag, 1 if valid bullish OB within 20 bars
+        lag: 1
+      - name: ob_bearish_active
+        formula: binary flag, 1 if valid bearish OB within 20 bars
+        lag: 1
+      - name: fvg_bullish_active
+        formula: binary flag, 1 if price in bullish FVG zone
+        lag: 1
+      - name: fvg_bearish_active
+        formula: binary flag, 1 if price in bearish FVG zone
+        lag: 1
+      - name: liquidity_sweep_bull
+        formula: binary flag, bullish sweep on bar[i-1]
+        lag: 1
+      - name: liquidity_sweep_bear
+        formula: binary flag, bearish sweep on bar[i-1]
+        lag: 1
+
+  validation:
+    train_start: "2019-01-01"
+    train_end: "2022-12-31"
+    val_start: "2023-01-01"
+    val_end: "2023-12-31"
+    test_start: "2024-01-01"
+    test_end: "2024-12-31"
+    walk_forward_windows: 4
+    walk_forward_detail:
+      window_1: {train: "2019-01-01 to 2020-12-31", val: "2021-01-01 to 2021-06-30"}
+      window_2: {train: "2019-01-01 to 2021-06-30", val: "2021-07-01 to 2021-12-31"}
+      window_3: {train: "2019-01-01 to 2021-12-31", val: "2022-01-01 to 2022-06-30"}
+      window_4: {train: "2019-01-01 to 2022-06-30", val: "2022-07-01 to 2022-12-31"}
+    optimization:
+      method: optuna_tpe
+      n_trials: 200
+      target_metric: sharpe_ratio
+      target_dataset: validation
+      parameter_search_space:
+        atr_multiplier_sl: [1.0, 2.5]
+        atr_multiplier_tp: [1.5, 5.0]
+        ob_lookback_impulse_bars: [2, 5]
+        ob_impulse_atr_threshold: [1.0, 2.5]
+        ob_validity_bars: [10, 30]
+        fvg_validity_bars: [5, 20]
+        swing_lookback_bars: [10, 40]
+        max_holding_bars: [24, 72]
+        hmm_n_states: [2, 3, 4]
+
+  performance_targets:
+    annualized_return_min: 20%
+    annualized_return_target: 50%
+    sharpe_ratio_min: 1.0
+    sharpe_ratio_target: 1.5
+    max_drawdown_limit: -35%
+    max_drawdown_target: -20%
+    profit_factor_min: 1.2
+    profit_factor_target: 1.5
+    min_trades: 30
+    target_trades: 50
+    auto_save_threshold:
+      annualized_return: 50%
+      sharpe_ratio: 1.5
+      max_drawdown: -25%
+      save_filename_format: "YYYY-MM-DD_xauusd_smc_hmm_regime.py"
+
+  bias_audit_checklist:
+    - "No lookahead in HMM features: all inputs shifted by 1 bar before inference"
+    - "No lookahead in OB detection: OB identified using only bars[i-1] and earlier"
+    - "No lookahead in FVG detection: FVG zone computed on bars up to bar[i-2] relative to signal bar"
+    - "No lookahead in swing detection: rolling max/min computed on bars up to bar[i-1]"
+    - "HMM scaler fitted on train set only, applied to val/test without refitting"
+    - "HMM model fitted on train set only"
+    - "Execution: entry on bar[i+1] open after signal on bar[i] close"
+    - "Transaction costs applied to every round-trip trade"
+
+  implementation_notes:
+    primary_backtesting_framework: vectorbt
+    regime_model_persistence: models/hmm_regime_model.pkl
+    signal_output_format: "pandas Series of {1: long, -1: short, 0: flat}"
+    encoding: cp874 compatible print statements (no unicode special characters)
+    auto_proceed: true
