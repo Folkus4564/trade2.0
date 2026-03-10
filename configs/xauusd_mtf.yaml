@@ -1,0 +1,8 @@
+# xauusd_mtf.yaml - Multi-timeframe strategy overrides
+# Merged on top of configs/base.yaml at runtime.
+
+strategy:
+  name: xauusd_mtf_hmm1h_smc5m
+  mode: multi_tf
+  signal_timeframe: 5M
+  regime_timeframe: 1H

@@ -1,0 +1,175 @@
+# ============================================================
+#  trade2 - XAUUSD Strategy - Central Configuration
+#  Single source of truth for all parameters.
+#  DO NOT hardcode these values in Python files.
+# ============================================================
+
+# ---- Strategy mode -----------------------------------------
+strategy:
+  name: xauusd_mtf_hmm1h_smc5m
+  mode: multi_tf              # single_tf | multi_tf
+  signal_timeframe: 5M        # timeframe for SMC entry signals
+  regime_timeframe: 1H        # timeframe for HMM regime detection
+
+# ---- Dataset -----------------------------------------------
+data:
+  instrument: XAUUSD
+  source: Dukascopy
+  raw_1h_csv: data/raw/XAUUSD_1H_2019_2025.csv
+  raw_5m_csv: data/raw/XAUUSD_5M_2019_2025.csv
+  timezone: UTC
+  missing_bar_policy: forward_fill
+  processed_dir: data/processed
+  version_tag: "v2.0"
+  expected_sha256: ""
+  expected_bar_count_1h: 43800
+
+# ---- Split dates -------------------------------------------
+splits:
+  train_start: "2019-01-01"
+  train_end:   "2022-12-31"
+  val_start:   "2023-01-01"
+  val_end:     "2023-12-31"
+  test_start:  "2024-01-01"
+  test_end:    "2025-06-30"
+
+# ---- Walk-forward windows ----------------------------------
+walk_forward:
+  n_windows: 4
+  windows:
+    - {train_start: "2019-01-01", train_end: "2020-12-31", val_start: "2021-01-01", val_end: "2021-06-30"}
+    - {train_start: "2019-01-01", train_end: "2021-06-30", val_start: "2021-07-01", val_end: "2021-12-31"}
+    - {train_start: "2019-01-01", train_end: "2021-12-31", val_start: "2022-01-01", val_end: "2022-06-30"}
+    - {train_start: "2019-01-01", train_end: "2022-06-30", val_start: "2022-07-01", val_end: "2022-12-31"}
+  min_mean_sharpe:    0.5
+  min_positive_pct:   0.75
+
+# ---- HMM regime model --------------------------------------
+hmm:
+  n_states:    3
+  n_iter:      200
+  random_seed: 42
+  features:
+    - hmm_feat_ret
+    - hmm_feat_rsi
+    - hmm_feat_atr
+    - hmm_feat_vol
+    - hmm_feat_hma_slope
+    - hmm_feat_bb_width
+    - hmm_feat_macd
+  min_sideways_pct: 0.10
+  use_as_hard_gate: false
+  min_prob_hard:    0.50
+  sizing_base:      0.50
+  sizing_max:       1.50
+
+# ---- Feature engineering (1H) ------------------------------
+features:
+  hma_period:  55
+  ema_period:  21
+  atr_period:  14
+  rsi_period:  14
+  adx_period:  14
+  dc_period:   40
+
+# ---- SMC parameters (1H) -----------------------------------
+smc:
+  ob_validity_bars:    20
+  ob_impulse_bars:     3
+  ob_impulse_mult:     1.5
+  fvg_validity_bars:   15
+  swing_lookback_bars: 20
+  require_confluence:  true
+  require_pin_bar:     false
+
+# ---- SMC parameters (5M - multi-TF mode) -------------------
+smc_5m:
+  ob_validity_bars:    60     # 60 x 5M bars = 5 hours
+  fvg_validity_bars:   36     # 36 x 5M bars = 3 hours
+  swing_lookback_bars: 60     # 60 x 5M bars = 5 hours
+  ob_impulse_bars:     3
+  ob_impulse_mult:     1.5
+  require_confluence:  true
+  require_pin_bar:     false
+
+# ---- Regime stability filter -------------------------------
+regime:
+  persistence_bars: 3
+  adx_threshold:    20.0
+
+# ---- Risk management ---------------------------------------
+risk:
+  atr_stop_mult:  1.5
+  atr_tp_mult:    3.0
+  max_hold_bars:  48
+  daily_loss_pct: 0.03
+  max_dd_limit:   0.25
+
+# ---- Execution costs ---------------------------------------
+costs:
+  spread_pips:    3
+  slippage_pips:  1
+  commission_rt:  0.0002
+  spread_asian_mult:     2.5
+  spread_vol_mult:       1.5
+  spread_vol_atr_lookback: 20
+
+# ---- Session filter ----------------------------------------
+session:
+  enabled: false
+  allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+# ---- Acceptance criteria -----------------------------------
+acceptance:
+  test:
+    min_annualized_return: 0.10
+    min_sharpe:            1.0
+    min_drawdown:          -0.35
+    min_profit_factor:     1.2
+    min_trades:            30
+    min_win_rate:          0.40
+  train:
+    min_sharpe:            0.0
+    min_profit_factor:     1.0
+    min_trades:            50
+  val:
+    min_sharpe:            0.5
+    min_profit_factor:     1.1
+    min_trades:            20
+  walk_forward:
+    min_mean_sharpe:       0.5
+    min_positive_windows:  0.75
+  auto_save:
+    min_annualized_return: 0.50
+    min_sharpe:            1.5
+    min_drawdown:          -0.25
+
+# ---- Optimization ------------------------------------------
+optimization:
+  method:    optuna_tpe
+  n_trials:  200
+  target:    val_sharpe
+  search_space:
+    dc_period:          [10, 50]
+    adx_threshold:      [15.0, 35.0]
+    hmm_min_prob:       [0.40, 0.80]
+    atr_stop_mult:      [1.0, 2.5]
+    atr_tp_mult:        [2.0, 5.0]
+    ob_impulse_mult:    [1.0, 2.5]
+    ob_validity_bars:   [10, 30]
+    fvg_validity_bars:  [5, 20]
+    regime_persistence: [1, 5]
+
+# ---- Baseline comparison -----------------------------------
+baseline:
+  buy_and_hold: true
+  random_long:  true
+
+# ---- Artefact directories ----------------------------------
+artefacts:
+  root:       artefacts
+  models:     artefacts/models
+  backtests:  artefacts/backtests
+  reports:    artefacts/reports
+  experiments: artefacts/experiments
+  approved:   artefacts/approved_strategies

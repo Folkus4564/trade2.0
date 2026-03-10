@@ -5,6 +5,9 @@ __pycache__/
 *.pyd
 .Python
 *.egg-info/
+dist/
+build/
+.eggs/
 
 # Environments
 .env
@@ -19,5 +22,21 @@ venv/
 .DS_Store
 Thumbs.db
 
-# Data (processed intermediates)
+# Data (raw CSVs and processed intermediates)
 data/processed/
+data/raw/
+
+# Artefacts (generated outputs - not source)
+artefacts/
+
+# Models (generated)
+*.pkl
+models/
+
+# Backtest and report outputs (legacy locations)
+backtests/
+backtests_v2/
+reports/
+reports_v2/
+experiments/
+approved_strategies/
