@@ -1,7 +1,46 @@
 {
   "strategy_name": "xauusd_smc_hmm_regime",
-  "verdict": "APPROVED",
-  "date": "2026-03-09",
+  "verdict": "HARD_REJECTED",
+  "verdict_detail": {
+    "verdict": "HARD_REJECTED",
+    "train_pass": {
+      "sharpe": true,
+      "profit_factor": false,
+      "trade_count": true
+    },
+    "val_pass": {
+      "sharpe": false,
+      "profit_factor": false,
+      "trade_count": true
+    },
+    "test_pass": {
+      "return": false,
+      "sharpe": false,
+      "drawdown": true,
+      "profit_factor": false,
+      "trade_count": true,
+      "win_rate": false
+    },
+    "wf_pass": {},
+    "train_ok": false,
+    "val_ok": false,
+    "test_ok": false,
+    "wf_ok": false,
+    "hard_checks": {
+      "hard_rejected": true,
+      "rejections": {
+        "wf_not_run": "Walk-forward validation not run - robustness unverified"
+      }
+    },
+    "flags": {
+      "test_without_train": false,
+      "test_without_val": false,
+      "wf_not_run": true,
+      "hard_rejected": true
+    }
+  },
+  "date": "2026-03-10",
+  "experiment_id": "20260310_032731",
   "params": {
     "hma_period": 55,
     "ema_period": 21,
@@ -11,58 +50,132 @@
     "dc_period": 40,
     "adx_threshold": 20.0,
     "hmm_min_prob": 0.5,
-    "hmm_states": 2,
+    "hmm_states": 3,
     "atr_stop_mult": 1.5,
     "atr_tp_mult": 3.0,
     "atr_expansion_filter": false,
     "use_smc": true
   },
+  "dataset": {
+    "file": "XAUUSD_1H_2019_2024.csv",
+    "sha256": "0b411fd0d0d6df6b2b547da1f287ce384ae9fbaf0e3b61e9e3fc7626c9beaa80",
+    "size_bytes": 2860190,
+    "mtime": 1772973948.2651486
+  },
+  "gap_audit": {
+    "expected_bars": 35015,
+    "actual_bars": 24528,
+    "missing_bars": 10487,
+    "missing_pct": 29.95,
+    "max_consecutive_gap": 76,
+    "expected_from_config": 43800,
+    "config_mismatch": true
+  },
+  "regime_distributions": {
+    "train": {
+      "bull": 0.425,
+      "sideways": 0.4211,
+      "bear": 0.1539
+    },
+    "test": {
+      "bull": 0.4927,
+      "sideways": 0.3704,
+      "bear": 0.1369
+    }
+  },
   "train_metrics": {
-    "annualized_return": -0.0371,
-    "total_return": -0.1364,
-    "annualized_volatility": 0.1396,
-    "sharpe_ratio": -0.4874,
-    "sortino_ratio": -0.7025,
-    "max_drawdown": -0.2945,
-    "calmar_ratio": -0.126,
-    "n_years": 3.88,
-    "total_trades": 343,
-    "win_rate": 0.4227,
-    "profit_factor": 0.9135,
-    "avg_win_loss_ratio": 1.2474,
-    "avg_trade_pnl": -39.7769,
+    "annualized_return": NaN,
+    "total_return": -1.014,
+    "annualized_volatility": 10.8454,
+    "sharpe_ratio": 0.4361,
+    "sortino_ratio": NaN,
+    "max_drawdown": -1.0159,
+    "calmar_ratio": NaN,
+    "n_years": 4.06,
+    "total_trades": 268,
+    "win_rate": 0.1642,
+    "profit_factor": 0.1653,
+    "avg_win_loss_ratio": 0.8415,
+    "avg_trade_pnl": -378.3699,
     "avg_trade_duration_bars": NaN,
-    "benchmark_return": 0.0952,
-    "alpha_vs_benchmark": -0.1323,
-    "information_ratio": -0.8415
+    "benchmark_return": 0.091,
+    "alpha_vs_benchmark": NaN,
+    "information_ratio": NaN,
+    "random_baseline": {
+      "random_median_sharpe": 0.3841,
+      "random_median_return": 0.0345,
+      "random_p95_sharpe": 0.9313,
+      "n_simulations": 200,
+      "note": "strategy must beat random_p95_sharpe to have statistically meaningful edge"
+    },
+    "beats_random_baseline": false
+  },
+  "val_metrics": {
+    "annualized_return": -0.5205,
+    "total_return": -0.5242,
+    "annualized_volatility": 0.1033,
+    "sharpe_ratio": -7.4501,
+    "sortino_ratio": -4.0986,
+    "max_drawdown": -0.5357,
+    "calmar_ratio": -0.9717,
+    "n_years": 1.01,
+    "total_trades": 114,
+    "win_rate": 0.1316,
+    "profit_factor": 0.0974,
+    "avg_win_loss_ratio": 0.6426,
+    "avg_trade_pnl": -459.8169,
+    "avg_trade_duration_bars": NaN,
+    "benchmark_return": 0.1262,
+    "alpha_vs_benchmark": -0.6467,
+    "information_ratio": -4.9719,
+    "random_baseline": {
+      "random_median_sharpe": 0.6379,
+      "random_median_return": 0.0528,
+      "random_p95_sharpe": 1.9129,
+      "n_simulations": 200,
+      "note": "strategy must beat random_p95_sharpe to have statistically meaningful edge"
+    },
+    "beats_random_baseline": false
   },
   "test_metrics": {
-    "annualized_return": 0.1949,
-    "total_return": 0.191,
-    "annualized_volatility": 0.1163,
-    "sharpe_ratio": 1.2455,
-    "sortino_ratio": 1.6675,
-    "max_drawdown": -0.0756,
-    "calmar_ratio": 2.5797,
-    "n_years": 0.98,
-    "total_trades": 87,
-    "win_rate": 0.4943,
-    "profit_factor": 1.5615,
-    "avg_win_loss_ratio": 1.5979,
-    "avg_trade_pnl": 219.5813,
+    "annualized_return": -0.326,
+    "total_return": -0.3307,
+    "annualized_volatility": 0.115,
+    "sharpe_ratio": -3.7214,
+    "sortino_ratio": -3.0241,
+    "max_drawdown": -0.3315,
+    "calmar_ratio": -0.9834,
+    "n_years": 1.02,
+    "total_trades": 123,
+    "win_rate": 0.2683,
+    "profit_factor": 0.3522,
+    "avg_win_loss_ratio": 0.9605,
+    "avg_trade_pnl": -268.8735,
     "avg_trade_duration_bars": NaN,
-    "benchmark_return": 0.2774,
-    "alpha_vs_benchmark": -0.0825,
-    "information_ratio": -0.5779
-  },
-  "pass_criteria": {
-    "return": true,
-    "sharpe": true,
-    "drawdown": true,
-    "profit_factor": true,
-    "trade_count": true,
-    "win_rate": true
+    "benchmark_return": 0.2663,
+    "alpha_vs_benchmark": -0.5923,
+    "information_ratio": -4.2254,
+    "random_baseline": {
+      "random_median_sharpe": 1.2569,
+      "random_median_return": 0.1184,
+      "random_p95_sharpe": 2.1792,
+      "n_simulations": 200,
+      "note": "strategy must beat random_p95_sharpe to have statistically meaningful edge"
+    },
+    "beats_random_baseline": false,
+    "cost_sensitivity_2x": {
+      "sharpe_ratio": -7.0026,
+      "annualized_return": -0.6791,
+      "max_drawdown": -0.6857
+    }
   },
   "walk_forward": null,
-  "next_iteration": []
+  "next_iteration": [
+    "Reduce HMM min_prob to increase SMC signal frequency",
+    "Try HMM with 4 states to capture more granular regimes",
+    "Reduce position size to lower volatility",
+    "Add volatility filter: skip entries when ATR > 2x average",
+    "Increase ATR take profit multiplier to improve avg winner",
+    "Add RSI confirmation filter for counter-trend exits"
+  ]
 }

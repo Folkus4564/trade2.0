@@ -1,0 +1,62 @@
+{
+  "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+  "verdict": "REVISE",
+  "date": "2026-03-10",
+  "params": {
+    "hmm_states": 3,
+    "hmm_min_prob": 0.5,
+    "regime_persistence_bars": 3,
+    "adx_threshold": 20.0,
+    "atr_stop_mult": 1.5,
+    "atr_tp_mult": 3.0,
+    "require_smc_confluence": true,
+    "require_pin_bar": false,
+    "dc_period": 40
+  },
+  "train_metrics": {
+    "annualized_return": 0.0537,
+    "total_return": 0.2125,
+    "annualized_volatility": 0.0972,
+    "sharpe_ratio": 0.1751,
+    "sortino_ratio": 0.113,
+    "max_drawdown": -0.1097,
+    "calmar_ratio": 0.4892,
+    "n_years": 3.68,
+    "total_trades": 454,
+    "win_rate": 0.467,
+    "profit_factor": 1.1786,
+    "avg_win_loss_ratio": 1.3454,
+    "avg_trade_pnl": 46.8143,
+    "avg_trade_duration_bars": NaN,
+    "benchmark_return": 0.1005,
+    "alpha_vs_benchmark": -0.0468,
+    "information_ratio": -0.282
+  },
+  "test_metrics": {
+    "annualized_return": 0.1244,
+    "total_return": 0.1582,
+    "annualized_volatility": 0.1054,
+    "sharpe_ratio": 0.7854,
+    "sortino_ratio": 0.7875,
+    "max_drawdown": -0.1168,
+    "calmar_ratio": 1.0644,
+    "n_years": 1.25,
+    "total_trades": 162,
+    "win_rate": 0.5556,
+    "profit_factor": 1.4208,
+    "avg_win_loss_ratio": 1.1366,
+    "avg_trade_pnl": 97.6672,
+    "avg_trade_duration_bars": NaN,
+    "benchmark_return": 0.4579,
+    "alpha_vs_benchmark": -0.3335,
+    "information_ratio": -1.9922
+  },
+  "pass_criteria": {
+    "return": true,
+    "sharpe": false,
+    "drawdown": true,
+    "profit_factor": true,
+    "trade_count": true,
+    "win_rate": true
+  }
+}

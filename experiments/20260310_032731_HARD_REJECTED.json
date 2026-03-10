@@ -1,0 +1,334 @@
+{
+  "run_id": "20260310_032731",
+  "git_hash": "e788d33",
+  "timestamp_utc": "2026-03-10T03:27:31.534321",
+  "verdict": "HARD_REJECTED",
+  "params": {
+    "hma_period": 55,
+    "ema_period": 21,
+    "atr_period": 14,
+    "rsi_period": 14,
+    "adx_period": 14,
+    "dc_period": 40,
+    "adx_threshold": 20.0,
+    "hmm_min_prob": 0.5,
+    "hmm_states": 3,
+    "atr_stop_mult": 1.5,
+    "atr_tp_mult": 3.0,
+    "atr_expansion_filter": false,
+    "use_smc": true
+  },
+  "config": {
+    "data": {
+      "instrument": "XAUUSD",
+      "source": "Dukascopy",
+      "raw_1h_csv": "data/XAUUSD_1H_2019_2024.csv",
+      "raw_5m_csv": "data/raw/XAUUSD_5M_2019-2024.csv",
+      "timezone": "UTC",
+      "missing_bar_policy": "forward_fill",
+      "processed_dir": "data/processed",
+      "version_tag": "v1.0",
+      "expected_sha256": "",
+      "expected_bar_count_1h": 43800
+    },
+    "splits": {
+      "train_start": "2019-01-01",
+      "train_end": "2022-12-31",
+      "val_start": "2023-01-01",
+      "val_end": "2023-12-31",
+      "test_start": "2024-01-01",
+      "test_end": "2024-12-31"
+    },
+    "walk_forward": {
+      "n_windows": 4,
+      "windows": [
+        {
+          "train_start": "2019-01-01",
+          "train_end": "2020-12-31",
+          "val_start": "2021-01-01",
+          "val_end": "2021-06-30"
+        },
+        {
+          "train_start": "2019-01-01",
+          "train_end": "2021-06-30",
+          "val_start": "2021-07-01",
+          "val_end": "2021-12-31"
+        },
+        {
+          "train_start": "2019-01-01",
+          "train_end": "2021-12-31",
+          "val_start": "2022-01-01",
+          "val_end": "2022-06-30"
+        },
+        {
+          "train_start": "2019-01-01",
+          "train_end": "2022-06-30",
+          "val_start": "2022-07-01",
+          "val_end": "2022-12-31"
+        }
+      ],
+      "min_mean_sharpe": 0.5,
+      "min_positive_pct": 0.75
+    },
+    "hmm": {
+      "n_states": 3,
+      "n_iter": 200,
+      "random_seed": 42,
+      "features": [
+        "hmm_feat_ret",
+        "hmm_feat_rsi",
+        "hmm_feat_atr",
+        "hmm_feat_vol",
+        "hmm_feat_hma_slope",
+        "hmm_feat_bb_width",
+        "hmm_feat_macd"
+      ],
+      "min_sideways_pct": 0.1,
+      "use_as_hard_gate": false,
+      "min_prob_hard": 0.5,
+      "sizing_base": 0.5,
+      "sizing_max": 1.5
+    },
+    "features": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40
+    },
+    "smc": {
+      "ob_validity_bars": 20,
+      "ob_impulse_bars": 3,
+      "ob_impulse_mult": 1.5,
+      "fvg_validity_bars": 15,
+      "swing_lookback_bars": 20,
+      "require_confluence": true,
+      "require_pin_bar": false
+    },
+    "regime": {
+      "persistence_bars": 3,
+      "adx_threshold": 20.0
+    },
+    "risk": {
+      "atr_stop_mult": 1.5,
+      "atr_tp_mult": 3.0,
+      "max_hold_bars": 48,
+      "daily_loss_pct": 0.03,
+      "max_dd_limit": 0.25
+    },
+    "costs": {
+      "spread_pips": 3,
+      "slippage_pips": 1,
+      "commission_rt": 0.0002,
+      "spread_asian_mult": 2.5,
+      "spread_vol_mult": 1.5,
+      "spread_vol_atr_lookback": 20
+    },
+    "session": {
+      "enabled": false,
+      "allowed_hours_utc": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    "acceptance": {
+      "test": {
+        "min_annualized_return": 0.1,
+        "min_sharpe": 1.0,
+        "min_drawdown": -0.35,
+        "min_profit_factor": 1.2,
+        "min_trades": 30,
+        "min_win_rate": 0.4
+      },
+      "train": {
+        "min_sharpe": 0.0,
+        "min_profit_factor": 1.0,
+        "min_trades": 50
+      },
+      "val": {
+        "min_sharpe": 0.5,
+        "min_profit_factor": 1.1,
+        "min_trades": 20
+      },
+      "walk_forward": {
+        "min_mean_sharpe": 0.5,
+        "min_positive_windows": 0.75
+      },
+      "auto_save": {
+        "min_annualized_return": 0.5,
+        "min_sharpe": 1.5,
+        "min_drawdown": -0.25
+      }
+    },
+    "optimization": {
+      "method": "optuna_tpe",
+      "n_trials": 200,
+      "target": "val_sharpe",
+      "search_space": {
+        "dc_period": [
+          10,
+          50
+        ],
+        "adx_threshold": [
+          15.0,
+          35.0
+        ],
+        "hmm_min_prob": [
+          0.4,
+          0.8
+        ],
+        "atr_stop_mult": [
+          1.0,
+          2.5
+        ],
+        "atr_tp_mult": [
+          2.0,
+          5.0
+        ],
+        "ob_impulse_mult": [
+          1.0,
+          2.5
+        ],
+        "ob_validity_bars": [
+          10,
+          30
+        ],
+        "fvg_validity_bars": [
+          5,
+          20
+        ],
+        "regime_persistence": [
+          1,
+          5
+        ]
+      }
+    },
+    "baseline": {
+      "buy_and_hold": true,
+      "random_long": true
+    }
+  },
+  "metrics": {
+    "train": {
+      "annualized_return": NaN,
+      "total_return": -1.014,
+      "annualized_volatility": 10.8454,
+      "sharpe_ratio": 0.4361,
+      "sortino_ratio": NaN,
+      "max_drawdown": -1.0159,
+      "calmar_ratio": NaN,
+      "n_years": 4.06,
+      "total_trades": 268,
+      "win_rate": 0.1642,
+      "profit_factor": 0.1653,
+      "avg_win_loss_ratio": 0.8415,
+      "avg_trade_pnl": -378.3699,
+      "avg_trade_duration_bars": NaN,
+      "benchmark_return": 0.091,
+      "alpha_vs_benchmark": NaN,
+      "information_ratio": NaN,
+      "random_baseline": {
+        "random_median_sharpe": 0.3841,
+        "random_median_return": 0.0345,
+        "random_p95_sharpe": 0.9313,
+        "n_simulations": 200,
+        "note": "strategy must beat random_p95_sharpe to have statistically meaningful edge"
+      },
+      "beats_random_baseline": false
+    },
+    "val": {
+      "annualized_return": -0.5205,
+      "total_return": -0.5242,
+      "annualized_volatility": 0.1033,
+      "sharpe_ratio": -7.4501,
+      "sortino_ratio": -4.0986,
+      "max_drawdown": -0.5357,
+      "calmar_ratio": -0.9717,
+      "n_years": 1.01,
+      "total_trades": 114,
+      "win_rate": 0.1316,
+      "profit_factor": 0.0974,
+      "avg_win_loss_ratio": 0.6426,
+      "avg_trade_pnl": -459.8169,
+      "avg_trade_duration_bars": NaN,
+      "benchmark_return": 0.1262,
+      "alpha_vs_benchmark": -0.6467,
+      "information_ratio": -4.9719,
+      "random_baseline": {
+        "random_median_sharpe": 0.6379,
+        "random_median_return": 0.0528,
+        "random_p95_sharpe": 1.9129,
+        "n_simulations": 200,
+        "note": "strategy must beat random_p95_sharpe to have statistically meaningful edge"
+      },
+      "beats_random_baseline": false
+    },
+    "test": {
+      "annualized_return": -0.326,
+      "total_return": -0.3307,
+      "annualized_volatility": 0.115,
+      "sharpe_ratio": -3.7214,
+      "sortino_ratio": -3.0241,
+      "max_drawdown": -0.3315,
+      "calmar_ratio": -0.9834,
+      "n_years": 1.02,
+      "total_trades": 123,
+      "win_rate": 0.2683,
+      "profit_factor": 0.3522,
+      "avg_win_loss_ratio": 0.9605,
+      "avg_trade_pnl": -268.8735,
+      "avg_trade_duration_bars": NaN,
+      "benchmark_return": 0.2663,
+      "alpha_vs_benchmark": -0.5923,
+      "information_ratio": -4.2254,
+      "random_baseline": {
+        "random_median_sharpe": 1.2569,
+        "random_median_return": 0.1184,
+        "random_p95_sharpe": 2.1792,
+        "n_simulations": 200,
+        "note": "strategy must beat random_p95_sharpe to have statistically meaningful edge"
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -7.0026,
+        "annualized_return": -0.6791,
+        "max_drawdown": -0.6857
+      }
+    }
+  },
+  "walk_forward": null,
+  "hard_checks": {
+    "hard_rejected": true,
+    "rejections": {
+      "wf_not_run": "Walk-forward validation not run - robustness unverified"
+    }
+  },
+  "gap_audit": {
+    "expected_bars": 35015,
+    "actual_bars": 24528,
+    "missing_bars": 10487,
+    "missing_pct": 29.95,
+    "max_consecutive_gap": 76,
+    "expected_from_config": 43800,
+    "config_mismatch": true
+  },
+  "dataset": {
+    "file": "XAUUSD_1H_2019_2024.csv",
+    "sha256": "0b411fd0d0d6df6b2b547da1f287ce384ae9fbaf0e3b61e9e3fc7626c9beaa80",
+    "size_bytes": 2860190,
+    "mtime": 1772973948.2651486
+  }
+}

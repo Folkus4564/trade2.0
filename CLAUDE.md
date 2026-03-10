@@ -96,4 +96,4 @@ Strategy is automatically saved as `YYYY-MM-DD_xauusd_hmm_hma_regime.py`
 - Auto-proceed without asking for confirmation
 - No unicode special characters in print statements (cp874 encoding)
 - Vectorbt is the primary backtesting framework
-- Save strategies achieving >= 50% return
+- Save strategies achieving >= 20% return

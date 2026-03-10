@@ -1,0 +1,28 @@
+# ============================================================
+#  Live Trading Configuration - SKELETON (not for production)
+#  Fill in broker credentials and live risk limits before use.
+# ============================================================
+
+broker:
+  name: ""                        # e.g., "oanda", "mt5", "interactive_brokers"
+  api_key: ""                     # PLACEHOLDER - use env var in production
+  api_secret: ""                  # PLACEHOLDER - use env var in production
+  account_id: ""
+  environment: "practice"         # "practice" or "live"
+  base_url: ""                    # broker REST API base URL
+
+live_risk:
+  max_position_size_usd: 10000    # max notional per trade
+  daily_loss_limit_pct: 0.02      # 2% daily loss limit (circuit breaker)
+  max_drawdown_limit_pct: 0.10    # 10% max DD circuit breaker (tighter than backtest)
+  max_open_positions: 1           # single position only (XAUUSD)
+  allow_short: true
+
+strategy:
+  approved_dir: "approved_strategies"   # folder to load model + config from
+  timeframe: "1H"
+  instrument: "XAUUSD"
+
+logging:
+  level: "INFO"
+  log_dir: "logs/live"

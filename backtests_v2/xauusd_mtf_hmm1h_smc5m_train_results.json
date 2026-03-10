@@ -1,0 +1,40 @@
+{
+  "strategy": "xauusd_mtf_hmm1h_smc5m",
+  "period": "train",
+  "start": "2019-01-01 23:00:00+00:00",
+  "end": "2022-12-30 21:55:00+00:00",
+  "n_bars": 267439,
+  "metrics": {
+    "annualized_return": 0.0537,
+    "total_return": 0.2125,
+    "annualized_volatility": 0.0972,
+    "sharpe_ratio": 0.1751,
+    "sortino_ratio": 0.113,
+    "max_drawdown": -0.1097,
+    "calmar_ratio": 0.4892,
+    "n_years": 3.68,
+    "total_trades": 454,
+    "win_rate": 0.467,
+    "profit_factor": 1.1786,
+    "avg_win_loss_ratio": 1.3454,
+    "avg_trade_pnl": 46.8143,
+    "avg_trade_duration_bars": NaN,
+    "benchmark_return": 0.1005,
+    "alpha_vs_benchmark": -0.0468,
+    "information_ratio": -0.282
+  },
+  "pass_criteria": {
+    "return": false,
+    "sharpe": false,
+    "drawdown": true,
+    "profit_factor": false,
+    "trade_count": true,
+    "win_rate": true
+  },
+  "verdict": "REVISE",
+  "costs": {
+    "spread_pips": 3,
+    "slippage_pips": 1,
+    "commission_rt": 0.0002
+  }
+}

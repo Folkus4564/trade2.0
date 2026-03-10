@@ -5,12 +5,32 @@ Author: Strategy Code Engineer Agent
 Date: 2026-03-08
 """
 
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).parents[2]))
+
 import numpy as np
 import pandas as pd
 from typing import Tuple
 
+from src.config import get_config
+
 
 # ── Signal generation ─────────────────────────────────────────────────────────
+
+_LONDON_HOURS = set(range(7, 17))   # 07-16 UTC
+_NY_HOURS     = set(range(13, 22))  # 13-21 UTC
+_ACTIVE_HOURS = _LONDON_HOURS | _NY_HOURS  # London + NY (most liquid)
+
+
+def _session_mask(index: pd.DatetimeIndex, allowed_hours: set) -> pd.Series:
+    """Return boolean mask True for bars in allowed UTC hours."""
+    if index.tz is None:
+        hours = index.hour
+    else:
+        hours = index.tz_convert("UTC").hour
+    return pd.Series(hours.isin(allowed_hours), index=index)
+
 
 def generate_signals(
     df: pd.DataFrame,
@@ -22,6 +42,7 @@ def generate_signals(
     hmm_min_prob: float = 0.55,
     atr_expansion_filter: bool = True,
     use_smc: bool = True,
+    session_filter: bool = None,
 ) -> pd.DataFrame:
     """
     Generate long/short entry and exit signals using:
@@ -58,6 +79,16 @@ def generate_signals(
         DataFrame with columns: signal_long, signal_short, exit_long, exit_short,
                                  position_size_long, position_size_short
     """
+    # Read sizing and session from config
+    cfg = get_config()
+    hmm_cfg     = cfg.get("hmm", {})
+    sess_cfg    = cfg.get("session", {})
+    sizing_base = hmm_cfg.get("sizing_base", 0.50)
+    sizing_max  = hmm_cfg.get("sizing_max",  1.50)
+    if session_filter is None:
+        session_filter = sess_cfg.get("enabled", False)
+    allowed_hours = set(sess_cfg.get("allowed_hours_utc", list(_ACTIVE_HOURS)))
+
     out = df.copy()
 
     # Align HMM outputs to the full DataFrame index
@@ -69,9 +100,17 @@ def generate_signals(
     out["bull_prob"] = bull_prob_s.reindex(out.index).fillna(0.0)
     out["bear_prob"] = bear_prob_s.reindex(out.index).fillna(0.0)
 
-    # ── HMM regime filter ─────────────────────────────────────────────────────
-    bull_regime = (out["regime"] == "bull") & (out["bull_prob"] >= hmm_min_prob)
-    bear_regime = (out["regime"] == "bear") & (out["bear_prob"] >= hmm_min_prob)
+    # ── HMM regime filter (SOFT gate) ────────────────────────────────────────
+    # HMM is used for confidence-based position sizing, not as a hard binary blocker.
+    # Trades are allowed in any non-sideways regime; size is scaled by HMM confidence.
+    # Only sideways regime is excluded from new entries.
+    bull_regime = (out["regime"] == "bull")
+    bear_regime = (out["regime"] == "bear")
+
+    # Hard probability gate is applied only when explicitly requested
+    if hmm_min_prob > 0:
+        bull_regime = bull_regime & (out["bull_prob"] >= hmm_min_prob)
+        bear_regime = bear_regime & (out["bear_prob"] >= hmm_min_prob)
 
     # ── SMC entry signals ─────────────────────────────────────────────────────
     # Check if SMC feature columns exist (may not if add_smc_features was not called)
@@ -101,6 +140,16 @@ def generate_signals(
     dc_long  = broke_up   & adx_ok & atr_exp & bull_regime
     dc_short = broke_down & adx_ok & atr_exp & bear_regime
 
+    # ── Session filter (optional) ─────────────────────────────────────────────
+    # Only enter during London + NY sessions (7-21 UTC) — most liquid, tightest spreads.
+    # Existing positions are NOT closed by session filter — only new entries are blocked.
+    if session_filter:
+        in_session = _session_mask(out.index, allowed_hours)
+        smc_long   = smc_long  & in_session
+        smc_short  = smc_short & in_session
+        dc_long    = dc_long   & in_session
+        dc_short   = dc_short  & in_session
+
     # ── Combine signals: SMC OR Donchian breakout ─────────────────────────────
     out["signal_long"]  = (smc_long  | dc_long).astype(int)
     out["signal_short"] = (smc_short | dc_short).astype(int)
@@ -113,16 +162,18 @@ def generate_signals(
     out["exit_long"]  = (~bull_regime).astype(int)
     out["exit_short"] = (~bear_regime).astype(int)
 
-    # ── Position sizing: scale by HMM confidence ──────────────────────────────
-    # Size = 0.5 + regime_probability (range: 0.5x at 0% confidence, 1.5x at 100%)
+    # ── Position sizing: confidence-based scaling ─────────────────────────────
+    # Size = 0.5 + regime_probability, capped at 1.5x
+    # Low-confidence regime = smaller size; high-confidence = full size.
+    # This replaces hard blocking with a graduated response to uncertainty.
     out["position_size_long"]  = np.where(
         out["signal_long"]  == 1,
-        0.5 + out["bull_prob"],
+        np.clip(sizing_base + out["bull_prob"], 0.1, sizing_max),
         0.0
     )
     out["position_size_short"] = np.where(
         out["signal_short"] == 1,
-        0.5 + out["bear_prob"],
+        np.clip(sizing_base + out["bear_prob"], 0.1, sizing_max),
         0.0
     )
 

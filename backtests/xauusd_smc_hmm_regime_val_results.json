@@ -1,0 +1,48 @@
+{
+  "strategy": "xauusd_smc_hmm_regime",
+  "period": "val",
+  "start": "2023-01-02 23:00:00+00:00",
+  "end": "2023-12-29 21:00:00+00:00",
+  "n_bars": 6112,
+  "metrics": {
+    "annualized_return": -0.5205,
+    "total_return": -0.5242,
+    "annualized_volatility": 0.1033,
+    "sharpe_ratio": -7.4501,
+    "sortino_ratio": -4.0986,
+    "max_drawdown": -0.5357,
+    "calmar_ratio": -0.9717,
+    "n_years": 1.01,
+    "total_trades": 114,
+    "win_rate": 0.1316,
+    "profit_factor": 0.0974,
+    "avg_win_loss_ratio": 0.6426,
+    "avg_trade_pnl": -459.8169,
+    "avg_trade_duration_bars": NaN,
+    "benchmark_return": 0.1262,
+    "alpha_vs_benchmark": -0.6467,
+    "information_ratio": -4.9719,
+    "random_baseline": {
+      "random_median_sharpe": 0.6379,
+      "random_median_return": 0.0528,
+      "random_p95_sharpe": 1.9129,
+      "n_simulations": 200,
+      "note": "strategy must beat random_p95_sharpe to have statistically meaningful edge"
+    },
+    "beats_random_baseline": false
+  },
+  "pass_criteria": {
+    "return": false,
+    "sharpe": false,
+    "drawdown": false,
+    "profit_factor": false,
+    "trade_count": true,
+    "win_rate": false
+  },
+  "verdict": "REVISE",
+  "costs": {
+    "spread_pips": 3,
+    "slippage_pips": 1,
+    "commission_rt": 0.0002
+  }
+}

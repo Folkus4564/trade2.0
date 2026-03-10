@@ -11,12 +11,17 @@ import joblib
 from pathlib import Path
 from hmmlearn.hmm import GaussianHMM
 from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
 from typing import Tuple, Dict
+
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).parents[2]))
+from src.config import get_config
 
 MODEL_DIR = Path(__file__).parents[2] / "models"
 MODEL_DIR.mkdir(exist_ok=True)
 
-# Fixed seeds for reproducibility
+# Fixed seeds for reproducibility (overridden by config)
 RANDOM_SEED = 42
 
 # Regime label constants
@@ -38,7 +43,11 @@ class XAUUSDRegimeModel:
     All features are pre-shifted by 1 bar in features.py to prevent lookahead.
     """
 
-    def __init__(self, n_states: int = 3, n_iter: int = 200):
+    def __init__(self, n_states: int = None, n_iter: int = None):
+        cfg = get_config()
+        hmm_cfg = cfg.get("hmm", {})
+        if n_states is None: n_states = hmm_cfg.get("n_states", 3)
+        if n_iter   is None: n_iter   = hmm_cfg.get("n_iter",   200)
         self.n_states  = n_states
         self.n_iter    = n_iter
         self.model     = None
@@ -50,22 +59,44 @@ class XAUUSDRegimeModel:
 
     def fit(self, X: np.ndarray) -> "XAUUSDRegimeModel":
         """
-        Fit HMM on feature matrix X (n_samples, n_features).
-        All rows must be NaN-free (call get_hmm_feature_matrix first).
+        Fit HMM with k-means initialization for stable, reproducible convergence.
+        K-means gives deterministic starting centroids, avoiding the random-seed
+        sensitivity of purely random HMM initialization.
+
+        Args:
+            X: Feature matrix (NaN-free rows)
         """
-        np.random.seed(RANDOM_SEED)
         X_scaled = self.scaler.fit_transform(X)
+
+        # K-means initialization: use cluster centroids as HMM means
+        cfg = get_config()
+        seed = cfg.get("hmm", {}).get("random_seed", RANDOM_SEED)
+        km = KMeans(n_clusters=self.n_states, random_state=seed, n_init=10)
+        km.fit(X_scaled)
+        init_means = km.cluster_centers_
 
         self.model = GaussianHMM(
             n_components=self.n_states,
             covariance_type="full",
             n_iter=self.n_iter,
-            random_state=RANDOM_SEED,
+            random_state=seed,
             tol=1e-4,
+            init_params="stc",   # init startprob, transmat, covars from data; means from k-means
+            params="stmc",       # fit all parameters
         )
+        self.model.means_init = init_means
         self.model.fit(X_scaled)
+
         self._map_states(X)
         self.fitted = True
+
+        # Validate state distribution
+        states = self.model.predict(X_scaled)
+        for s in range(self.n_states):
+            pct = (states == s).mean()
+            if pct < 0.05:
+                print(f"[hmm_model] WARNING: state {s} only {pct*100:.1f}% of bars — consider fewer states")
+
         return self
 
     def _map_states(self, X: np.ndarray) -> None:

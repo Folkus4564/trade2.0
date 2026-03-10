@@ -10,6 +10,8 @@ import pandas as pd
 import talib
 from typing import Tuple
 
+from src.config import get_config
+
 
 # ── Smart Money Concepts (SMC) Features ───────────────────────────────────────
 
@@ -71,9 +73,11 @@ def add_smc_features(df: pd.DataFrame, atr_period: int = 14) -> pd.DataFrame:
     # Valid for 20 bars. Retest: current close enters OB zone.
     # All references use already-closed bars to avoid lookahead.
 
-    OB_VALIDITY = 20
-    IMPULSE_BARS = 3
-    IMPULSE_MULT = 1.5
+    cfg = get_config()
+    smc = cfg.get("smc", {})
+    OB_VALIDITY  = smc.get("ob_validity_bars",    20)
+    IMPULSE_BARS = smc.get("ob_impulse_bars",      3)
+    IMPULSE_MULT = smc.get("ob_impulse_mult",    1.5)
 
     # Store OB zone boundaries for each bar (computed on prior bars only)
     bull_ob_low  = np.full(n, np.nan)
@@ -134,7 +138,7 @@ def add_smc_features(df: pd.DataFrame, atr_period: int = 14) -> pd.DataFrame:
     # Valid for 15 bars. Entry: close inside gap zone.
     # Lookahead prevention: detect FVG on bars i-2..i (all completed), carry forward zone.
 
-    FVG_VALIDITY = 15
+    FVG_VALIDITY = smc.get("fvg_validity_bars", 15)
 
     bull_fvg_lo  = np.full(n, np.nan)
     bull_fvg_hi  = np.full(n, np.nan)
@@ -217,7 +221,7 @@ def add_smc_features(df: pd.DataFrame, atr_period: int = 14) -> pd.DataFrame:
     # Reversal confirmation: close direction
     # Shift by 1 for lag safety.
 
-    SWING_LOOKBACK = 20
+    SWING_LOOKBACK = smc.get("swing_lookback_bars", 20)
 
     # Rolling max/min excluding current bar (shift(1) on rolling result)
     swing_high = high.rolling(SWING_LOOKBACK).max().shift(1)
@@ -264,12 +268,12 @@ def hma(series: pd.Series, period: int) -> pd.Series:
 
 def add_features(
     df: pd.DataFrame,
-    hma_period: int = 55,
-    ema_period: int = 21,
-    atr_period: int = 14,
-    rsi_period: int = 14,
-    adx_period: int = 14,
-    dc_period: int = 20,
+    hma_period: int = None,
+    ema_period: int = None,
+    atr_period: int = None,
+    rsi_period: int = None,
+    adx_period: int = None,
+    dc_period: int = None,
 ) -> pd.DataFrame:
     """
     Add all strategy features to an OHLCV DataFrame.
@@ -291,6 +295,15 @@ def add_features(
     Returns:
         df copy with all features added
     """
+    cfg = get_config()
+    feat_cfg = cfg.get("features", {})
+    if hma_period is None: hma_period = feat_cfg.get("hma_period", 55)
+    if ema_period is None: ema_period = feat_cfg.get("ema_period", 21)
+    if atr_period is None: atr_period = feat_cfg.get("atr_period", 14)
+    if rsi_period is None: rsi_period = feat_cfg.get("rsi_period", 14)
+    if adx_period is None: adx_period = feat_cfg.get("adx_period", 14)
+    if dc_period  is None: dc_period  = feat_cfg.get("dc_period",  40)
+
     out   = df.copy()
     close = out["Close"].astype(float)
     high  = out["High"].astype(float)
@@ -363,11 +376,13 @@ def add_features(
     out["atr_expansion"] = (out["atr_14"] > atr_ma).astype(int)
 
     # ── HMM input features (shifted 1 bar to prevent lookahead) ──────────────
-    # These are the features fed to GaussianHMM for regime prediction
-    out["hmm_feat_ret"]  = out["log_ret"].shift(1)
-    out["hmm_feat_rsi"]  = out["rsi_norm"].shift(1)
-    out["hmm_feat_atr"]  = out["atr_norm"].shift(1)
-    out["hmm_feat_vol"]  = out["vol_20"].shift(1)
+    out["hmm_feat_ret"]       = out["log_ret"].shift(1)
+    out["hmm_feat_rsi"]       = out["rsi_norm"].shift(1)
+    out["hmm_feat_atr"]       = out["atr_norm"].shift(1)
+    out["hmm_feat_vol"]       = out["vol_20"].shift(1)
+    out["hmm_feat_hma_slope"] = out["hma_slope"].shift(1)
+    out["hmm_feat_bb_width"]  = out["bb_width"].shift(1)
+    out["hmm_feat_macd"]      = out["macd_hist"].shift(1)
 
     # ── SMC features ──────────────────────────────────────────────────────────
     out = add_smc_features(out, atr_period=atr_period)
@@ -378,9 +393,19 @@ def add_features(
 def get_hmm_feature_matrix(df: pd.DataFrame) -> Tuple[np.ndarray, pd.Index]:
     """
     Extract the HMM feature matrix (rows without NaN) and corresponding index.
-    Used for HMM training and prediction.
+    7 features: log_ret, rsi, atr, vol, hma_slope, bb_width, macd_hist
     """
-    cols = ["hmm_feat_ret", "hmm_feat_rsi", "hmm_feat_atr", "hmm_feat_vol"]
+    cols = [
+        "hmm_feat_ret",
+        "hmm_feat_rsi",
+        "hmm_feat_atr",
+        "hmm_feat_vol",
+        "hmm_feat_hma_slope",
+        "hmm_feat_bb_width",
+        "hmm_feat_macd",
+    ]
+    # Only use cols that exist (backward compat)
+    cols = [c for c in cols if c in df.columns]
     feat = df[cols].dropna()
     return feat.values, feat.index
 
