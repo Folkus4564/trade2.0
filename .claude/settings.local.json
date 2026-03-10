@@ -32,7 +32,8 @@
       "Bash(cd \"C:/Users/LENOVO/Desktop/trade2.0\" && pip install -e . -q 2>&1 | tail -5)",
       "Bash(cd C:/Users/LENOVO/Desktop/trade2.0 && C:/Users/LENOVO/AppData/Local/Programs/Python/Python313/python.exe -m src_v2.pipeline 2>&1)",
       "Bash(cd C:/Users/LENOVO/Desktop/trade2.0 && C:/Users/LENOVO/AppData/Local/Programs/Python/Python313/python.exe -m pip install -r requirements.txt 2>&1)",
-      "Bash(cd C:/Users/LENOVO/Desktop/trade2.0 && mkdir -p code1.0/.claude/agents code1.0/.claude/skills code1.0/src/backtesting code1.0/src/data code1.0/src/models code1.0/models code1.0/data)"
+      "Bash(cd C:/Users/LENOVO/Desktop/trade2.0 && mkdir -p code1.0/.claude/agents code1.0/.claude/skills code1.0/src/backtesting code1.0/src/data code1.0/src/models code1.0/models code1.0/data)",
+      "Bash(cd C:/Users/LENOVO/Desktop/trade2.0 && rmdir src/backtesting src/data src/models 2>&1)"
     ]
   }
 }
