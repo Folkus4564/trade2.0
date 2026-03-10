@@ -36,24 +36,25 @@ class XAUUSDRegimeModel:
     before being considered active.
     """
 
-    def __init__(self, n_states: int = 3, n_iter: int = 200):
-        self.n_states  = n_states
-        self.n_iter    = n_iter
-        self.model     = None
-        self.scaler    = StandardScaler()
+    def __init__(self, n_states: int = 3, n_iter: int = 200, random_seed: int = RANDOM_SEED):
+        self.n_states    = n_states
+        self.n_iter      = n_iter
+        self.random_seed = random_seed
+        self.model       = None
+        self.scaler      = StandardScaler()
         self.state_map: Dict[str, int] = {}
-        self.fitted    = False
+        self.fitted      = False
 
     def fit(self, X: np.ndarray) -> "XAUUSDRegimeModel":
         """Fit HMM on feature matrix X (NaN-free)."""
-        np.random.seed(RANDOM_SEED)
+        np.random.seed(self.random_seed)
         X_scaled = self.scaler.fit_transform(X)
 
         self.model = GaussianHMM(
             n_components=self.n_states,
             covariance_type="full",
             n_iter=self.n_iter,
-            random_state=RANDOM_SEED,
+            random_state=self.random_seed,
             tol=1e-4,
         )
         self.model.fit(X_scaled)

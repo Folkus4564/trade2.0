@@ -15,7 +15,7 @@ ROOT          = Path(__file__).parents[2]
 BACKTESTS_DIR = ROOT / "backtests_v2"
 BACKTESTS_DIR.mkdir(exist_ok=True)
 
-# Realistic costs (XAUUSD 5M)
+# Realistic costs (XAUUSD 5M) -- module-level defaults
 SPREAD_PIPS   = 3       # 3 pip spread
 SLIPPAGE_PIPS = 1       # 1 pip slippage per side
 COMMISSION_RT = 0.0002  # 2 bps round-trip
@@ -32,12 +32,24 @@ def run_backtest(
     period_label: str = "test",
     init_cash: float = 100_000.0,
     size_pct: float = 0.95,
+    config: dict = None,
 ) -> Tuple[Dict[str, Any], Any]:
     """
     Run vectorbt backtest on 5M signal DataFrame.
 
     Expects columns: signal_long, signal_short, exit_long, exit_short
     """
+    # Read costs from config if provided, otherwise use module-level defaults
+    if config and "costs" in config:
+        c = config["costs"]
+        spread_pips   = c.get("spread_pips",   SPREAD_PIPS)
+        slippage_pips = c.get("slippage_pips", SLIPPAGE_PIPS)
+        commission_rt = c.get("commission_rt", COMMISSION_RT)
+    else:
+        spread_pips   = SPREAD_PIPS
+        slippage_pips = SLIPPAGE_PIPS
+        commission_rt = COMMISSION_RT
+
     close = df["Close"].astype(float)
 
     long_entries  = df["signal_long"].astype(bool)
@@ -60,7 +72,7 @@ def run_backtest(
     # Spread + slippage both applied (bug fix vs v1)
     avg_price  = close.mean()
     pip_value  = 0.01
-    slippage   = ((SPREAD_PIPS + SLIPPAGE_PIPS) * pip_value) / avg_price
+    slippage   = ((spread_pips + slippage_pips) * pip_value) / avg_price
 
     trade_value = init_cash * size_pct
 
@@ -71,7 +83,7 @@ def run_backtest(
         short_entries = short_entries,
         short_exits   = short_exits,
         init_cash     = init_cash,
-        fees          = COMMISSION_RT / 2,
+        fees          = commission_rt / 2,
         slippage      = slippage,
         size          = trade_value,
         size_type     = "value",
@@ -114,9 +126,9 @@ def run_backtest(
             "pass_criteria": passes_criteria(metrics),
             "verdict":  verdict(metrics),
             "costs": {
-                "spread_pips":   SPREAD_PIPS,
-                "slippage_pips": SLIPPAGE_PIPS,
-                "commission_rt": COMMISSION_RT,
+                "spread_pips":   spread_pips,
+                "slippage_pips": slippage_pips,
+                "commission_rt": commission_rt,
             },
         }, f, indent=2)
     print(f"[engine_v2] Results saved to {result_path}")

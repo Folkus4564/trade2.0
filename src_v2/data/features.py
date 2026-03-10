@@ -140,6 +140,7 @@ def add_5m_features(
     dc_period: int = 40,
     adx_period: int = 14,
     rsi_period: int = 14,
+    smc_config: dict = None,
 ) -> pd.DataFrame:
     """
     Add 5M features for SMC entry detection.
@@ -181,7 +182,7 @@ def add_5m_features(
     out["atr_expansion"] = (out["atr_14"] > atr_ma).astype(int)
 
     # -- SMC features --
-    out = _add_smc_features(out, atr_period=atr_period)
+    out = _add_smc_features(out, atr_period=atr_period, smc_config=smc_config)
 
     # -- Pin bar rejection candles --
     out = _add_pin_bar_features(out)
@@ -189,7 +190,7 @@ def add_5m_features(
     return out
 
 
-def _add_smc_features(df: pd.DataFrame, atr_period: int = 14) -> pd.DataFrame:
+def _add_smc_features(df: pd.DataFrame, atr_period: int = 14, smc_config: dict = None) -> pd.DataFrame:
     """
     Add SMC features to 5M DataFrame.
     Order Blocks, Fair Value Gaps, Liquidity Sweeps.
@@ -210,9 +211,10 @@ def _add_smc_features(df: pd.DataFrame, atr_period: int = 14) -> pd.DataFrame:
     open_arr  = open_.values
 
     # ---- Order Blocks ----
-    OB_VALIDITY  = 60    # 60 bars on 5M = 5 hours
-    IMPULSE_BARS = 3
-    IMPULSE_MULT = 1.5
+    cfg_smc = smc_config or {}
+    OB_VALIDITY  = cfg_smc.get("ob_validity_bars",  60)
+    IMPULSE_BARS = cfg_smc.get("ob_impulse_bars",    3)
+    IMPULSE_MULT = cfg_smc.get("ob_impulse_mult",  1.5)
 
     bull_ob_low  = np.full(n, np.nan)
     bull_ob_high = np.full(n, np.nan)
@@ -258,7 +260,7 @@ def _add_smc_features(df: pd.DataFrame, atr_period: int = 14) -> pd.DataFrame:
     out["ob_bearish"] = pd.Series(bear_ob_retest_raw, index=out.index).shift(1).fillna(False).astype(bool)
 
     # ---- Fair Value Gaps ----
-    FVG_VALIDITY = 36  # 36 bars on 5M = 3 hours
+    FVG_VALIDITY = cfg_smc.get("fvg_validity_bars", 36)
 
     bull_fvg_lo = np.full(n, np.nan)
     bull_fvg_hi = np.full(n, np.nan)
@@ -311,7 +313,7 @@ def _add_smc_features(df: pd.DataFrame, atr_period: int = 14) -> pd.DataFrame:
     out["fvg_bearish"] = pd.Series(bear_fvg_retest_raw, index=out.index).shift(1).fillna(False).astype(bool)
 
     # ---- Liquidity Sweeps ----
-    SWING_LOOKBACK = 60  # 60 bars on 5M = 5 hours
+    SWING_LOOKBACK = cfg_smc.get("swing_lookback_bars", 60)
 
     swing_high = high.rolling(SWING_LOOKBACK).max().shift(1)
     swing_low  = low.rolling(SWING_LOOKBACK).min().shift(1)

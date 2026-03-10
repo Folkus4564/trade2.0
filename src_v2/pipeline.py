@@ -13,6 +13,7 @@ Usage:
 import argparse
 import json
 import sys
+import yaml
 import numpy as np
 import pandas as pd
 from datetime import date
@@ -35,19 +36,41 @@ STRATEGY_NAME = "xauusd_mtf_hmm1h_smc5m"
 REPORTS_DIR   = ROOT / "reports_v2"
 REPORTS_DIR.mkdir(exist_ok=True)
 
-np.random.seed(42)
 
-DEFAULT_PARAMS = {
-    "hmm_states":             3,
-    "hmm_min_prob":           0.50,
-    "regime_persistence_bars": 3,    # 1H bars (x12 internally for 5M)
-    "adx_threshold":          20.0,
-    "atr_stop_mult":          1.5,
-    "atr_tp_mult":            3.0,
-    "require_smc_confluence": True,
-    "require_pin_bar":        False,
-    "dc_period":              40,
-}
+def load_v2_config() -> tuple:
+    """
+    Load config.yaml and build the v2 params dict.
+    Returns (cfg, params) where cfg is the raw dict and params mirrors DEFAULT_PARAMS.
+    Raises KeyError with a clear message if any expected key is missing.
+    """
+    config_path = ROOT / "config.yaml"
+    with open(config_path, "r") as f:
+        cfg = yaml.safe_load(f)
+
+    def _get(path, cfg=cfg):
+        keys = path.split(".")
+        node = cfg
+        for k in keys:
+            if not isinstance(node, dict) or k not in node:
+                raise KeyError(
+                    f"[load_v2_config] Missing config key: '{path}' "
+                    f"(failed at '{k}'). Check config.yaml."
+                )
+            node = node[k]
+        return node
+
+    params = {
+        "hmm_states":             _get("hmm.n_states"),
+        "hmm_min_prob":           _get("hmm.min_prob_hard"),
+        "regime_persistence_bars": _get("regime.persistence_bars"),
+        "adx_threshold":          _get("regime.adx_threshold"),
+        "atr_stop_mult":          _get("risk.atr_stop_mult"),
+        "atr_tp_mult":            _get("risk.atr_tp_mult"),
+        "require_smc_confluence": _get("smc.require_confluence"),
+        "require_pin_bar":        _get("smc.require_pin_bar"),
+        "dc_period":              _get("features.dc_period"),
+    }
+    return cfg, params
 
 
 def run_pipeline(params: dict = None) -> dict:
@@ -61,7 +84,9 @@ def run_pipeline(params: dict = None) -> dict:
     6. Backtest on 5M bars
     7. Save verdict
     """
-    p = {**DEFAULT_PARAMS, **(params or {})}
+    cfg, default_params = load_v2_config()
+    np.random.seed(cfg["hmm"]["random_seed"])
+    p = {**default_params, **(params or {})}
 
     print(f"\n{'='*60}")
     print(f"  XAUUSD MTF STRATEGY v2  |  1H HMM + 5M SMC")
@@ -74,10 +99,10 @@ def run_pipeline(params: dict = None) -> dict:
 
     # ---- 1. Load data ----
     print("[pipeline_v2] Loading 1H data...")
-    train_1h, val_1h, test_1h = load_split_tf("1H")
+    train_1h, val_1h, test_1h = load_split_tf("1H", config=cfg)
 
     print("[pipeline_v2] Loading 5M data...")
-    train_5m, val_5m, test_5m = load_split_tf("5M")
+    train_5m, val_5m, test_5m = load_split_tf("5M", config=cfg)
 
     print(f"\n  1H  train={len(train_1h)} | val={len(val_1h)} | test={len(test_1h)} bars")
     print(f"  5M  train={len(train_5m)} | val={len(val_5m)} | test={len(test_5m)} bars\n")
@@ -91,7 +116,7 @@ def run_pipeline(params: dict = None) -> dict:
     print("[pipeline_v2] Training HMM on 1H train data...")
     X_train_1h, idx_train_1h = get_hmm_feature_matrix(train_1h_feat)
 
-    hmm = XAUUSDRegimeModel(n_states=p["hmm_states"])
+    hmm = XAUUSDRegimeModel(n_states=p["hmm_states"], random_seed=cfg["hmm"]["random_seed"])
     hmm.fit(X_train_1h)
     hmm.save("hmm_regime_model_v2")
     hmm.summary(X_train_1h)
@@ -109,9 +134,9 @@ def run_pipeline(params: dict = None) -> dict:
 
     # ---- 3. 5M features ----
     print("\n[pipeline_v2] Engineering 5M features (SMC)...")
-    train_5m_feat = add_5m_features(train_5m, dc_period=p["dc_period"])
-    val_5m_feat   = add_5m_features(val_5m,   dc_period=p["dc_period"])
-    test_5m_feat  = add_5m_features(test_5m,  dc_period=p["dc_period"])
+    train_5m_feat = add_5m_features(train_5m, dc_period=p["dc_period"], smc_config=cfg.get("smc_5m"))
+    val_5m_feat   = add_5m_features(val_5m,   dc_period=p["dc_period"], smc_config=cfg.get("smc_5m"))
+    test_5m_feat  = add_5m_features(test_5m,  dc_period=p["dc_period"], smc_config=cfg.get("smc_5m"))
 
     for col in ["ob_bullish", "ob_bearish", "fvg_bullish", "fvg_bearish", "sweep_low", "sweep_high"]:
         if col in train_5m_feat.columns:
@@ -154,10 +179,10 @@ def run_pipeline(params: dict = None) -> dict:
 
     # ---- 6. Backtests ----
     print("\n[pipeline_v2] Running TRAIN backtest...")
-    train_metrics, _ = run_backtest(train_sig, STRATEGY_NAME, "train")
+    train_metrics, _ = run_backtest(train_sig, STRATEGY_NAME, "train", config=cfg)
 
     print("\n[pipeline_v2] Running TEST backtest (out-of-sample)...")
-    test_metrics, _  = run_backtest(test_sig, STRATEGY_NAME, "test")
+    test_metrics, _  = run_backtest(test_sig, STRATEGY_NAME, "test", config=cfg)
 
     # ---- 7. Verdict ----
     from src.backtesting.metrics import passes_criteria, verdict

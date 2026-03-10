@@ -14,16 +14,41 @@ RAW_DIR  = DATA_DIR / "raw"
 PROC_DIR = DATA_DIR / "processed"
 PROC_DIR.mkdir(parents=True, exist_ok=True)
 
-# ---- Consistent split boundaries across ALL timeframes ----
+# ---- Consistent split boundaries across ALL timeframes (module-level defaults) ----
 TRAIN_END = "2022-12-31 23:59"
 VAL_END   = "2023-12-31 23:59"
 # Test = 2024-01-01 to 2025-06-30
 
-# Known raw CSV paths
+# Known raw CSV paths (module-level defaults)
 RAW_PATHS = {
     "1H": RAW_DIR / "XAUUSD_1H_2019_2025.csv",
     "5M": RAW_DIR / "XAUUSD_5M_2019_2025.csv",
 }
+
+
+def _resolve_paths_from_config(config: dict) -> dict:
+    """Build RAW_PATHS dict from config, falling back to module-level defaults."""
+    resolved = dict(RAW_PATHS)
+    if config and "data" in config:
+        d = config["data"]
+        if "raw_1h_csv" in d:
+            resolved["1H"] = ROOT / d["raw_1h_csv"]
+        if "raw_5m_csv" in d:
+            resolved["5M"] = ROOT / d["raw_5m_csv"]
+    return resolved
+
+
+def _resolve_splits_from_config(config: dict) -> tuple:
+    """Return (train_end, val_end) strings from config, falling back to module-level defaults."""
+    train_end = TRAIN_END
+    val_end   = VAL_END
+    if config and "splits" in config:
+        s = config["splits"]
+        if "train_end" in s:
+            train_end = s["train_end"] + " 23:59"
+        if "val_end" in s:
+            val_end = s["val_end"] + " 23:59"
+    return train_end, val_end
 
 
 def _merge_yearly_csvs(timeframe: str) -> Path:
@@ -75,11 +100,12 @@ def _merge_yearly_csvs(timeframe: str) -> Path:
     return out_path
 
 
-def _find_raw_csv(timeframe: str) -> Path:
+def _find_raw_csv(timeframe: str, raw_paths: dict = None) -> Path:
     """Find the raw CSV for a given timeframe. Auto-merges yearly files if needed."""
+    paths = raw_paths if raw_paths is not None else RAW_PATHS
     # 1. Check primary known path
-    if timeframe in RAW_PATHS and RAW_PATHS[timeframe] and RAW_PATHS[timeframe].exists():
-        return RAW_PATHS[timeframe]
+    if timeframe in paths and paths[timeframe] and paths[timeframe].exists():
+        return paths[timeframe]
 
     # 2. Try merging yearly files (e.g. downloaded per-year batches)
     merged = _merge_yearly_csvs(timeframe)
@@ -171,7 +197,11 @@ def load_raw(path: Path) -> pd.DataFrame:
     return df
 
 
-def split(df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def split(
+    df: pd.DataFrame,
+    train_end: str = TRAIN_END,
+    val_end: str = VAL_END,
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Split DataFrame into (train, val, test) by fixed date boundaries.
     Uses the SAME boundaries regardless of timeframe to prevent data leakage.
@@ -182,11 +212,11 @@ def split(df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     idx = df.index
     if hasattr(idx, "tz") and idx.tz is not None:
-        te = pd.Timestamp(TRAIN_END, tz="UTC")
-        ve = pd.Timestamp(VAL_END, tz="UTC")
+        te = pd.Timestamp(train_end, tz="UTC")
+        ve = pd.Timestamp(val_end, tz="UTC")
     else:
-        te = pd.Timestamp(TRAIN_END)
-        ve = pd.Timestamp(VAL_END)
+        te = pd.Timestamp(train_end)
+        ve = pd.Timestamp(val_end)
 
     train = df[df.index <= te].copy()
     val   = df[(df.index > te) & (df.index <= ve)].copy()
@@ -194,26 +224,33 @@ def split(df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     return train, val, test
 
 
-def load_split_tf(timeframe: str) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def load_split_tf(
+    timeframe: str,
+    config: dict = None,
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Load and split data for a given timeframe.
     Automatically finds the right CSV.
 
     Args:
         timeframe: "1H", "5M", etc.
+        config:    Optional config dict. When provided, data paths and split dates
+                   are read from config instead of module-level defaults.
 
     Returns:
         (train, val, test) DataFrames
     """
-    path = _find_raw_csv(timeframe)
+    raw_paths = _resolve_paths_from_config(config)
+    train_end, val_end = _resolve_splits_from_config(config)
+    path = _find_raw_csv(timeframe, raw_paths=raw_paths)
     print(f"[loader] Loading {timeframe} data from {path.name}")
     df = load_raw(path)
-    train, val, test = split(df)
+    train, val, test = split(df, train_end=train_end, val_end=val_end)
     print(f"[loader] {timeframe}: train={len(train)} | val={len(val)} | test={len(test)} bars")
     return train, val, test
 
 
-def load_multi_tf() -> dict:
+def load_multi_tf(config: dict = None) -> dict:
     """
     Load both 1H and 5M data with consistent splits.
 
@@ -225,7 +262,7 @@ def load_multi_tf() -> dict:
     """
     result = {}
     for tf in ["1H", "5M"]:
-        train, val, test = load_split_tf(tf)
+        train, val, test = load_split_tf(tf, config=config)
         result[tf] = {"train": train, "val": val, "test": test}
     return result
 
