@@ -6,13 +6,12 @@ Purpose: Multi-timeframe XAUUSD strategy pipeline
          - Consistent train/val/test splits across both timeframes
 
 Usage:
-    python src_v2/pipeline.py
-    python src_v2/pipeline.py --optimize --trials 100
+    python -m src_v2.pipeline
+    python -m src_v2.pipeline --optimize --trials 100
 """
 
 import argparse
 import json
-import sys
 import yaml
 import numpy as np
 import pandas as pd
@@ -20,17 +19,17 @@ from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).parents[1]
-sys.path.insert(0, str(ROOT))
 
-from src_v2.data.loader import load_split_tf
-from src_v2.data.features import add_1h_features, get_hmm_feature_matrix, add_5m_features
-from src_v2.models.hmm_model import XAUUSDRegimeModel
-from src_v2.models.signal_generator import (
+from .data.loader import load_split_tf
+from .data.features import add_1h_features, get_hmm_feature_matrix, add_5m_features
+from .models.hmm_model import XAUUSDRegimeModel
+from .models.signal_generator import (
     forward_fill_1h_regime,
     generate_signals,
     compute_stops,
 )
-from src_v2.backtesting.engine import run_backtest
+from .backtesting.engine import run_backtest
+from src.backtesting.metrics import passes_criteria, verdict as _verdict
 
 STRATEGY_NAME = "xauusd_mtf_hmm1h_smc5m"
 REPORTS_DIR   = ROOT / "reports_v2"
@@ -185,9 +184,7 @@ def run_pipeline(params: dict = None) -> dict:
     test_metrics, _  = run_backtest(test_sig, STRATEGY_NAME, "test", config=cfg)
 
     # ---- 7. Verdict ----
-    from src.backtesting.metrics import passes_criteria, verdict
-
-    final_verdict = verdict(test_metrics)
+    final_verdict = _verdict(test_metrics)
     criteria      = passes_criteria(test_metrics)
 
     results = {

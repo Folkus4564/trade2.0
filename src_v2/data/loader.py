@@ -14,41 +14,41 @@ RAW_DIR  = DATA_DIR / "raw"
 PROC_DIR = DATA_DIR / "processed"
 PROC_DIR.mkdir(parents=True, exist_ok=True)
 
-# ---- Consistent split boundaries across ALL timeframes (module-level defaults) ----
-TRAIN_END = "2022-12-31 23:59"
-VAL_END   = "2023-12-31 23:59"
-# Test = 2024-01-01 to 2025-06-30
-
-# Known raw CSV paths (module-level defaults)
-RAW_PATHS = {
-    "1H": RAW_DIR / "XAUUSD_1H_2019_2025.csv",
-    "5M": RAW_DIR / "XAUUSD_5M_2019_2025.csv",
-}
-
-
 def _resolve_paths_from_config(config: dict) -> dict:
-    """Build RAW_PATHS dict from config, falling back to module-level defaults."""
-    resolved = dict(RAW_PATHS)
-    if config and "data" in config:
+    """Build raw CSV path dict from config. Raises if config is absent or keys are missing."""
+    if not config:
+        raise ValueError(
+            "[loader] config is required for data paths. "
+            "Pass the loaded config dict to load_split_tf()."
+        )
+    try:
         d = config["data"]
-        if "raw_1h_csv" in d:
-            resolved["1H"] = ROOT / d["raw_1h_csv"]
-        if "raw_5m_csv" in d:
-            resolved["5M"] = ROOT / d["raw_5m_csv"]
-    return resolved
+        return {
+            "1H": ROOT / d["raw_1h_csv"],
+            "5M": ROOT / d["raw_5m_csv"],
+        }
+    except KeyError as e:
+        raise ValueError(
+            f"[loader] Missing config key: {e}. "
+            "Ensure config.yaml has data.raw_1h_csv and data.raw_5m_csv."
+        ) from e
 
 
 def _resolve_splits_from_config(config: dict) -> tuple:
-    """Return (train_end, val_end) strings from config, falling back to module-level defaults."""
-    train_end = TRAIN_END
-    val_end   = VAL_END
-    if config and "splits" in config:
+    """Return (train_end, val_end) timestamp strings from config. Raises if absent or keys missing."""
+    if not config:
+        raise ValueError(
+            "[loader] config is required for split dates. "
+            "Pass the loaded config dict to load_split_tf()."
+        )
+    try:
         s = config["splits"]
-        if "train_end" in s:
-            train_end = s["train_end"] + " 23:59"
-        if "val_end" in s:
-            val_end = s["val_end"] + " 23:59"
-    return train_end, val_end
+        return s["train_end"] + " 23:59", s["val_end"] + " 23:59"
+    except KeyError as e:
+        raise ValueError(
+            f"[loader] Missing config key: {e}. "
+            "Ensure config.yaml has splits.train_end and splits.val_end."
+        ) from e
 
 
 def _merge_yearly_csvs(timeframe: str) -> Path:
@@ -100,9 +100,9 @@ def _merge_yearly_csvs(timeframe: str) -> Path:
     return out_path
 
 
-def _find_raw_csv(timeframe: str, raw_paths: dict = None) -> Path:
+def _find_raw_csv(timeframe: str, raw_paths: dict) -> Path:
     """Find the raw CSV for a given timeframe. Auto-merges yearly files if needed."""
-    paths = raw_paths if raw_paths is not None else RAW_PATHS
+    paths = raw_paths
     # 1. Check primary known path
     if timeframe in paths and paths[timeframe] and paths[timeframe].exists():
         return paths[timeframe]
@@ -199,8 +199,8 @@ def load_raw(path: Path) -> pd.DataFrame:
 
 def split(
     df: pd.DataFrame,
-    train_end: str = TRAIN_END,
-    val_end: str = VAL_END,
+    train_end: str,
+    val_end: str,
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Split DataFrame into (train, val, test) by fixed date boundaries.
@@ -268,7 +268,12 @@ def load_multi_tf(config: dict = None) -> dict:
 
 
 if __name__ == "__main__":
-    data = load_multi_tf()
+    import yaml
+    import sys
+    sys.path.insert(0, str(ROOT))
+    with open(ROOT / "config.yaml") as _f:
+        _cfg = yaml.safe_load(_f)
+    data = load_multi_tf(config=_cfg)
     for tf, splits in data.items():
         train = splits["train"]
         test = splits["test"]

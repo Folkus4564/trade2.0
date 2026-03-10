@@ -15,10 +15,6 @@ ROOT          = Path(__file__).parents[2]
 BACKTESTS_DIR = ROOT / "backtests_v2"
 BACKTESTS_DIR.mkdir(exist_ok=True)
 
-# Realistic costs (XAUUSD 5M) -- module-level defaults
-SPREAD_PIPS   = 3       # 3 pip spread
-SLIPPAGE_PIPS = 1       # 1 pip slippage per side
-COMMISSION_RT = 0.0002  # 2 bps round-trip
 
 # Re-import metrics from v1 (no need to duplicate)
 import sys
@@ -39,16 +35,21 @@ def run_backtest(
 
     Expects columns: signal_long, signal_short, exit_long, exit_short
     """
-    # Read costs from config if provided, otherwise use module-level defaults
-    if config and "costs" in config:
+    if not config or "costs" not in config:
+        raise ValueError(
+            "[engine_v2] config with a 'costs' section is required. "
+            "Pass the loaded config dict to run_backtest()."
+        )
+    try:
         c = config["costs"]
-        spread_pips   = c.get("spread_pips",   SPREAD_PIPS)
-        slippage_pips = c.get("slippage_pips", SLIPPAGE_PIPS)
-        commission_rt = c.get("commission_rt", COMMISSION_RT)
-    else:
-        spread_pips   = SPREAD_PIPS
-        slippage_pips = SLIPPAGE_PIPS
-        commission_rt = COMMISSION_RT
+        spread_pips   = c["spread_pips"]
+        slippage_pips = c["slippage_pips"]
+        commission_rt = c["commission_rt"]
+    except KeyError as e:
+        raise ValueError(
+            f"[engine_v2] Missing config key: {e}. "
+            "Ensure config.yaml has costs.spread_pips, costs.slippage_pips, costs.commission_rt."
+        ) from e
 
     close = df["Close"].astype(float)
 
