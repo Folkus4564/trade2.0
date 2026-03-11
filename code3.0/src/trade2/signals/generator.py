@@ -143,9 +143,21 @@ def generate_signals(
         dc_long    = dc_long   & in_session
         dc_short   = dc_short  & in_session
 
+    # ---- Macro trend filter (optional) ----
+    # If 1H HMA direction columns are present, require them to agree with direction.
+    # Longs: HMA rising AND price above HMA (confirmed uptrend).
+    # Shorts: HMA falling AND price below HMA (confirmed downtrend).
+    has_macro = "hma_rising" in out.columns and "price_above_hma" in out.columns
+    if has_macro:
+        macro_bull = out["hma_rising"].astype(bool) & out["price_above_hma"].astype(bool)
+        macro_bear = (~out["hma_rising"].astype(bool)) & (~out["price_above_hma"].astype(bool))
+    else:
+        macro_bull = pd.Series(True, index=out.index)
+        macro_bear = pd.Series(True, index=out.index)
+
     # ---- Combine signals ----
-    out["signal_long"]  = (bull_regime & (smc_long  | dc_long)).astype(int)
-    out["signal_short"] = (bear_regime & (smc_short | dc_short)).astype(int)
+    out["signal_long"]  = (bull_regime & macro_bull & (smc_long  | dc_long)).astype(int)
+    out["signal_short"] = (bear_regime & macro_bear & (smc_short | dc_short)).astype(int)
 
     # ---- Exit: regime flip ----
     out["exit_long"]  = (~bull_regime).astype(int)
@@ -167,9 +179,15 @@ def compute_stops(
     atr_stop_mult: float,
     atr_tp_mult: float,
 ) -> pd.DataFrame:
-    """Compute ATR-based stop loss and take profit levels."""
+    """
+    Compute ATR-based stop loss and take profit levels.
+
+    In multi-TF mode (5M signals, 1H regime), uses 'atr_1h' if present.
+    This prevents the 5M noise from immediately triggering SL/TP.
+    Falls back to 'atr_14' for single-TF mode.
+    """
     out   = df.copy()
-    atr   = out["atr_14"]
+    atr   = out["atr_1h"] if "atr_1h" in out.columns else out["atr_14"]
     close = out["Close"]
     out["stop_long"]  = close - atr_stop_mult * atr
     out["stop_short"] = close + atr_stop_mult * atr

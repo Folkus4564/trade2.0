@@ -30,8 +30,10 @@ from trade2.evaluation.hard_rejection import hard_rejection_checks
 from trade2.evaluation.verdict import multi_split_verdict
 from trade2.experiment.logger import ExperimentLogger
 from trade2.export.exporter import export_approved_strategy
+from trade2.optimization.optimizer import run_optimization
 
 PROJECT_ROOT = Path(__file__).parents[3]  # code3.0/
+DATA_ROOT    = Path(__file__).parents[4]  # trade2.0/ (where data/ lives)
 
 
 def _resolve_artefact_dirs(config: dict) -> dict:
@@ -85,6 +87,8 @@ def run_pipeline(
     walk_forward: bool = True,
     retrain_model: bool = False,
     export_approved: bool = False,
+    optimize: bool = False,
+    n_trials: int = 100,
 ) -> dict:
     """
     Full research pipeline:
@@ -123,7 +127,7 @@ def run_pipeline(
     print("[pipeline] Loading 1H data...")
     train_1h, val_1h, test_1h = load_split_tf("1H", config)
 
-    raw_1h_path = PROJECT_ROOT / config.get("data", {}).get("raw_1h_csv", "data/raw/XAUUSD_1H_2019_2025.csv")
+    raw_1h_path = DATA_ROOT / config.get("data", {}).get("raw_1h_csv", "data/raw/XAUUSD_1H_2019_2025.csv")
     gap_audit  = audit_missing_bars(train_1h, "1h", config)
     data_ver   = dataset_version(raw_1h_path) if raw_1h_path.exists() else {}
     print(f"  [data] Missing bars: {gap_audit['missing_bars']} ({gap_audit['missing_pct']}%)")
@@ -193,11 +197,21 @@ def run_pipeline(
 
     # ---- 5. Build signal dataframes ----
     if mode == "multi_tf":
-        # Forward-fill 1H regime onto 5M bars
+        # Forward-fill 1H regime onto 5M bars.
+        # Also forward-fill 1H ATR so compute_stops uses 1H-scale risk levels.
         print("[pipeline] Forward-filling 1H regime onto 5M bars...")
-        train_sig_df = forward_fill_1h_regime(train_5m_feat, train_labels, train_bull, train_bear, idx_train_1h)
-        val_sig_df   = forward_fill_1h_regime(val_5m_feat,   val_labels,   val_bull,   val_bear,   idx_val_1h)
-        test_sig_df  = forward_fill_1h_regime(test_5m_feat,  test_labels,  test_bull,  test_bear,  idx_test_1h)
+        train_sig_df = forward_fill_1h_regime(train_5m_feat, train_labels, train_bull, train_bear, idx_train_1h,
+                                               atr_1h=train_1h_feat["atr_14"].rename(None),
+                                               hma_rising=train_1h_feat["hma_rising"].rename(None),
+                                               price_above_hma=train_1h_feat["price_above_hma"].rename(None))
+        val_sig_df   = forward_fill_1h_regime(val_5m_feat,   val_labels,   val_bull,   val_bear,   idx_val_1h,
+                                               atr_1h=val_1h_feat["atr_14"].rename(None),
+                                               hma_rising=val_1h_feat["hma_rising"].rename(None),
+                                               price_above_hma=val_1h_feat["price_above_hma"].rename(None))
+        test_sig_df  = forward_fill_1h_regime(test_5m_feat,  test_labels,  test_bull,  test_bear,  idx_test_1h,
+                                               atr_1h=test_1h_feat["atr_14"].rename(None),
+                                               hma_rising=test_1h_feat["hma_rising"].rename(None),
+                                               price_above_hma=test_1h_feat["price_above_hma"].rename(None))
         freq         = "5min"
     else:
         train_sig_df = train_1h_feat
@@ -240,6 +254,42 @@ def run_pipeline(
 
     print(f"  Train: long={int(train_sig['signal_long'].sum())} | short={int(train_sig['signal_short'].sum())}")
     print(f"  Test : long={int(test_sig['signal_long'].sum())}  | short={int(test_sig['signal_short'].sum())}")
+
+    # ---- 5b. Optional: Optuna optimization on val ----
+    if optimize:
+        print(f"\n[pipeline] Running Optuna optimization ({n_trials} trials) targeting val_sharpe...")
+        best_params, best_val_sharpe = run_optimization(val_sig_df, config, n_trials=n_trials)
+
+        # Override p with best params
+        if best_val_sharpe > -990:
+            p.update(best_params)
+            print(f"[pipeline] Applying best params (val_sharpe={best_val_sharpe:.4f})")
+
+            # Regenerate signals + stops with best params
+            sig_kwargs_opt = dict(
+                config                  = config,
+                adx_threshold           = p.get("adx_threshold",           p["adx_threshold"]),
+                hmm_min_prob            = p.get("hmm_min_prob",             p["hmm_min_prob"]),
+                regime_persistence_bars = p.get("regime_persistence_bars", p["regime_persistence_bars"]),
+                require_smc_confluence  = p.get("require_smc_confluence",  p["require_smc_confluence"]),
+                require_pin_bar         = p.get("require_pin_bar",         p["require_pin_bar"]),
+            )
+            if mode == "multi_tf":
+                train_sig = generate_signals(train_sig_df, **sig_kwargs_opt)
+                val_sig   = generate_signals(val_sig_df,   **sig_kwargs_opt)
+                test_sig  = generate_signals(test_sig_df,  **sig_kwargs_opt)
+            else:
+                train_sig = generate_signals(train_sig_df, **sig_kwargs_opt,
+                    hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_1h)
+                val_sig   = generate_signals(val_sig_df,   **sig_kwargs_opt,
+                    hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_1h)
+                test_sig  = generate_signals(test_sig_df,  **sig_kwargs_opt,
+                    hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_1h)
+
+            train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"])
+            val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"])
+            test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"])
+            print(f"  Optimized: long={int(test_sig['signal_long'].sum())} | short={int(test_sig['signal_short'].sum())} (test)")
 
     # ---- 6. Backtests ----
     print("\n[pipeline] Running TRAIN backtest...")
@@ -401,6 +451,8 @@ def main():
         walk_forward    = not args.skip_walk_forward,
         retrain_model   = args.retrain_model,
         export_approved = args.export_approved,
+        optimize        = args.optimize,
+        n_trials        = args.trials,
     )
     sys.exit(0 if results["verdict"] == "APPROVED" else 1)
 

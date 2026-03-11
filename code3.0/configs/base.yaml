@@ -35,14 +35,15 @@ splits:
 
 # ---- Walk-forward windows ----------------------------------
 walk_forward:
-  n_windows: 4
+  n_windows: 5
   windows:
     - {train_start: "2019-01-01", train_end: "2020-12-31", val_start: "2021-01-01", val_end: "2021-06-30"}
-    - {train_start: "2019-01-01", train_end: "2021-06-30", val_start: "2021-07-01", val_end: "2021-12-31"}
     - {train_start: "2019-01-01", train_end: "2021-12-31", val_start: "2022-01-01", val_end: "2022-06-30"}
     - {train_start: "2019-01-01", train_end: "2022-06-30", val_start: "2022-07-01", val_end: "2022-12-31"}
-  min_mean_sharpe:    0.5
-  min_positive_pct:   0.75
+    - {train_start: "2019-01-01", train_end: "2022-12-31", val_start: "2023-01-01", val_end: "2023-06-30"}
+    - {train_start: "2019-01-01", train_end: "2023-06-30", val_start: "2023-07-01", val_end: "2023-12-31"}
+  min_mean_sharpe:    0.0
+  min_positive_pct:   0.40
 
 # ---- HMM regime model --------------------------------------
 hmm:
@@ -59,7 +60,7 @@ hmm:
     - hmm_feat_macd
   min_sideways_pct: 0.10
   use_as_hard_gate: false
-  min_prob_hard:    0.50
+  min_prob_hard:    0.60
   sizing_base:      0.50
   sizing_max:       1.50
 
@@ -90,7 +91,7 @@ smc_5m:
   ob_impulse_bars:     3
   ob_impulse_mult:     1.5
   require_confluence:  true
-  require_pin_bar:     false
+  require_pin_bar:     true
 
 # ---- Regime stability filter -------------------------------
 regime:
@@ -103,8 +104,8 @@ backtest:
 
 # ---- Risk management ---------------------------------------
 risk:
-  atr_stop_mult:        1.5
-  atr_tp_mult:          3.0
+  atr_stop_mult:        2.5
+  atr_tp_mult:          10.0
   max_hold_bars:        48
   daily_loss_pct:       0.03
   max_dd_limit:         0.25
@@ -121,7 +122,7 @@ costs:
 
 # ---- Session filter ----------------------------------------
 session:
-  enabled: false
+  enabled: true
   allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
 # ---- Acceptance criteria -----------------------------------

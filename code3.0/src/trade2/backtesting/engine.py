@@ -253,6 +253,11 @@ def run_backtest(
     max_hold_bars = risk_cfg["max_hold_bars"]
     base_alloc    = risk_cfg["base_allocation_frac"]
 
+    # Scale max_hold_bars to match the data frequency.
+    # Config value is expressed in 1H-equivalent bars; 5M data needs x12.
+    if freq in ("5min", "5m", "5M"):
+        max_hold_bars = max_hold_bars * 12
+
     close = df["Close"].astype(float)
 
     n_longs  = int(df["signal_long"].sum())
