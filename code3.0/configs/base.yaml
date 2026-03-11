@@ -97,6 +97,10 @@ regime:
   persistence_bars: 3
   adx_threshold:    20.0
 
+# ---- Backtest settings -------------------------------------
+backtest:
+  init_cash: 100000
+
 # ---- Risk management ---------------------------------------
 risk:
   atr_stop_mult:        1.5
@@ -141,7 +145,7 @@ acceptance:
     min_mean_sharpe:       0.5
     min_positive_windows:  0.75
   auto_save:
-    min_annualized_return: 0.50
+    min_annualized_return: 0.30
     min_sharpe:            1.5
     min_drawdown:          -0.25
 

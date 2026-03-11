@@ -54,21 +54,21 @@ def generate_signals(
         df with signal_long, signal_short, exit_long, exit_short,
         position_size_long, position_size_short columns.
     """
-    cfg     = config or {}
-    hmm_cfg = cfg.get("hmm", {})
-    reg_cfg = cfg.get("regime", {})
-    smc_cfg = cfg.get("smc", cfg.get("smc_5m", {}))
-    sess_cfg = cfg.get("session", {})
+    cfg      = config or {}
+    hmm_cfg  = cfg["hmm"]
+    reg_cfg  = cfg["regime"]
+    smc_cfg  = cfg.get("smc_5m") or cfg["smc"]
+    sess_cfg = cfg["session"]
 
-    # Resolve parameters (explicit overrides > config > defaults)
-    adx_thresh    = adx_threshold            if adx_threshold            is not None else reg_cfg.get("adx_threshold",  20.0)
-    min_prob      = hmm_min_prob             if hmm_min_prob             is not None else hmm_cfg.get("min_prob_hard",   0.50)
-    persistence   = regime_persistence_bars  if regime_persistence_bars  is not None else reg_cfg.get("persistence_bars", 3)
-    confluence    = require_smc_confluence   if require_smc_confluence   is not None else smc_cfg.get("require_confluence", True)
-    pin_bar       = require_pin_bar          if require_pin_bar          is not None else smc_cfg.get("require_pin_bar",    False)
-    sizing_base   = hmm_cfg.get("sizing_base", 0.50)
-    sizing_max    = hmm_cfg.get("sizing_max",  1.50)
-    sess_enabled  = session_filter if session_filter is not None else sess_cfg.get("enabled", False)
+    # Resolve parameters (explicit overrides > config)
+    adx_thresh    = adx_threshold           if adx_threshold           is not None else reg_cfg["adx_threshold"]
+    min_prob      = hmm_min_prob            if hmm_min_prob            is not None else hmm_cfg["min_prob_hard"]
+    persistence   = regime_persistence_bars if regime_persistence_bars is not None else reg_cfg["persistence_bars"]
+    confluence    = require_smc_confluence  if require_smc_confluence  is not None else smc_cfg["require_confluence"]
+    pin_bar       = require_pin_bar         if require_pin_bar         is not None else smc_cfg["require_pin_bar"]
+    sizing_base   = hmm_cfg["sizing_base"]
+    sizing_max    = hmm_cfg["sizing_max"]
+    sess_enabled  = session_filter if session_filter is not None else sess_cfg["enabled"]
     allowed_hours = set(sess_cfg.get("allowed_hours_utc", list(_ACTIVE_HOURS)))
 
     out = df.copy()
@@ -164,8 +164,8 @@ def generate_signals(
 
 def compute_stops(
     df: pd.DataFrame,
-    atr_stop_mult: float = 1.5,
-    atr_tp_mult: float = 3.0,
+    atr_stop_mult: float,
+    atr_tp_mult: float,
 ) -> pd.DataFrame:
     """Compute ATR-based stop loss and take profit levels."""
     out   = df.copy()

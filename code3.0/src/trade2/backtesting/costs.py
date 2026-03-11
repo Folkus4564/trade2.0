@@ -19,12 +19,12 @@ def compute_slippage(
     Returns:
         Scalar slippage fraction suitable for vectorbt's slippage= parameter.
     """
-    costs_cfg    = config.get("costs", {})
-    spread_pips  = costs_cfg.get("spread_pips",   3)
-    slip_pips    = costs_cfg.get("slippage_pips", 1)
-    asian_mult   = costs_cfg.get("spread_asian_mult", 2.5)
-    vol_mult     = costs_cfg.get("spread_vol_mult",   1.5)
-    atr_lb       = costs_cfg.get("spread_vol_atr_lookback", 20)
+    costs_cfg    = config["costs"]
+    spread_pips  = costs_cfg["spread_pips"]
+    slip_pips    = costs_cfg["slippage_pips"]
+    asian_mult   = costs_cfg["spread_asian_mult"]
+    vol_mult     = costs_cfg["spread_vol_mult"]
+    atr_lb       = costs_cfg["spread_vol_atr_lookback"]
     pip_value    = 0.01  # XAUUSD: 1 pip = $0.01
 
     _ASIAN_HOURS = set(range(0, 7)) | set(range(22, 24))
@@ -55,9 +55,9 @@ def doubled_costs(config: Dict[str, Any]) -> Dict[str, Any]:
     Return a copy of config with all costs doubled (for 2x cost sensitivity test).
     """
     cfg = copy.deepcopy(config)
-    costs = cfg.get("costs", {})
-    costs["spread_pips"]   = costs.get("spread_pips",   3) * 2
-    costs["slippage_pips"] = costs.get("slippage_pips", 1) * 2
-    costs["commission_rt"] = costs.get("commission_rt", 0.0002) * 2
+    costs = cfg["costs"]
+    costs["spread_pips"]   = costs["spread_pips"]   * 2
+    costs["slippage_pips"] = costs["slippage_pips"] * 2
+    costs["commission_rt"] = costs["commission_rt"] * 2
     cfg["costs"] = costs
     return cfg

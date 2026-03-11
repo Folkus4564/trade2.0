@@ -56,26 +56,26 @@ def _regime_distribution(labels) -> dict:
 
 
 def _build_params(config: dict) -> dict:
-    feat = config.get("features", {})
-    smc  = config.get("smc", {})
-    risk = config.get("risk", {})
-    hmm  = config.get("hmm", {})
-    reg  = config.get("regime", {})
+    feat = config["features"]
+    smc  = config["smc"]
+    risk = config["risk"]
+    hmm  = config["hmm"]
+    reg  = config["regime"]
     return {
-        "hma_period":              feat.get("hma_period",  55),
-        "ema_period":              feat.get("ema_period",  21),
-        "atr_period":              feat.get("atr_period",  14),
-        "rsi_period":              feat.get("rsi_period",  14),
-        "adx_period":              feat.get("adx_period",  14),
-        "dc_period":               feat.get("dc_period",   40),
-        "adx_threshold":           reg.get("adx_threshold",   20.0),
-        "hmm_min_prob":            hmm.get("min_prob_hard",   0.50),
-        "hmm_states":              hmm.get("n_states",        3),
-        "regime_persistence_bars": reg.get("persistence_bars", 3),
-        "atr_stop_mult":           risk.get("atr_stop_mult",  1.5),
-        "atr_tp_mult":             risk.get("atr_tp_mult",    3.0),
-        "require_smc_confluence":  smc.get("require_confluence", True),
-        "require_pin_bar":         smc.get("require_pin_bar",   False),
+        "hma_period":              feat["hma_period"],
+        "ema_period":              feat["ema_period"],
+        "atr_period":              feat["atr_period"],
+        "rsi_period":              feat["rsi_period"],
+        "adx_period":              feat["adx_period"],
+        "dc_period":               feat["dc_period"],
+        "adx_threshold":           reg["adx_threshold"],
+        "hmm_min_prob":            hmm["min_prob_hard"],
+        "hmm_states":              hmm["n_states"],
+        "regime_persistence_bars": reg["persistence_bars"],
+        "atr_stop_mult":           risk["atr_stop_mult"],
+        "atr_tp_mult":             risk["atr_tp_mult"],
+        "require_smc_confluence":  smc["require_confluence"],
+        "require_pin_bar":         smc["require_pin_bar"],
     }
 
 

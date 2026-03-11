@@ -222,12 +222,11 @@ def run_backtest(
     period_label: str = "test",
     config: Dict[str, Any] = None,
     backtests_dir: Path = None,
-    init_cash: float = 100_000.0,
-    size_pct: float = 0.95,
     freq: str = "1h",
 ) -> Tuple[Dict[str, Any], pd.DataFrame]:
     """
     Run event-driven backtest using pre-computed signal + SL/TP columns in df.
+    All parameters read from config -- no hardcoded defaults.
 
     Expected df columns: signal_long, signal_short, exit_long, exit_short,
         stop_long, stop_short, tp_long, tp_short,
@@ -237,25 +236,22 @@ def run_backtest(
         df:            Feature+signal DataFrame (with stop/tp columns from compute_stops)
         strategy_name: Name for result file
         period_label:  'train', 'val', 'test', or 'wf_N'
-        config:        Config dict (for costs + risk params)
+        config:        Config dict (all parameters sourced from here)
         backtests_dir: Where to save result JSON (optional)
         freq:          '1h' or '5min' -- controls bars_per_year
-        size_pct:      Fallback max allocation if base_allocation_frac not in config
 
     Returns:
         (metrics_dict, trades_df)
     """
     cfg       = config or {}
-    costs_cfg = cfg.get("costs", {})
-    risk_cfg  = cfg.get("risk",  {})
-    hmm_cfg   = cfg.get("hmm",   {})
+    costs_cfg = cfg["costs"]
+    risk_cfg  = cfg["risk"]
+    hmm_cfg   = cfg["hmm"]
 
-    commission    = costs_cfg.get("commission_rt", 0.0002)
-    max_hold_bars = risk_cfg.get("max_hold_bars",  48)
-
-    # base_allocation_frac: ensures base * sizing_max = size_pct
-    sizing_max = hmm_cfg.get("sizing_max", 1.5)
-    base_alloc = risk_cfg.get("base_allocation_frac", size_pct / sizing_max)
+    init_cash     = cfg["backtest"]["init_cash"]
+    commission    = costs_cfg["commission_rt"]
+    max_hold_bars = risk_cfg["max_hold_bars"]
+    base_alloc    = risk_cfg["base_allocation_frac"]
 
     close = df["Close"].astype(float)
 
@@ -269,7 +265,7 @@ def run_backtest(
             "win_rate": 0.0, "profit_factor": 0.0,
         }, pd.DataFrame()
 
-    slippage = compute_slippage(close, cfg) if cfg else 0.001
+    slippage = compute_slippage(close, cfg)
 
     bars_per_year = (252 * 24 * 12) if freq in ("5min", "5m", "5M") else (252 * 24)
 
@@ -325,9 +321,9 @@ def run_backtest(
                 "n_bars":   len(df),
                 "metrics":  metrics,
                 "costs": {
-                    "spread_pips":   costs_cfg.get("spread_pips", 3),
-                    "slippage_pips": costs_cfg.get("slippage_pips", 1),
-                    "commission_rt": commission,
+                    "spread_pips":   costs_cfg["spread_pips"],
+                    "slippage_pips": costs_cfg["slippage_pips"],
+                    "commission_rt": costs_cfg["commission_rt"],
                 },
             }, f, indent=2)
         print(f"[engine] Results saved to {result_path}")
@@ -422,8 +418,8 @@ def run_walk_forward(
             )
             val_sig = compute_stops(
                 val_sig,
-                config.get("risk", {}).get("atr_stop_mult", 1.5),
-                config.get("risk", {}).get("atr_tp_mult",   3.0),
+                config["risk"]["atr_stop_mult"],
+                config["risk"]["atr_tp_mult"],
             )
 
             n_sigs = val_sig["signal_long"].sum() + val_sig["signal_short"].sum()
