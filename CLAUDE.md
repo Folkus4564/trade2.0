@@ -40,7 +40,7 @@ trade2.0/
       hmm_model.py                # GaussianHMM regime detector
       signal_generator.py         # Signal generation from features+regime
     backtesting/
-      engine.py                   # vectorbt backtest runner
+      engine.py                   # event-driven backtest engine (bar-by-bar SL/TP)
       metrics.py                  # Performance metrics computation
     pipeline.py                   # MAIN entry point
   models/
@@ -95,5 +95,5 @@ Strategy is automatically saved as `YYYY-MM-DD_xauusd_hmm_hma_regime.py`
 ## User Preferences
 - Auto-proceed without asking for confirmation
 - No unicode special characters in print statements (cp874 encoding)
-- Vectorbt is the primary backtesting framework
+- Custom event-driven engine (pandas/numpy, no vectorbt) is the backtesting framework
 - Save strategies achieving >= 20% return

@@ -31,7 +31,7 @@ from trade2.evaluation.verdict import multi_split_verdict
 from trade2.experiment.logger import ExperimentLogger
 from trade2.export.exporter import export_approved_strategy
 
-PROJECT_ROOT = Path(__file__).parents[4]
+PROJECT_ROOT = Path(__file__).parents[3]  # code3.0/
 
 
 def _resolve_artefact_dirs(config: dict) -> dict:

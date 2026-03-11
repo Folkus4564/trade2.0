@@ -1,17 +1,219 @@
 """
-backtesting/engine.py - vectorbt backtest engine supporting 1H and 5M frequencies.
-No module-level mkdir. Artefact paths passed explicitly.
+backtesting/engine.py - Custom event-driven backtest engine.
+Simulates trades bar-by-bar with real ATR-based SL/TP execution and
+confidence-based variable position sizing. No vectorbt dependency.
 """
 
 import json
 import numpy as np
 import pandas as pd
-import vectorbt as vbt
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from trade2.backtesting.costs import compute_slippage, doubled_costs
 from trade2.backtesting.metrics import compute_metrics, compute_random_baseline, format_report
+
+
+def _simulate_trades(
+    df: pd.DataFrame,
+    init_cash: float,
+    base_allocation_frac: float,
+    slippage: float,
+    commission_rt: float,
+    max_hold_bars: int,
+) -> Tuple[pd.Series, pd.DataFrame]:
+    """
+    Bar-by-bar event-driven simulation with frozen ATR-based SL/TP
+    and confidence-based variable position sizing.
+
+    Signal at bar i  -> entry at bar i+1 Open (next-bar execution).
+    SL/TP levels are frozen from the signal bar and never updated.
+    One position at a time; conflicting long+short signals are skipped.
+
+    Required df columns:
+        Open, High, Low, Close
+        signal_long, signal_short, exit_long, exit_short
+        stop_long, stop_short, tp_long, tp_short
+        position_size_long, position_size_short
+
+    Returns:
+        equity_curve : pd.Series  (bar-by-bar mark-to-market portfolio value)
+        trades_df    : pd.DataFrame  (one row per completed trade)
+    """
+    opens  = df["Open"].values.astype(float)
+    highs  = df["High"].values.astype(float)
+    lows   = df["Low"].values.astype(float)
+    closes = df["Close"].values.astype(float)
+
+    sig_long   = df["signal_long"].values.astype(int)
+    sig_short  = df["signal_short"].values.astype(int)
+    exit_long  = df["exit_long"].values.astype(int)
+    exit_short = df["exit_short"].values.astype(int)
+    stop_long  = df["stop_long"].values.astype(float)
+    stop_short = df["stop_short"].values.astype(float)
+    tp_long    = df["tp_long"].values.astype(float)
+    tp_short   = df["tp_short"].values.astype(float)
+    ps_long    = df["position_size_long"].values.astype(float)
+    ps_short   = df["position_size_short"].values.astype(float)
+
+    n          = len(df)
+    equity_arr = np.zeros(n, dtype=float)
+    trades: List[Dict] = []
+
+    cash = float(init_cash)
+
+    # Active position state
+    in_pos    = False
+    direction = None    # 'long' | 'short'
+    entry_bar = -1
+    entry_px  = 0.0
+    frozen_sl = 0.0
+    frozen_tp = 0.0
+    pos_val   = 0.0     # dollar value committed
+    n_units   = 0.0     # units held
+
+    # Pending entry: signal at bar i fires at bar i+1 open
+    pend_dir = None
+    pend_sl  = 0.0
+    pend_tp  = 0.0
+    pend_ps  = 0.0      # position_size multiplier
+
+    for i in range(n):
+
+        # --- Execute pending entry at this bar's open ---
+        if pend_dir is not None and not in_pos:
+            if pend_dir == "long":
+                entry_px = opens[i] * (1.0 + slippage)
+            else:
+                entry_px = opens[i] * (1.0 - slippage)
+            pos_val   = cash * base_allocation_frac * pend_ps
+            n_units   = pos_val / entry_px if entry_px > 0.0 else 0.0
+            frozen_sl = pend_sl
+            frozen_tp = pend_tp
+            direction = pend_dir
+            entry_bar = i
+            in_pos    = True
+            pend_dir  = None
+
+        # --- Mark-to-market equity ---
+        if in_pos:
+            if direction == "long":
+                equity_arr[i] = cash + (closes[i] - entry_px) * n_units
+            else:
+                equity_arr[i] = cash + (entry_px - closes[i]) * n_units
+        else:
+            equity_arr[i] = cash
+
+        # --- Check SL / TP / signal exit / timeout ---
+        if in_pos:
+            reason  = None
+            exit_px = 0.0
+
+            if direction == "long":
+                if lows[i] <= frozen_sl:
+                    reason  = "sl"
+                    exit_px = frozen_sl * (1.0 - slippage)
+                elif highs[i] >= frozen_tp:
+                    reason  = "tp"
+                    exit_px = frozen_tp * (1.0 - slippage)
+                elif exit_long[i] == 1 and i > entry_bar:
+                    reason  = "signal"
+                    exit_px = closes[i] * (1.0 - slippage)
+                elif (i - entry_bar) >= max_hold_bars:
+                    reason  = "timeout"
+                    exit_px = closes[i] * (1.0 - slippage)
+            else:  # short
+                if highs[i] >= frozen_sl:
+                    reason  = "sl"
+                    exit_px = frozen_sl * (1.0 + slippage)
+                elif lows[i] <= frozen_tp:
+                    reason  = "tp"
+                    exit_px = frozen_tp * (1.0 + slippage)
+                elif exit_short[i] == 1 and i > entry_bar:
+                    reason  = "signal"
+                    exit_px = closes[i] * (1.0 + slippage)
+                elif (i - entry_bar) >= max_hold_bars:
+                    reason  = "timeout"
+                    exit_px = closes[i] * (1.0 + slippage)
+
+            if reason is not None:
+                if direction == "long":
+                    raw_pnl = (exit_px - entry_px) * n_units
+                else:
+                    raw_pnl = (entry_px - exit_px) * n_units
+                cost      = commission_rt * pos_val
+                net_pnl   = raw_pnl - cost
+                cash     += net_pnl
+                equity_arr[i] = cash  # lock in realized equity
+
+                trades.append({
+                    "entry_time":    df.index[entry_bar],
+                    "exit_time":     df.index[i],
+                    "direction":     direction,
+                    "entry_price":   round(entry_px,  5),
+                    "exit_price":    round(exit_px,   5),
+                    "sl":            round(frozen_sl,  5),
+                    "tp":            round(frozen_tp,  5),
+                    "size":          round(pos_val,    2),
+                    "pnl":           round(net_pnl,    4),
+                    "duration_bars": i - entry_bar,
+                    "exit_reason":   reason,
+                })
+                in_pos    = False
+                direction = None
+
+        # --- Queue next entry from signal at bar i ---
+        if not in_pos and pend_dir is None and i < n - 1:
+            go_long  = sig_long[i]  == 1 and sig_short[i] == 0
+            go_short = sig_short[i] == 1 and sig_long[i]  == 0
+
+            if go_long:
+                pend_dir = "long"
+                pend_sl  = stop_long[i]
+                pend_tp  = tp_long[i]
+                pend_ps  = ps_long[i]
+            elif go_short:
+                pend_dir = "short"
+                pend_sl  = stop_short[i]
+                pend_tp  = tp_short[i]
+                pend_ps  = ps_short[i]
+
+    # --- Close any open position at end of data ---
+    if in_pos:
+        i = n - 1
+        if direction == "long":
+            exit_px = closes[i] * (1.0 - slippage)
+            raw_pnl = (exit_px - entry_px) * n_units
+        else:
+            exit_px = closes[i] * (1.0 + slippage)
+            raw_pnl = (entry_px - exit_px) * n_units
+        cost      = commission_rt * pos_val
+        net_pnl   = raw_pnl - cost
+        cash     += net_pnl
+        equity_arr[i] = cash
+        trades.append({
+            "entry_time":    df.index[entry_bar],
+            "exit_time":     df.index[i],
+            "direction":     direction,
+            "entry_price":   round(entry_px,  5),
+            "exit_price":    round(exit_px,   5),
+            "sl":            round(frozen_sl,  5),
+            "tp":            round(frozen_tp,  5),
+            "size":          round(pos_val,    2),
+            "pnl":           round(net_pnl,    4),
+            "duration_bars": i - entry_bar,
+            "exit_reason":   "end_of_data",
+        })
+
+    equity_curve = pd.Series(equity_arr, index=df.index, name="equity")
+    trades_df = (
+        pd.DataFrame(trades) if trades else
+        pd.DataFrame(columns=[
+            "entry_time", "exit_time", "direction", "entry_price", "exit_price",
+            "sl", "tp", "size", "pnl", "duration_bars", "exit_reason",
+        ])
+    )
+    return equity_curve, trades_df
 
 
 def run_backtest(
@@ -23,90 +225,78 @@ def run_backtest(
     init_cash: float = 100_000.0,
     size_pct: float = 0.95,
     freq: str = "1h",
-) -> Tuple[Dict[str, Any], Any]:
+) -> Tuple[Dict[str, Any], pd.DataFrame]:
     """
-    Run vectorbt backtest using signal columns in df.
+    Run event-driven backtest using pre-computed signal + SL/TP columns in df.
 
-    Expected columns: signal_long, signal_short, exit_long, exit_short
+    Expected df columns: signal_long, signal_short, exit_long, exit_short,
+        stop_long, stop_short, tp_long, tp_short,
+        position_size_long, position_size_short
 
     Args:
-        df:            Feature+signal DataFrame
+        df:            Feature+signal DataFrame (with stop/tp columns from compute_stops)
         strategy_name: Name for result file
         period_label:  'train', 'val', 'test', or 'wf_N'
-        config:        Config dict (for costs)
+        config:        Config dict (for costs + risk params)
         backtests_dir: Where to save result JSON (optional)
-        freq:          '1h' or '5min' — controls bars_per_year and vectorbt freq
-        size_pct:      Fraction of portfolio per trade
+        freq:          '1h' or '5min' -- controls bars_per_year
+        size_pct:      Fallback max allocation if base_allocation_frac not in config
 
     Returns:
-        (metrics_dict, vbt.Portfolio)
+        (metrics_dict, trades_df)
     """
-    cfg = config or {}
-    costs_cfg    = cfg.get("costs", {})
-    commission   = costs_cfg.get("commission_rt", 0.0002)
+    cfg       = config or {}
+    costs_cfg = cfg.get("costs", {})
+    risk_cfg  = cfg.get("risk",  {})
+    hmm_cfg   = cfg.get("hmm",   {})
+
+    commission    = costs_cfg.get("commission_rt", 0.0002)
+    max_hold_bars = risk_cfg.get("max_hold_bars",  48)
+
+    # base_allocation_frac: ensures base * sizing_max = size_pct
+    sizing_max = hmm_cfg.get("sizing_max", 1.5)
+    base_alloc = risk_cfg.get("base_allocation_frac", size_pct / sizing_max)
 
     close = df["Close"].astype(float)
 
-    long_entries  = df["signal_long"].astype(bool)
-    long_exits    = df["exit_long"].astype(bool)
-    short_entries = df["signal_short"].astype(bool)
-    short_exits   = df["exit_short"].astype(bool)
-
-    conflict      = long_entries & short_entries
-    long_entries  = long_entries  & ~conflict
-    short_entries = short_entries & ~conflict
-
-    if long_entries.sum() == 0 and short_entries.sum() == 0:
+    n_longs  = int(df["signal_long"].sum())
+    n_shorts = int(df["signal_short"].sum())
+    if n_longs == 0 and n_shorts == 0:
         print(f"[engine] WARNING: No signals for {period_label}")
         return {
             "annualized_return": 0.0, "sharpe_ratio": 0.0,
             "max_drawdown": 0.0, "total_trades": 0,
             "win_rate": 0.0, "profit_factor": 0.0,
-        }, None
+        }, pd.DataFrame()
 
-    slippage    = compute_slippage(close, cfg) if cfg else 0.001
-    trade_value = init_cash * size_pct
+    slippage = compute_slippage(close, cfg) if cfg else 0.001
 
-    # bars_per_year depends on frequency
-    if freq in ("5min", "5m", "5M"):
-        bars_per_year = 252 * 24 * 12
-        vbt_freq      = "5min"
-    else:
-        bars_per_year = 252 * 24
-        vbt_freq      = "1h"
+    bars_per_year = (252 * 24 * 12) if freq in ("5min", "5m", "5M") else (252 * 24)
 
-    pf = vbt.Portfolio.from_signals(
-        close         = close,
-        entries       = long_entries,
-        exits         = long_exits,
-        short_entries = short_entries,
-        short_exits   = short_exits,
-        init_cash     = init_cash,
-        fees          = commission / 2,
-        slippage      = slippage,
-        size          = trade_value,
-        size_type     = "value",
-        freq          = vbt_freq,
+    equity, trades_df = _simulate_trades(
+        df                   = df,
+        init_cash            = init_cash,
+        base_allocation_frac = base_alloc,
+        slippage             = slippage,
+        commission_rt        = commission,
+        max_hold_bars        = max_hold_bars,
     )
-
-    equity    = pf.value()
-    trades_df = pf.trades.records_readable
 
     trade_records = None
     if len(trades_df) > 0:
-        trade_records = pd.DataFrame({
-            "pnl":           trades_df.get("PnL", pd.Series(dtype=float)),
-            "duration_bars": trades_df.get("Duration", pd.Series(dtype=float)),
-        })
+        trade_records = trades_df[["pnl", "duration_bars"]].copy()
 
     bh_equity = init_cash * (close / close.iloc[0])
-
-    metrics = compute_metrics(
+    metrics   = compute_metrics(
         equity_curve     = equity,
         trades           = trade_records,
         benchmark_equity = bh_equity,
         bars_per_year    = bars_per_year,
     )
+
+    # Exit reason breakdown
+    if len(trades_df) > 0 and "exit_reason" in trades_df.columns:
+        metrics["exit_reasons"] = trades_df["exit_reason"].value_counts().to_dict()
 
     if metrics.get("total_trades", 0) > 0:
         baseline = compute_random_baseline(
@@ -115,11 +305,13 @@ def run_backtest(
         metrics["random_baseline"] = baseline
         beats = metrics.get("sharpe_ratio", 0) > baseline["random_p95_sharpe"]
         metrics["beats_random_baseline"] = beats
-        print(f"[engine] Random baseline p95 Sharpe: {baseline['random_p95_sharpe']:.3f} | Strategy: {metrics.get('sharpe_ratio', 0):.3f} | Beats: {beats}")
+        print(
+            f"[engine] Random baseline p95 Sharpe: {baseline['random_p95_sharpe']:.3f}"
+            f" | Strategy: {metrics.get('sharpe_ratio', 0):.3f} | Beats: {beats}"
+        )
 
     print(format_report(metrics, f"{strategy_name} [{period_label}]"))
 
-    # Save results JSON
     if backtests_dir is not None:
         backtests_dir = Path(backtests_dir)
         backtests_dir.mkdir(parents=True, exist_ok=True)
@@ -140,7 +332,7 @@ def run_backtest(
             }, f, indent=2)
         print(f"[engine] Results saved to {result_path}")
 
-    return metrics, pf
+    return metrics, trades_df
 
 
 def run_backtest_2x_costs(
@@ -191,7 +383,7 @@ def run_walk_forward(
     if not windows:
         return {"available": False, "error": "No walk-forward windows defined in config"}
 
-    raw = load_raw(raw_1h_path)
+    raw     = load_raw(raw_1h_path)
     hmm_cfg = config.get("hmm", {})
     results = []
 
@@ -247,7 +439,11 @@ def run_walk_forward(
             metrics["train_period"] = f"{win['train_start']} to {win['train_end']}"
             metrics["val_period"]   = f"{win['val_start']} to {win['val_end']}"
             results.append(metrics)
-            print(f"[walk_forward] Window {i+1}: Sharpe={metrics.get('sharpe_ratio',0):.3f} | Return={metrics.get('annualized_return',0)*100:.1f}%")
+            print(
+                f"[walk_forward] Window {i+1}:"
+                f" Sharpe={metrics.get('sharpe_ratio',0):.3f}"
+                f" | Return={metrics.get('annualized_return',0)*100:.1f}%"
+            )
 
         except Exception as e:
             print(f"[walk_forward] Window {i+1} failed: {e}")
