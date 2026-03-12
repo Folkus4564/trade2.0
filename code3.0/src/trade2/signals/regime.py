@@ -15,6 +15,7 @@ def forward_fill_1h_regime(
     atr_1h: pd.Series = None,
     hma_rising: pd.Series = None,
     price_above_hma: pd.Series = None,
+    hmm_sideways_prob: np.ndarray = None,
 ) -> pd.DataFrame:
     """
     Forward-fill 1H HMM regime labels and probabilities onto 5M bars.
@@ -45,6 +46,10 @@ def forward_fill_1h_regime(
     out["regime"]    = regime_s.reindex(out.index, method="ffill").fillna("sideways")
     out["bull_prob"] = bull_prob_s.reindex(out.index, method="ffill").fillna(0.0)
     out["bear_prob"] = bear_prob_s.reindex(out.index, method="ffill").fillna(0.0)
+
+    if hmm_sideways_prob is not None:
+        sideways_s = pd.Series(hmm_sideways_prob, index=hmm_index, name="sideways_prob")
+        out["sideways_prob"] = sideways_s.reindex(out.index, method="ffill").fillna(0.0)
 
     if atr_1h is not None:
         out["atr_1h"] = atr_1h.reindex(out.index, method="ffill").fillna(atr_1h.median())

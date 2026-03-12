@@ -10,7 +10,7 @@ import pandas as pd
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from trade2.backtesting.costs import compute_slippage, doubled_costs
+from trade2.backtesting.costs import compute_slippage_array, doubled_costs
 from trade2.backtesting.metrics import compute_metrics, compute_random_baseline, format_report
 
 
@@ -18,7 +18,7 @@ def _simulate_trades(
     df: pd.DataFrame,
     init_cash: float,
     base_allocation_frac: float,
-    slippage: float,
+    slippage: np.ndarray,
     commission_rt: float,
     max_hold_bars: int,
 ) -> Tuple[pd.Series, pd.DataFrame]:
@@ -83,9 +83,9 @@ def _simulate_trades(
         # --- Execute pending entry at this bar's open ---
         if pend_dir is not None and not in_pos:
             if pend_dir == "long":
-                entry_px = opens[i] * (1.0 + slippage)
+                entry_px = opens[i] * (1.0 + slippage[i])
             else:
-                entry_px = opens[i] * (1.0 - slippage)
+                entry_px = opens[i] * (1.0 - slippage[i])
             pos_val   = cash * base_allocation_frac * pend_ps
             n_units   = pos_val / entry_px if entry_px > 0.0 else 0.0
             frozen_sl = pend_sl
@@ -112,29 +112,29 @@ def _simulate_trades(
             if direction == "long":
                 if lows[i] <= frozen_sl:
                     reason  = "sl"
-                    exit_px = frozen_sl * (1.0 - slippage)
+                    exit_px = frozen_sl * (1.0 - slippage[i])
                 elif highs[i] >= frozen_tp:
                     reason  = "tp"
-                    exit_px = frozen_tp * (1.0 - slippage)
+                    exit_px = frozen_tp * (1.0 - slippage[i])
                 elif exit_long[i] == 1 and i > entry_bar:
                     reason  = "signal"
-                    exit_px = closes[i] * (1.0 - slippage)
+                    exit_px = closes[i] * (1.0 - slippage[i])
                 elif (i - entry_bar) >= max_hold_bars:
                     reason  = "timeout"
-                    exit_px = closes[i] * (1.0 - slippage)
+                    exit_px = closes[i] * (1.0 - slippage[i])
             else:  # short
                 if highs[i] >= frozen_sl:
                     reason  = "sl"
-                    exit_px = frozen_sl * (1.0 + slippage)
+                    exit_px = frozen_sl * (1.0 + slippage[i])
                 elif lows[i] <= frozen_tp:
                     reason  = "tp"
-                    exit_px = frozen_tp * (1.0 + slippage)
+                    exit_px = frozen_tp * (1.0 + slippage[i])
                 elif exit_short[i] == 1 and i > entry_bar:
                     reason  = "signal"
-                    exit_px = closes[i] * (1.0 + slippage)
+                    exit_px = closes[i] * (1.0 + slippage[i])
                 elif (i - entry_bar) >= max_hold_bars:
                     reason  = "timeout"
-                    exit_px = closes[i] * (1.0 + slippage)
+                    exit_px = closes[i] * (1.0 + slippage[i])
 
             if reason is not None:
                 if direction == "long":
@@ -182,10 +182,10 @@ def _simulate_trades(
     if in_pos:
         i = n - 1
         if direction == "long":
-            exit_px = closes[i] * (1.0 - slippage)
+            exit_px = closes[i] * (1.0 - slippage[i])
             raw_pnl = (exit_px - entry_px) * n_units
         else:
-            exit_px = closes[i] * (1.0 + slippage)
+            exit_px = closes[i] * (1.0 + slippage[i])
             raw_pnl = (entry_px - exit_px) * n_units
         cost      = commission_rt * pos_val
         net_pnl   = raw_pnl - cost
@@ -270,7 +270,7 @@ def run_backtest(
             "win_rate": 0.0, "profit_factor": 0.0,
         }, pd.DataFrame()
 
-    slippage = compute_slippage(close, cfg)
+    slippage = compute_slippage_array(close, cfg).values
 
     bars_per_year = (252 * 24 * 12) if freq in ("5min", "5m", "5M") else (252 * 24)
 

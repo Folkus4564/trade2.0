@@ -60,9 +60,11 @@ hmm:
     - hmm_feat_macd
   min_sideways_pct: 0.10
   use_as_hard_gate: false
-  min_prob_hard:    0.60
+  min_prob_hard:       0.77   # long entries (optimizer: 0.769)
+  min_prob_hard_short: 0.77   # short entries (optimizer: aligns longs/shorts at same bar)
   sizing_base:      0.50
   sizing_max:       1.50
+  min_confidence:   0.45      # min max-state-probability to allow any entry
 
 # ---- Feature engineering (1H) ------------------------------
 features:
@@ -91,12 +93,14 @@ smc_5m:
   ob_impulse_bars:     3
   ob_impulse_mult:     1.5
   require_confluence:  true
-  require_pin_bar:     true
+  require_pin_bar:     false  # optimizer: false (pin bar reduces signal count too aggressively)
 
 # ---- Regime stability filter -------------------------------
 regime:
-  persistence_bars: 3
-  adx_threshold:    20.0
+  persistence_bars:       3   # 1H bars required for bull regime entry
+  persistence_bars_short: 5   # 1H bars required for bear regime entry (more selective)
+  adx_threshold:    15.0      # optimizer: 15.0 (lower threshold, more signals)
+  transition_cooldown_bars: 2 # 1H bars to skip after regime flip
 
 # ---- Backtest settings -------------------------------------
 backtest:
@@ -104,8 +108,8 @@ backtest:
 
 # ---- Risk management ---------------------------------------
 risk:
-  atr_stop_mult:        2.5
-  atr_tp_mult:          10.0
+  atr_stop_mult:        2.75    # optimizer: 2.73 (wider stop, less noise-triggered SL)
+  atr_tp_mult:          15.0    # optimizer: 14.98 (ride regime; primary exit = regime flip)
   max_hold_bars:        48
   daily_loss_pct:       0.03
   max_dd_limit:         0.25
@@ -150,21 +154,30 @@ acceptance:
     min_sharpe:            1.5
     min_drawdown:          -0.25
 
+# ---- Hard rejection thresholds -----------------------------
+hard_rejection:
+  min_avg_trade_duration_bars: 2
+  max_regime_drift_pp: 0.20
+  max_cost_sharpe_drop_pct: 0.35
+  require_walk_forward: true
+
 # ---- Optimization ------------------------------------------
 optimization:
   method:    optuna_tpe
   n_trials:  200
   target:    val_sharpe
   search_space:
-    dc_period:          [10, 50]
-    adx_threshold:      [15.0, 35.0]
-    hmm_min_prob:       [0.40, 0.80]
-    atr_stop_mult:      [1.0, 2.5]
-    atr_tp_mult:        [2.0, 5.0]
-    ob_impulse_mult:    [1.0, 2.5]
-    ob_validity_bars:   [10, 30]
-    fvg_validity_bars:  [5, 20]
-    regime_persistence: [1, 5]
+    dc_period:                [10, 50]
+    adx_threshold:            [15.0, 35.0]
+    hmm_min_prob:             [0.40, 0.80]
+    atr_stop_mult:            [1.5, 3.5]
+    atr_tp_mult:              [3.0, 15.0]
+    ob_impulse_mult:          [1.0, 2.5]
+    ob_validity_bars:         [10, 30]
+    fvg_validity_bars:        [5, 20]
+    regime_persistence:       [1, 5]
+    hmm_min_confidence:       [0.35, 0.65]
+    transition_cooldown_bars: [0, 4]
 
 # ---- Baseline comparison -----------------------------------
 baseline:

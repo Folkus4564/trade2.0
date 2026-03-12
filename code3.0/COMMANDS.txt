@@ -1,0 +1,32 @@
+================================================================
+ SETUP  (run once, or after any code change)
+================================================================
+
+cd C:\Users\LENOVO\Desktop\trade2.0\code3.0
+pip install -e .
+
+================================================================
+ COMMANDS
+================================================================
+
+trade2                                                                          # basic run, uses cached HMM model, runs walk-forward validation
+
+trade2 --retrain-model                                                          # force retrain the HMM regime model from scratch
+
+trade2 --skip-walk-forward                                                      # skip walk-forward validation (faster run, ~3x quicker)
+
+trade2 --retrain-model --skip-walk-forward                                      # retrain model + skip walk-forward (fastest full run)
+
+trade2 --retrain-model --export-approved                                        # retrain + auto-export strategy file if verdict = APPROVED
+
+trade2 --optimize                                                               # run Optuna hyperparameter search before backtesting (100 trials default)
+
+trade2 --optimize --trials 200                                                  # same but with 200 trials (better params, slower)
+
+trade2 --optimize --retrain-model --skip-walk-forward                           # optimize + retrain + skip walk-forward (fast optimization loop)
+
+trade2 --optimize --trials 200 --retrain-model --export-approved                # full run: optimize 200 trials, retrain, walk-forward, export if approved
+
+trade2 --config configs/xauusd_mtf.yaml                                         # use multi-timeframe override config on top of base.yaml
+
+trade2 --config configs/xauusd_mtf.yaml --retrain-model --skip-walk-forward     # multi-TF config + retrain + skip walk-forward

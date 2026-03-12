@@ -11,7 +11,7 @@ from typing import Any, Dict, Tuple
 
 from trade2.signals.generator import generate_signals, compute_stops
 from trade2.backtesting.engine import _simulate_trades
-from trade2.backtesting.costs import compute_slippage
+from trade2.backtesting.costs import compute_slippage_array
 from trade2.backtesting.metrics import compute_metrics
 
 
@@ -24,6 +24,8 @@ def _run_val_trial(
     regime_persistence_bars: int,
     adx_threshold: float,
     require_pin_bar: bool,
+    hmm_min_confidence: float = None,
+    transition_cooldown_bars: int = None,
 ) -> float:
     """
     Run one trial: generate signals on val, run backtest, return val_sharpe.
@@ -32,12 +34,14 @@ def _run_val_trial(
     try:
         sig = generate_signals(
             val_sig_df,
-            config               = config,
-            adx_threshold        = adx_threshold,
-            hmm_min_prob         = hmm_min_prob,
-            regime_persistence_bars = regime_persistence_bars,
-            require_smc_confluence  = config["smc_5m"]["require_confluence"],
-            require_pin_bar         = require_pin_bar,
+            config                   = config,
+            adx_threshold            = adx_threshold,
+            hmm_min_prob             = hmm_min_prob,
+            regime_persistence_bars  = regime_persistence_bars,
+            require_smc_confluence   = config["smc_5m"]["require_confluence"],
+            require_pin_bar          = require_pin_bar,
+            hmm_min_confidence       = hmm_min_confidence,
+            transition_cooldown_bars = transition_cooldown_bars,
         )
         sig = compute_stops(sig, atr_stop_mult, atr_tp_mult)
 
@@ -46,7 +50,7 @@ def _run_val_trial(
 
         costs_cfg  = config["costs"]
         risk_cfg   = config["risk"]
-        slippage   = compute_slippage(sig["Close"].astype(float), config)
+        slippage   = compute_slippage_array(sig["Close"].astype(float), config).values
         max_hold   = risk_cfg["max_hold_bars"] * 12  # 5M scale
 
         equity, trades_df = _simulate_trades(
@@ -79,16 +83,20 @@ def run_optimization(
     val_sig_df: pd.DataFrame,
     config: Dict[str, Any],
     n_trials: int = 100,
+    train_sig_df: pd.DataFrame = None,
 ) -> Tuple[Dict[str, Any], float]:
     """
     Run Optuna TPE optimization over signal/risk parameters.
 
+    Objective: minimize overfitting by using combined train+val Sharpe.
+    If train_sig_df provided: objective = min(train_sharpe, val_sharpe).
+    If only val_sig_df: objective = val_sharpe.
+
     Pre-conditions:
-        val_sig_df must already contain regime, bull_prob, bear_prob, atr_1h columns
-        (output of forward_fill_1h_regime with atr_1h).
+        sig_dfs must already contain regime, bull_prob, bear_prob, atr_1h columns.
 
     Returns:
-        (best_params dict, best_val_sharpe)
+        (best_params dict, best_objective_score)
     """
     try:
         import optuna
@@ -104,29 +112,42 @@ def run_optimization(
         return v[0], v[1]
 
     def objective(trial: "optuna.Trial") -> float:
-        atr_stop_lo,  atr_stop_hi  = _bounds("atr_stop_mult",     1.0, 3.5)
-        atr_tp_lo,    atr_tp_hi    = _bounds("atr_tp_mult",        3.0, 15.0)
-        min_prob_lo,  min_prob_hi  = _bounds("hmm_min_prob",       0.40, 0.80)
-        persist_lo,   persist_hi   = _bounds("regime_persistence", 1,   5)
-        adx_lo,       adx_hi       = _bounds("adx_threshold",      15.0, 35.0)
+        atr_stop_lo,  atr_stop_hi  = _bounds("atr_stop_mult",           1.0, 3.5)
+        atr_tp_lo,    atr_tp_hi    = _bounds("atr_tp_mult",             3.0, 15.0)
+        min_prob_lo,  min_prob_hi  = _bounds("hmm_min_prob",            0.40, 0.80)
+        persist_lo,   persist_hi   = _bounds("regime_persistence",      1,   5)
+        adx_lo,       adx_hi       = _bounds("adx_threshold",           15.0, 35.0)
+        conf_lo,      conf_hi      = _bounds("hmm_min_confidence",      0.35, 0.65)
+        cool_lo,      cool_hi      = _bounds("transition_cooldown_bars", 0,   4)
 
-        atr_stop_mult         = trial.suggest_float("atr_stop_mult",         atr_stop_lo,  atr_stop_hi)
-        atr_tp_mult           = trial.suggest_float("atr_tp_mult",           atr_tp_lo,    atr_tp_hi)
-        hmm_min_prob          = trial.suggest_float("hmm_min_prob",          min_prob_lo,  min_prob_hi)
-        regime_persistence    = trial.suggest_int("regime_persistence_bars", int(persist_lo), int(persist_hi))
-        adx_threshold         = trial.suggest_float("adx_threshold",         adx_lo,       adx_hi)
-        require_pin_bar       = trial.suggest_categorical("require_pin_bar", [True, False])
+        atr_stop_mult            = trial.suggest_float("atr_stop_mult",          atr_stop_lo, atr_stop_hi)
+        atr_tp_mult              = trial.suggest_float("atr_tp_mult",            atr_tp_lo,   atr_tp_hi)
+        hmm_min_prob             = trial.suggest_float("hmm_min_prob",           min_prob_lo, min_prob_hi)
+        regime_persistence       = trial.suggest_int("regime_persistence_bars",  int(persist_lo), int(persist_hi))
+        adx_threshold            = trial.suggest_float("adx_threshold",          adx_lo,      adx_hi)
+        require_pin_bar          = trial.suggest_categorical("require_pin_bar",  [True, False])
+        hmm_min_confidence       = trial.suggest_float("hmm_min_confidence",     conf_lo,     conf_hi)
+        transition_cooldown      = trial.suggest_int("transition_cooldown_bars", int(cool_lo), int(cool_hi))
 
-        return _run_val_trial(
-            val_sig_df           = val_sig_df,
-            config               = config,
-            atr_stop_mult        = atr_stop_mult,
-            atr_tp_mult          = atr_tp_mult,
-            hmm_min_prob         = hmm_min_prob,
-            regime_persistence_bars = regime_persistence,
-            adx_threshold        = adx_threshold,
-            require_pin_bar      = require_pin_bar,
+        trial_kwargs = dict(
+            config                   = config,
+            atr_stop_mult            = atr_stop_mult,
+            atr_tp_mult              = atr_tp_mult,
+            hmm_min_prob             = hmm_min_prob,
+            regime_persistence_bars  = regime_persistence,
+            adx_threshold            = adx_threshold,
+            require_pin_bar          = require_pin_bar,
+            hmm_min_confidence       = hmm_min_confidence,
+            transition_cooldown_bars = transition_cooldown,
         )
+        val_sharpe = _run_val_trial(val_sig_df=val_sig_df, **trial_kwargs)
+        if train_sig_df is not None and val_sharpe > -990:
+            train_sharpe = _run_val_trial(val_sig_df=train_sig_df, **trial_kwargs)
+            if train_sharpe <= -990:
+                return val_sharpe * 0.5  # penalize if train fails
+            # Combined: take the minimum (most conservative)
+            return min(val_sharpe, train_sharpe)
+        return val_sharpe
 
     study = optuna.create_study(
         direction  = "maximize",

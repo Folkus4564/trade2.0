@@ -81,6 +81,39 @@ def _build_params(config: dict) -> dict:
     }
 
 
+def _log_signal_stats(sig_df, config: dict) -> None:
+    """Log probabilistic gating diagnostic stats."""
+    hmm_cfg = config["hmm"]
+    reg_cfg = config["regime"]
+    min_confidence = hmm_cfg["min_confidence"]
+    cooldown       = reg_cfg["transition_cooldown_bars"]
+
+    # Fraction filtered by min_confidence (max-entropy bars)
+    if "bull_prob" in sig_df.columns and "bear_prob" in sig_df.columns:
+        sideways_col = sig_df["sideways_prob"] if "sideways_prob" in sig_df.columns \
+                       else (1.0 - sig_df["bull_prob"] - sig_df["bear_prob"]).clip(lower=0.0)
+        max_prob = sig_df[["bull_prob", "bear_prob"]].assign(sideways_prob=sideways_col).max(axis=1)
+        frac_low_confidence = float((max_prob < min_confidence).mean())
+        print(f"  [prob-gate] bars filtered by min_confidence ({min_confidence}): {frac_low_confidence*100:.1f}%")
+
+    # Fraction filtered by transition cooldown
+    if cooldown > 0 and "regime" in sig_df.columns:
+        from trade2.signals.generator import _is_5m_data
+        freq_mult     = 12 if _is_5m_data(sig_df) else 1
+        cooldown_bars = cooldown * freq_mult
+        regime_changed = sig_df["regime"] != sig_df["regime"].shift(1)
+        in_cooldown    = regime_changed.rolling(cooldown_bars, min_periods=1).sum() > 0
+        frac_cooldown  = float(in_cooldown.mean())
+        print(f"  [prob-gate] bars filtered by cooldown ({cooldown}h): {frac_cooldown*100:.1f}%")
+
+    # Mean position size on signal bars
+    any_signal = (sig_df["signal_long"] == 1) | (sig_df["signal_short"] == 1)
+    if any_signal.any():
+        mean_size_long  = sig_df.loc[sig_df["signal_long"]  == 1, "position_size_long"].mean()  if sig_df["signal_long"].any()  else 0.0
+        mean_size_short = sig_df.loc[sig_df["signal_short"] == 1, "position_size_short"].mean() if sig_df["signal_short"].any() else 0.0
+        print(f"  [prob-gate] mean position size: long={mean_size_long:.3f} | short={mean_size_short:.3f}")
+
+
 def run_pipeline(
     config: dict,
     params: dict = None,
@@ -178,11 +211,12 @@ def run_pipeline(
     # ---- 4. Get regime for all 1H splits ----
     def _get_regime(feat_1h):
         X, idx = get_hmm_feature_matrix(feat_1h)
-        return hmm.regime_labels(X), hmm.bull_probability(X), hmm.bear_probability(X), X, idx
+        return (hmm.regime_labels(X), hmm.bull_probability(X), hmm.bear_probability(X),
+                hmm.sideways_probability(X), X, idx)
 
-    train_labels, train_bull, train_bear, X_train_1h, idx_train_1h = _get_regime(train_1h_feat)
-    val_labels,   val_bull,   val_bear,   X_val_1h,   idx_val_1h   = _get_regime(val_1h_feat)
-    test_labels,  test_bull,  test_bear,  X_test_1h,  idx_test_1h  = _get_regime(test_1h_feat)
+    train_labels, train_bull, train_bear, train_sideways, X_train_1h, idx_train_1h = _get_regime(train_1h_feat)
+    val_labels,   val_bull,   val_bear,   val_sideways,   X_val_1h,   idx_val_1h   = _get_regime(val_1h_feat)
+    test_labels,  test_bull,  test_bear,  test_sideways,  X_test_1h,  idx_test_1h  = _get_regime(test_1h_feat)
 
     train_regime_dist = _regime_distribution(train_labels)
     test_regime_dist  = _regime_distribution(test_labels)
@@ -203,15 +237,18 @@ def run_pipeline(
         train_sig_df = forward_fill_1h_regime(train_5m_feat, train_labels, train_bull, train_bear, idx_train_1h,
                                                atr_1h=train_1h_feat["atr_14"].rename(None),
                                                hma_rising=train_1h_feat["hma_rising"].rename(None),
-                                               price_above_hma=train_1h_feat["price_above_hma"].rename(None))
+                                               price_above_hma=train_1h_feat["price_above_hma"].rename(None),
+                                               hmm_sideways_prob=train_sideways)
         val_sig_df   = forward_fill_1h_regime(val_5m_feat,   val_labels,   val_bull,   val_bear,   idx_val_1h,
                                                atr_1h=val_1h_feat["atr_14"].rename(None),
                                                hma_rising=val_1h_feat["hma_rising"].rename(None),
-                                               price_above_hma=val_1h_feat["price_above_hma"].rename(None))
+                                               price_above_hma=val_1h_feat["price_above_hma"].rename(None),
+                                               hmm_sideways_prob=val_sideways)
         test_sig_df  = forward_fill_1h_regime(test_5m_feat,  test_labels,  test_bull,  test_bear,  idx_test_1h,
                                                atr_1h=test_1h_feat["atr_14"].rename(None),
                                                hma_rising=test_1h_feat["hma_rising"].rename(None),
-                                               price_above_hma=test_1h_feat["price_above_hma"].rename(None))
+                                               price_above_hma=test_1h_feat["price_above_hma"].rename(None),
+                                               hmm_sideways_prob=test_sideways)
         freq         = "5min"
     else:
         train_sig_df = train_1h_feat
@@ -255,10 +292,18 @@ def run_pipeline(
     print(f"  Train: long={int(train_sig['signal_long'].sum())} | short={int(train_sig['signal_short'].sum())}")
     print(f"  Test : long={int(test_sig['signal_long'].sum())}  | short={int(test_sig['signal_short'].sum())}")
 
+    # Diagnostic: probabilistic gating stats on test split
+    _log_signal_stats(test_sig, config)
+
     # ---- 5b. Optional: Optuna optimization on val ----
     if optimize:
         print(f"\n[pipeline] Running Optuna optimization ({n_trials} trials) targeting val_sharpe...")
-        best_params, best_val_sharpe = run_optimization(val_sig_df, config, n_trials=n_trials)
+        best_params, best_val_sharpe = run_optimization(
+            val_sig_df   = val_sig_df,
+            config       = config,
+            n_trials     = n_trials,
+            train_sig_df = train_sig_df,  # combined train+val objective avoids overfitting
+        )
 
         # Override p with best params
         if best_val_sharpe > -990:
@@ -322,6 +367,7 @@ def run_pipeline(
     # ---- 8. Hard rejection checks ----
     hrd = hard_rejection_checks(
         metrics                  = test_metrics,
+        config                   = config,
         train_regime_dist        = train_regime_dist,
         test_regime_dist         = test_regime_dist,
         cost_sensitivity_metrics = test_2x_metrics,

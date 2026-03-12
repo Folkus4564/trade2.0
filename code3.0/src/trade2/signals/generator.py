@@ -34,6 +34,8 @@ def generate_signals(
     require_pin_bar: bool = None,
     atr_expansion_filter: bool = False,
     session_filter: bool = None,
+    hmm_min_confidence: float = None,
+    transition_cooldown_bars: int = None,
 ) -> pd.DataFrame:
     """
     Generate long/short entry and exit signals.
@@ -63,6 +65,8 @@ def generate_signals(
     # Resolve parameters (explicit overrides > config)
     adx_thresh    = adx_threshold           if adx_threshold           is not None else reg_cfg["adx_threshold"]
     min_prob      = hmm_min_prob            if hmm_min_prob            is not None else hmm_cfg["min_prob_hard"]
+    # Shorts require higher conviction — use min_prob_short if defined, else same as longs
+    min_prob_short = hmm_cfg.get("min_prob_hard_short", min_prob)
     persistence   = regime_persistence_bars if regime_persistence_bars is not None else reg_cfg["persistence_bars"]
     confluence    = require_smc_confluence  if require_smc_confluence  is not None else smc_cfg["require_confluence"]
     pin_bar       = require_pin_bar         if require_pin_bar         is not None else smc_cfg["require_pin_bar"]
@@ -70,6 +74,8 @@ def generate_signals(
     sizing_max    = hmm_cfg["sizing_max"]
     sess_enabled  = session_filter if session_filter is not None else sess_cfg["enabled"]
     allowed_hours = set(sess_cfg.get("allowed_hours_utc", list(_ACTIVE_HOURS)))
+    min_confidence = hmm_min_confidence if hmm_min_confidence is not None else hmm_cfg["min_confidence"]
+    cooldown       = transition_cooldown_bars if transition_cooldown_bars is not None else reg_cfg["transition_cooldown_bars"]
 
     out = df.copy()
 
@@ -85,17 +91,39 @@ def generate_signals(
         out["bull_prob"] = bull_prob_s.reindex(out.index).fillna(0.0)
         out["bear_prob"] = bear_prob_s.reindex(out.index).fillna(0.0)
 
-    # ---- Regime filter + persistence ----
-    bull_raw = (out["regime"] == "bull") & (out["bull_prob"] >= min_prob)
-    bear_raw = (out["regime"] == "bear") & (out["bear_prob"] >= min_prob)
+    # ---- Sideways probability ----
+    if "sideways_prob" not in out.columns:
+        # Derive from complement (works for both 2-state and 3-state HMM)
+        out["sideways_prob"] = (1.0 - out["bull_prob"] - out["bear_prob"]).clip(lower=0.0)
 
-    if persistence > 1:
+    # ---- Uncertainty filter: max regime prob must exceed min_confidence ----
+    max_prob  = out[["bull_prob", "bear_prob", "sideways_prob"]].max(axis=1)
+    confident = max_prob >= min_confidence
+
+    # ---- Regime direction: probability-only gating (no hard label requirement) ----
+    bull_raw = confident & (out["bull_prob"] >= min_prob)
+    bear_raw = confident & (out["bear_prob"] >= min_prob_short)
+
+    # ---- Transition cooldown: suppress entries N bars after regime flip ----
+    if cooldown > 0:
+        freq_mult    = 12 if _is_5m_data(out) else 1
+        cooldown_bars = cooldown * freq_mult
+        regime_changed = out["regime"] != out["regime"].shift(1)
+        in_cooldown    = regime_changed.rolling(cooldown_bars, min_periods=1).sum() > 0
+        bull_raw = bull_raw & ~in_cooldown
+        bear_raw = bear_raw & ~in_cooldown
+
+    # Shorts require longer persistence (more bars of confirmed bear regime).
+    # Config: regime.persistence_bars_short; defaults to persistence if not set.
+    persistence_short = reg_cfg.get("persistence_bars_short", persistence)
+
+    if persistence > 1 or persistence_short > 1:
         # For multi-TF 5M: persistence is in 1H bars, so x12 on 5M
-        # Detect if this is 5M data by checking index freq or len ratio
         freq_mult = 12 if _is_5m_data(out) else 1
-        win = persistence * freq_mult
-        bull_regime = bull_raw.rolling(win).sum() == win
-        bear_regime = bear_raw.rolling(win).sum() == win
+        win_long  = max(persistence,       1) * freq_mult
+        win_short = max(persistence_short, 1) * freq_mult
+        bull_regime = bull_raw.rolling(win_long).sum()  == win_long
+        bear_regime = bear_raw.rolling(win_short).sum() == win_short
     else:
         bull_regime = bull_raw
         bear_regime = bear_raw
@@ -163,13 +191,16 @@ def generate_signals(
     out["exit_long"]  = (~bull_regime).astype(int)
     out["exit_short"] = (~bear_regime).astype(int)
 
-    # ---- Confidence-based position sizing ----
-    out["position_size_long"]  = np.where(
-        out["signal_long"]  == 1, np.clip(sizing_base + out["bull_prob"], 0.1, sizing_max), 0.0
-    )
-    out["position_size_short"] = np.where(
-        out["signal_short"] == 1, np.clip(sizing_base + out["bear_prob"], 0.1, sizing_max), 0.0
-    )
+    # ---- Confidence-based position sizing (linear interpolation) ----
+    # sizing_base at min_confidence -> sizing_max at prob=1.0
+    prob_range   = max(1.0 - min_confidence, 1e-9)
+    long_excess  = np.clip(out["bull_prob"] - min_confidence, 0.0, prob_range) / prob_range
+    short_excess = np.clip(out["bear_prob"] - min_confidence, 0.0, prob_range) / prob_range
+    size_long    = sizing_base + long_excess  * (sizing_max - sizing_base)
+    size_short   = sizing_base + short_excess * (sizing_max - sizing_base)
+
+    out["position_size_long"]  = np.where(out["signal_long"]  == 1, size_long,  0.0)
+    out["position_size_short"] = np.where(out["signal_short"] == 1, size_short, 0.0)
 
     return out
 

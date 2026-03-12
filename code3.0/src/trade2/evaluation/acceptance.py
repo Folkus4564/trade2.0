@@ -15,50 +15,50 @@ def passes_criteria(
 
     Args:
         metrics: Performance metrics dict
-        config:  Full config dict (thresholds read from acceptance section)
+        config:  Full config dict (thresholds read from config["acceptance"])
         split:   'train', 'val', or 'test'
 
     Returns:
         Dict of criterion_name -> bool
     """
-    acc = config.get("acceptance", {})
+    acc = config["acceptance"]
 
     if split == "train":
-        t = acc.get("train", {})
+        t = acc["train"]
         return {
-            "sharpe":        metrics.get("sharpe_ratio", -999)  >= t.get("min_sharpe",        0.0),
-            "profit_factor": metrics.get("profit_factor", 0)    >= t.get("min_profit_factor", 1.0),
-            "trade_count":   metrics.get("total_trades", 0)     >= t.get("min_trades",         50),
+            "sharpe":        metrics.get("sharpe_ratio", -999)  >= t["min_sharpe"],
+            "profit_factor": metrics.get("profit_factor", 0)    >= t["min_profit_factor"],
+            "trade_count":   metrics.get("total_trades", 0)     >= t["min_trades"],
         }
     elif split == "val":
-        t = acc.get("val", {})
+        t = acc["val"]
         return {
-            "sharpe":        metrics.get("sharpe_ratio", -999)  >= t.get("min_sharpe",        0.5),
-            "profit_factor": metrics.get("profit_factor", 0)    >= t.get("min_profit_factor", 1.1),
-            "trade_count":   metrics.get("total_trades", 0)     >= t.get("min_trades",         20),
+            "sharpe":        metrics.get("sharpe_ratio", -999)  >= t["min_sharpe"],
+            "profit_factor": metrics.get("profit_factor", 0)    >= t["min_profit_factor"],
+            "trade_count":   metrics.get("total_trades", 0)     >= t["min_trades"],
         }
     else:  # test
-        t = acc.get("test", {})
+        t = acc["test"]
         return {
-            "return":        metrics.get("annualized_return", 0) >= t.get("min_annualized_return", 0.10),
-            "sharpe":        metrics.get("sharpe_ratio", -999)   >= t.get("min_sharpe",            1.0),
-            "drawdown":      metrics.get("max_drawdown", -999)   >= t.get("min_drawdown",          -0.35),
-            "profit_factor": metrics.get("profit_factor", 0)     >= t.get("min_profit_factor",     1.2),
-            "trade_count":   metrics.get("total_trades", 0)      >= t.get("min_trades",             30),
-            "win_rate":      metrics.get("win_rate", 0)          >= t.get("min_win_rate",           0.40),
+            "return":        metrics.get("annualized_return", 0) >= t["min_annualized_return"],
+            "sharpe":        metrics.get("sharpe_ratio", -999)   >= t["min_sharpe"],
+            "drawdown":      metrics.get("max_drawdown", -999)   >= t["min_drawdown"],
+            "profit_factor": metrics.get("profit_factor", 0)     >= t["min_profit_factor"],
+            "trade_count":   metrics.get("total_trades", 0)      >= t["min_trades"],
+            "win_rate":      metrics.get("win_rate", 0)          >= t["min_win_rate"],
         }
 
 
 def passes_walk_forward(
     wf_results: Dict[str, Any],
-    config: Dict[str, Any] = None,
+    config: Dict[str, Any],
 ) -> Dict[str, bool]:
     """Check if walk-forward results meet robustness thresholds."""
     if not wf_results or "mean_sharpe" not in wf_results:
         return {"available": False}
-    acc = (config or {}).get("acceptance", {}).get("walk_forward", {})
+    acc = config["acceptance"]["walk_forward"]
     return {
         "available":    True,
-        "mean_sharpe":  wf_results.get("mean_sharpe", -999) >= acc.get("min_mean_sharpe",       0.5),
-        "positive_pct": wf_results.get("pct_positive", 0)   >= acc.get("min_positive_windows", 0.75),
+        "mean_sharpe":  wf_results.get("mean_sharpe", -999) >= acc["min_mean_sharpe"],
+        "positive_pct": wf_results.get("pct_positive", 0)   >= acc["min_positive_windows"],
     }
