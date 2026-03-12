@@ -97,6 +97,12 @@ def add_5m_features(df: pd.DataFrame, config: Dict[str, Any] = None, dc_period: 
     atr_ma = out["atr_14"].rolling(20).mean()
     out["atr_expansion"] = (out["atr_14"] > atr_ma).astype(int)
 
+    # Bollinger Band position (for range strategy: 0=at lower BB, 1=at upper BB)
+    import numpy as np
+    bb_period = feat_cfg.get("bb_period_5m", 60)
+    bb_upper, bb_mid, bb_lower = talib.BBANDS(close.values, timeperiod=bb_period)
+    out["bb_pos"] = (close.values - bb_lower) / (bb_upper - bb_lower + 1e-10)
+
     # SMC features (with 5M-specific validity periods)
     out = add_smc_features(
         out,

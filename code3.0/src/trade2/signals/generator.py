@@ -227,6 +227,55 @@ def compute_stops(
     return out
 
 
+def compute_stops_regime_aware(
+    df: pd.DataFrame,
+    config: Dict[str, Any],
+) -> pd.DataFrame:
+    """
+    Compute ATR-based SL/TP levels with per-regime multipliers.
+
+    Reads the 'signal_source' column (set by router: 'trend', 'range', 'volatile').
+    For trend strategy with atr_tp_mult == 0: sets TP to a far-away level (ride regime).
+    Untagged bars fall back to global risk.atr_stop_mult / risk.atr_tp_mult.
+    """
+    out   = df.copy()
+    atr   = out["atr_1h"] if "atr_1h" in out.columns else out["atr_14"]
+    close = out["Close"]
+
+    strat_cfg = config["strategies"]
+    risk_cfg  = config["risk"]
+
+    default_stop_mult = risk_cfg["atr_stop_mult"]
+    default_tp_mult   = risk_cfg["atr_tp_mult"]
+
+    source = out["signal_source"] if "signal_source" in out.columns else pd.Series("", index=out.index)
+
+    # Build per-bar multiplier arrays
+    stop_mults = np.full(len(out), default_stop_mult, dtype=float)
+    tp_mults   = np.full(len(out), default_tp_mult,   dtype=float)
+
+    for src_name in ("trend", "range", "volatile"):
+        mask = (source == src_name).values
+        if mask.any():
+            scfg = strat_cfg[src_name]
+            stop_mults[mask] = scfg["atr_stop_mult"]
+            tp_mults[mask]   = scfg["atr_tp_mult"]
+
+    # atr_tp_mult == 0 -> no fixed TP (ride regime); use a far-away level
+    no_fixed_tp = tp_mults == 0.0
+    tp_mults    = np.where(no_fixed_tp, 999.0, tp_mults)
+
+    atr_vals = atr.values
+    cl_vals  = close.values
+
+    out["stop_long"]  = cl_vals - stop_mults * atr_vals
+    out["stop_short"] = cl_vals + stop_mults * atr_vals
+    out["tp_long"]    = cl_vals + tp_mults   * atr_vals
+    out["tp_short"]   = cl_vals - tp_mults   * atr_vals
+
+    return out
+
+
 def _is_5m_data(df: pd.DataFrame) -> bool:
     """Heuristic: check if DataFrame has 5-minute frequency."""
     if len(df) < 2:

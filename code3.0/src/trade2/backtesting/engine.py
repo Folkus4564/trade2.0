@@ -378,7 +378,8 @@ def run_walk_forward(
     from trade2.features.builder import add_1h_features
     from trade2.features.hmm_features import get_hmm_feature_matrix
     from trade2.models.hmm import XAUUSDRegimeModel
-    from trade2.signals.generator import generate_signals, compute_stops
+    from trade2.signals.generator import generate_signals, compute_stops, compute_stops_regime_aware
+    from trade2.signals.router import route_signals
 
     windows = config.get("walk_forward", {}).get("windows", [])
     if not windows:
@@ -414,18 +415,30 @@ def run_walk_forward(
             )
             model.fit(X_train)
 
-            val_sig = generate_signals(
-                val_feat, config,
-                hmm_labels    = model.regime_labels(X_val),
-                hmm_bull_prob = model.bull_probability(X_val),
-                hmm_bear_prob = model.bear_probability(X_val),
-                hmm_index     = idx_val,
-            )
-            val_sig = compute_stops(
-                val_sig,
-                config["risk"]["atr_stop_mult"],
-                config["risk"]["atr_tp_mult"],
-            )
+            wf_strategy_mode = config.get("strategies", {}).get("mode", "legacy")
+
+            if wf_strategy_mode == "regime_specialized":
+                val_sig = route_signals(
+                    val_feat, config,
+                    hmm_labels    = model.regime_labels(X_val),
+                    hmm_bull_prob = model.bull_probability(X_val),
+                    hmm_bear_prob = model.bear_probability(X_val),
+                    hmm_index     = idx_val,
+                )
+                val_sig = compute_stops_regime_aware(val_sig, config)
+            else:
+                val_sig = generate_signals(
+                    val_feat, config,
+                    hmm_labels    = model.regime_labels(X_val),
+                    hmm_bull_prob = model.bull_probability(X_val),
+                    hmm_bear_prob = model.bear_probability(X_val),
+                    hmm_index     = idx_val,
+                )
+                val_sig = compute_stops(
+                    val_sig,
+                    config["risk"]["atr_stop_mult"],
+                    config["risk"]["atr_tp_mult"],
+                )
 
             n_sigs = val_sig["signal_long"].sum() + val_sig["signal_short"].sum()
             if n_sigs < 5:

@@ -68,12 +68,13 @@ hmm:
 
 # ---- Feature engineering (1H) ------------------------------
 features:
-  hma_period:  55
-  ema_period:  21
-  atr_period:  14
-  rsi_period:  14
-  adx_period:  14
-  dc_period:   40
+  hma_period:    55
+  ema_period:    21
+  atr_period:    14
+  rsi_period:    14
+  adx_period:    14
+  dc_period:     40
+  bb_period_5m:  60   # 60 x 5M bars = 5 hours (range strategy)
 
 # ---- SMC parameters (1H) -----------------------------------
 smc:
@@ -128,6 +129,58 @@ costs:
 session:
   enabled: true
   allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+# ---- Regime-specialized sub-strategies ---------------------
+strategies:
+  mode: regime_specialized   # regime_specialized | legacy
+
+  trend:
+    min_prob: 0.70
+    require_dc_breakout: true
+    require_smc_confirm: false
+    require_macro_trend: true
+    adx_threshold: 20.0
+    atr_expansion_filter: true
+    persistence_bars: 3
+    atr_stop_mult: 2.5
+    atr_tp_mult: 0.0            # 0 = no fixed TP, ride regime
+    max_hold_bars: 72
+    sizing_base: 0.70
+    sizing_max: 1.50
+    session_enabled: true
+    allowed_hours_utc: [7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
+  range:
+    min_prob: 0.55
+    bb_pos_long_max: 0.15
+    bb_pos_short_min: 0.85
+    rsi_long_max: 35.0
+    rsi_short_min: 65.0
+    require_smc_ob: true
+    adx_max: 25.0
+    bb_period: 60               # 60 x 5M = 5 hours
+    persistence_bars: 2
+    atr_stop_mult: 1.5
+    atr_tp_mult: 2.5
+    max_hold_bars: 24
+    sizing_base: 0.30
+    sizing_max: 0.70
+    session_enabled: true
+    allowed_hours_utc: [7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
+  volatile:
+    enabled: true               # false = skip all uncertain bars
+    max_confidence: 0.50
+    require_triple_confluence: true
+    require_pin_bar: true
+    adx_threshold: 30.0
+    atr_stop_mult: 1.0
+    atr_tp_mult: 1.5
+    max_hold_bars: 12
+    sizing_base: 0.15
+    sizing_max: 0.30
+    session_enabled: true
+    allowed_hours_utc: [8,9,10,11,12,13,14,15,16]
 
 # ---- Acceptance criteria -----------------------------------
 acceptance:

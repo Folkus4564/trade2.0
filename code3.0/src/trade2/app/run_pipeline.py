@@ -24,7 +24,8 @@ from trade2.features.builder import add_1h_features, add_5m_features
 from trade2.features.hmm_features import get_hmm_feature_matrix
 from trade2.models.hmm import XAUUSDRegimeModel
 from trade2.signals.regime import forward_fill_1h_regime
-from trade2.signals.generator import generate_signals, compute_stops
+from trade2.signals.generator import generate_signals, compute_stops, compute_stops_regime_aware
+from trade2.signals.router import route_signals
 from trade2.backtesting.engine import run_backtest, run_backtest_2x_costs, run_walk_forward
 from trade2.evaluation.hard_rejection import hard_rejection_checks
 from trade2.evaluation.verdict import multi_split_verdict
@@ -122,6 +123,7 @@ def run_pipeline(
     export_approved: bool = False,
     optimize: bool = False,
     n_trials: int = 100,
+    legacy_signals: bool = False,
 ) -> dict:
     """
     Full research pipeline:
@@ -258,6 +260,7 @@ def run_pipeline(
 
     # Generate signals
     print("[pipeline] Generating signals...")
+    strategy_mode = "legacy" if legacy_signals else config.get("strategies", {}).get("mode", "legacy")
     sig_kwargs = dict(
         config                  = config,
         adx_threshold           = p["adx_threshold"],
@@ -267,27 +270,44 @@ def run_pipeline(
         require_pin_bar         = p["require_pin_bar"],
     )
 
-    if mode == "multi_tf":
-        train_sig = generate_signals(train_sig_df, **sig_kwargs)
-        val_sig   = generate_signals(val_sig_df,   **sig_kwargs)
-        test_sig  = generate_signals(test_sig_df,  **sig_kwargs)
+    if strategy_mode == "regime_specialized":
+        print(f"  [pipeline] strategy_mode=regime_specialized")
+        if mode == "multi_tf":
+            train_sig = route_signals(train_sig_df, config)
+            val_sig   = route_signals(val_sig_df,   config)
+            test_sig  = route_signals(test_sig_df,  config)
+        else:
+            train_sig = route_signals(train_sig_df, config,
+                hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_1h)
+            val_sig   = route_signals(val_sig_df, config,
+                hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_1h)
+            test_sig  = route_signals(test_sig_df, config,
+                hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_1h)
+        train_sig = compute_stops_regime_aware(train_sig, config)
+        val_sig   = compute_stops_regime_aware(val_sig,   config)
+        test_sig  = compute_stops_regime_aware(test_sig,  config)
     else:
-        train_sig = generate_signals(
-            train_sig_df, **sig_kwargs,
-            hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_1h,
-        )
-        val_sig   = generate_signals(
-            val_sig_df, **sig_kwargs,
-            hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_1h,
-        )
-        test_sig  = generate_signals(
-            test_sig_df, **sig_kwargs,
-            hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_1h,
-        )
-
-    train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"])
-    val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"])
-    test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"])
+        print(f"  [pipeline] strategy_mode=legacy")
+        if mode == "multi_tf":
+            train_sig = generate_signals(train_sig_df, **sig_kwargs)
+            val_sig   = generate_signals(val_sig_df,   **sig_kwargs)
+            test_sig  = generate_signals(test_sig_df,  **sig_kwargs)
+        else:
+            train_sig = generate_signals(
+                train_sig_df, **sig_kwargs,
+                hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_1h,
+            )
+            val_sig   = generate_signals(
+                val_sig_df, **sig_kwargs,
+                hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_1h,
+            )
+            test_sig  = generate_signals(
+                test_sig_df, **sig_kwargs,
+                hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_1h,
+            )
+        train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"])
+        val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"])
+        test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"])
 
     print(f"  Train: long={int(train_sig['signal_long'].sum())} | short={int(train_sig['signal_short'].sum())}")
     print(f"  Test : long={int(test_sig['signal_long'].sum())}  | short={int(test_sig['signal_short'].sum())}")
@@ -319,21 +339,36 @@ def run_pipeline(
                 require_smc_confluence  = p.get("require_smc_confluence",  p["require_smc_confluence"]),
                 require_pin_bar         = p.get("require_pin_bar",         p["require_pin_bar"]),
             )
-            if mode == "multi_tf":
-                train_sig = generate_signals(train_sig_df, **sig_kwargs_opt)
-                val_sig   = generate_signals(val_sig_df,   **sig_kwargs_opt)
-                test_sig  = generate_signals(test_sig_df,  **sig_kwargs_opt)
+            if strategy_mode == "regime_specialized":
+                if mode == "multi_tf":
+                    train_sig = route_signals(train_sig_df, config)
+                    val_sig   = route_signals(val_sig_df,   config)
+                    test_sig  = route_signals(test_sig_df,  config)
+                else:
+                    train_sig = route_signals(train_sig_df, config,
+                        hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_1h)
+                    val_sig   = route_signals(val_sig_df, config,
+                        hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_1h)
+                    test_sig  = route_signals(test_sig_df, config,
+                        hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_1h)
+                train_sig = compute_stops_regime_aware(train_sig, config)
+                val_sig   = compute_stops_regime_aware(val_sig,   config)
+                test_sig  = compute_stops_regime_aware(test_sig,  config)
             else:
-                train_sig = generate_signals(train_sig_df, **sig_kwargs_opt,
-                    hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_1h)
-                val_sig   = generate_signals(val_sig_df,   **sig_kwargs_opt,
-                    hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_1h)
-                test_sig  = generate_signals(test_sig_df,  **sig_kwargs_opt,
-                    hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_1h)
-
-            train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"])
-            val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"])
-            test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"])
+                if mode == "multi_tf":
+                    train_sig = generate_signals(train_sig_df, **sig_kwargs_opt)
+                    val_sig   = generate_signals(val_sig_df,   **sig_kwargs_opt)
+                    test_sig  = generate_signals(test_sig_df,  **sig_kwargs_opt)
+                else:
+                    train_sig = generate_signals(train_sig_df, **sig_kwargs_opt,
+                        hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_1h)
+                    val_sig   = generate_signals(val_sig_df,   **sig_kwargs_opt,
+                        hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_1h)
+                    test_sig  = generate_signals(test_sig_df,  **sig_kwargs_opt,
+                        hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_1h)
+                train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"])
+                val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"])
+                test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"])
             print(f"  Optimized: long={int(test_sig['signal_long'].sum())} | short={int(test_sig['signal_short'].sum())} (test)")
 
     # ---- 6. Backtests ----
@@ -484,6 +519,7 @@ def main():
     parser.add_argument("--optimize",           action="store_true",               help="Run Optuna optimization first")
     parser.add_argument("--trials",             type=int, default=100,             help="Optuna trial count")
     parser.add_argument("--export-approved",    action="store_true",               help="Export strategy if APPROVED")
+    parser.add_argument("--legacy-signals",     action="store_true",               help="Force legacy signal generation (ignore strategies.mode)")
     args = parser.parse_args()
 
     # Resolve paths relative to project root
@@ -499,6 +535,7 @@ def main():
         export_approved = args.export_approved,
         optimize        = args.optimize,
         n_trials        = args.trials,
+        legacy_signals  = args.legacy_signals,
     )
     sys.exit(0 if results["verdict"] == "APPROVED" else 1)
 

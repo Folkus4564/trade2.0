@@ -9,7 +9,9 @@ import numpy as np
 import pandas as pd
 from typing import Any, Dict, Tuple
 
-from trade2.signals.generator import generate_signals, compute_stops
+import copy
+from trade2.signals.generator import generate_signals, compute_stops, compute_stops_regime_aware
+from trade2.signals.router import route_signals
 from trade2.backtesting.engine import _simulate_trades
 from trade2.backtesting.costs import compute_slippage_array
 from trade2.backtesting.metrics import compute_metrics
@@ -26,24 +28,49 @@ def _run_val_trial(
     require_pin_bar: bool,
     hmm_min_confidence: float = None,
     transition_cooldown_bars: int = None,
+    # Per-regime params (regime_specialized mode only)
+    trend_min_prob: float = None,
+    trend_adx_threshold: float = None,
+    trend_atr_stop_mult: float = None,
+    range_min_prob: float = None,
+    range_bb_pos_long_max: float = None,
+    range_rsi_long_max: float = None,
+    range_atr_stop_mult: float = None,
+    range_atr_tp_mult: float = None,
 ) -> float:
     """
     Run one trial: generate signals on val, run backtest, return val_sharpe.
     Returns -999 on failure or < 10 trades.
     """
     try:
-        sig = generate_signals(
-            val_sig_df,
-            config                   = config,
-            adx_threshold            = adx_threshold,
-            hmm_min_prob             = hmm_min_prob,
-            regime_persistence_bars  = regime_persistence_bars,
-            require_smc_confluence   = config["smc_5m"]["require_confluence"],
-            require_pin_bar          = require_pin_bar,
-            hmm_min_confidence       = hmm_min_confidence,
-            transition_cooldown_bars = transition_cooldown_bars,
-        )
-        sig = compute_stops(sig, atr_stop_mult, atr_tp_mult)
+        strategy_mode = config.get("strategies", {}).get("mode", "legacy")
+
+        if strategy_mode == "regime_specialized":
+            # Patch per-regime params into a config copy
+            trial_config = copy.deepcopy(config)
+            if trend_min_prob         is not None: trial_config["strategies"]["trend"]["min_prob"]         = trend_min_prob
+            if trend_adx_threshold    is not None: trial_config["strategies"]["trend"]["adx_threshold"]    = trend_adx_threshold
+            if trend_atr_stop_mult    is not None: trial_config["strategies"]["trend"]["atr_stop_mult"]    = trend_atr_stop_mult
+            if range_min_prob         is not None: trial_config["strategies"]["range"]["min_prob"]         = range_min_prob
+            if range_bb_pos_long_max  is not None: trial_config["strategies"]["range"]["bb_pos_long_max"]  = range_bb_pos_long_max
+            if range_rsi_long_max     is not None: trial_config["strategies"]["range"]["rsi_long_max"]     = range_rsi_long_max
+            if range_atr_stop_mult    is not None: trial_config["strategies"]["range"]["atr_stop_mult"]    = range_atr_stop_mult
+            if range_atr_tp_mult      is not None: trial_config["strategies"]["range"]["atr_tp_mult"]      = range_atr_tp_mult
+            sig = route_signals(val_sig_df, trial_config)
+            sig = compute_stops_regime_aware(sig, trial_config)
+        else:
+            sig = generate_signals(
+                val_sig_df,
+                config                   = config,
+                adx_threshold            = adx_threshold,
+                hmm_min_prob             = hmm_min_prob,
+                regime_persistence_bars  = regime_persistence_bars,
+                require_smc_confluence   = config["smc_5m"]["require_confluence"],
+                require_pin_bar          = require_pin_bar,
+                hmm_min_confidence       = hmm_min_confidence,
+                transition_cooldown_bars = transition_cooldown_bars,
+            )
+            sig = compute_stops(sig, atr_stop_mult, atr_tp_mult)
 
         if sig["signal_long"].sum() + sig["signal_short"].sum() == 0:
             return -999.0
@@ -111,6 +138,8 @@ def run_optimization(
         v = search.get(key, [default_lo, default_hi])
         return v[0], v[1]
 
+    strategy_mode = config.get("strategies", {}).get("mode", "legacy")
+
     def objective(trial: "optuna.Trial") -> float:
         atr_stop_lo,  atr_stop_hi  = _bounds("atr_stop_mult",           1.0, 3.5)
         atr_tp_lo,    atr_tp_hi    = _bounds("atr_tp_mult",             3.0, 15.0)
@@ -140,6 +169,27 @@ def run_optimization(
             hmm_min_confidence       = hmm_min_confidence,
             transition_cooldown_bars = transition_cooldown,
         )
+
+        # Per-regime params (only when regime_specialized mode is active)
+        if strategy_mode == "regime_specialized":
+            t_min_prob_lo, t_min_prob_hi = _bounds("trend_min_prob",         0.55, 0.90)
+            t_adx_lo,      t_adx_hi      = _bounds("trend_adx_threshold",   15.0, 35.0)
+            t_stop_lo,     t_stop_hi     = _bounds("trend_atr_stop_mult",    1.5,  4.0)
+            r_min_prob_lo, r_min_prob_hi = _bounds("range_min_prob",         0.40, 0.80)
+            r_bb_lo,       r_bb_hi       = _bounds("range_bb_pos_long_max",  0.05, 0.30)
+            r_rsi_lo,      r_rsi_hi      = _bounds("range_rsi_long_max",     25.0, 45.0)
+            r_stop_lo,     r_stop_hi     = _bounds("range_atr_stop_mult",    0.75, 2.5)
+            r_tp_lo,       r_tp_hi       = _bounds("range_atr_tp_mult",      1.5,  5.0)
+
+            trial_kwargs["trend_min_prob"]        = trial.suggest_float("trend_min_prob",        t_min_prob_lo, t_min_prob_hi)
+            trial_kwargs["trend_adx_threshold"]   = trial.suggest_float("trend_adx_threshold",   t_adx_lo,     t_adx_hi)
+            trial_kwargs["trend_atr_stop_mult"]   = trial.suggest_float("trend_atr_stop_mult",   t_stop_lo,    t_stop_hi)
+            trial_kwargs["range_min_prob"]        = trial.suggest_float("range_min_prob",        r_min_prob_lo, r_min_prob_hi)
+            trial_kwargs["range_bb_pos_long_max"] = trial.suggest_float("range_bb_pos_long_max", r_bb_lo,      r_bb_hi)
+            trial_kwargs["range_rsi_long_max"]    = trial.suggest_float("range_rsi_long_max",    r_rsi_lo,     r_rsi_hi)
+            trial_kwargs["range_atr_stop_mult"]   = trial.suggest_float("range_atr_stop_mult",   r_stop_lo,    r_stop_hi)
+            trial_kwargs["range_atr_tp_mult"]     = trial.suggest_float("range_atr_tp_mult",     r_tp_lo,      r_tp_hi)
+
         val_sharpe = _run_val_trial(val_sig_df=val_sig_df, **trial_kwargs)
         if train_sig_df is not None and val_sharpe > -990:
             train_sharpe = _run_val_trial(val_sig_df=train_sig_df, **trial_kwargs)
