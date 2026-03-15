@@ -45,6 +45,14 @@ def add_1h_features(df: pd.DataFrame, config: Dict[str, Any] = None) -> pd.DataF
         atr_period      = feat_cfg.get("atr_period",         14),
     )
 
+    if (config or {}).get("smc_luxalgo", {}).get("enabled", False):
+        from trade2.features.smc_luxalgo import add_luxalgo_smc_features
+        df_feat = add_luxalgo_smc_features(df_feat, config, config_key="smc_luxalgo")
+
+    if (config or {}).get("strategies", {}).get("cdc", {}).get("enabled", False):
+        from trade2.features.cdc import add_cdc_features
+        df_feat = add_cdc_features(df_feat, config)
+
     return df_feat
 
 
@@ -116,5 +124,13 @@ def add_5m_features(df: pd.DataFrame, config: Dict[str, Any] = None, dc_period: 
 
     # Pin bar features
     out = add_pin_bar_features(out)
+
+    if (config or {}).get("smc_luxalgo_5m", {}).get("enabled", False):
+        from trade2.features.smc_luxalgo import add_luxalgo_smc_features
+        out = add_luxalgo_smc_features(out, config, config_key="smc_luxalgo_5m")
+
+    if (config or {}).get("strategies", {}).get("cdc", {}).get("enabled", False):
+        from trade2.features.cdc import add_cdc_features
+        out = add_cdc_features(out, config)
 
     return out

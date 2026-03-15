@@ -254,7 +254,7 @@ def compute_stops_regime_aware(
     stop_mults = np.full(len(out), default_stop_mult, dtype=float)
     tp_mults   = np.full(len(out), default_tp_mult,   dtype=float)
 
-    for src_name in ("trend", "range", "volatile"):
+    for src_name in ("trend", "range", "volatile", "cdc"):
         mask = (source == src_name).values
         if mask.any():
             scfg = strat_cfg[src_name]

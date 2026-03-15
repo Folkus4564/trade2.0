@@ -85,8 +85,8 @@ def load_split_tf(
 
     train, val, test = split_by_dates(
         df,
-        train_end=splits_cfg.get("train_end", "2022-12-31"),
-        val_end=splits_cfg.get("val_end",   "2023-12-31"),
+        train_end=splits_cfg["train_end"],
+        val_end=splits_cfg["val_end"],
     )
     print(f"[splits] {timeframe}: train={len(train)} | val={len(val)} | test={len(test)} bars")
     return train, val, test

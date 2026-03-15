@@ -20,6 +20,9 @@ dependencies = [
     "PyYAML>=6.0",
 ]
 
+[project.optional-dependencies]
+ui = ["streamlit>=1.30", "plotly>=5.18"]
+
 [project.scripts]
 trade2 = "trade2.app.run_pipeline:main"
 

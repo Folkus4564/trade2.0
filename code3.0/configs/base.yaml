@@ -22,7 +22,7 @@ data:
   processed_dir: data/processed
   version_tag: "v2.0"
   expected_sha256: ""
-  expected_bar_count_1h: 43800
+  expected_bar_count_1h: 38401
 
 # ---- Split dates -------------------------------------------
 splits:
@@ -135,6 +135,7 @@ strategies:
   mode: regime_specialized   # regime_specialized | legacy
 
   trend:
+    enabled: true
     min_prob: 0.70
     require_dc_breakout: true
     require_smc_confirm: false
@@ -151,6 +152,7 @@ strategies:
     allowed_hours_utc: [7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 
   range:
+    enabled: true
     min_prob: 0.55
     bb_pos_long_max: 0.15
     bb_pos_short_min: 0.85
@@ -181,6 +183,22 @@ strategies:
     sizing_max: 0.30
     session_enabled: true
     allowed_hours_utc: [8,9,10,11,12,13,14,15,16]
+
+  cdc:
+    enabled: false
+    regime_gated: true
+    fast_period: 12
+    slow_period: 26
+    ap_period: 2
+    adx_threshold: 15.0
+    require_bos_confirm: false
+    atr_stop_mult: 2.0
+    atr_tp_mult: 4.0
+    max_hold_bars: 48
+    sizing_base: 0.50
+    sizing_max: 1.00
+    session_enabled: true
+    allowed_hours_utc: [7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 
 # ---- Acceptance criteria -----------------------------------
 acceptance:
@@ -245,3 +263,17 @@ artefacts:
   reports:    artefacts/reports
   experiments: artefacts/experiments
   approved:   artefacts/approved_strategies
+
+# ---- LuxAlgo SMC features (1H) ----------------------------
+smc_luxalgo:
+  enabled: true
+  swing_left_bars: 5
+  swing_right_bars: 5
+  equal_hl_atr_mult: 0.1
+
+# ---- LuxAlgo SMC features (5M) ----------------------------
+smc_luxalgo_5m:
+  enabled: true
+  swing_left_bars: 10
+  swing_right_bars: 10
+  equal_hl_atr_mult: 0.1
