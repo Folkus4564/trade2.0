@@ -136,15 +136,15 @@ strategies:
 
   trend:
     enabled: true
-    min_prob: 0.70
+    min_prob: 0.77
     require_dc_breakout: true
     require_smc_confirm: false
     require_bos_confirm: false   # LuxAlgo BOS/CHoCH confirmation gate
     require_macro_trend: true
-    adx_threshold: 20.0
+    adx_threshold: 15.0
     atr_expansion_filter: true
     persistence_bars: 3
-    atr_stop_mult: 2.5
+    atr_stop_mult: 2.75
     atr_tp_mult: 0.0            # 0 = no fixed TP, ride regime
     trailing_enabled: false      # Phase 4: trailing stop for trend trades
     trailing_atr_mult: 1.5       # trail stop = close - N*ATR (updated each bar)

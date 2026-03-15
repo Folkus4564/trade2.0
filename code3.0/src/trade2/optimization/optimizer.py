@@ -17,8 +17,14 @@ from trade2.backtesting.costs import compute_slippage_array
 from trade2.backtesting.metrics import compute_metrics
 
 
+def _get_tf_scale(config: Dict[str, Any]) -> int:
+    """Return bars-per-hour for the configured signal timeframe."""
+    signal_tf = config.get("strategy", {}).get("signal_timeframe", "5M")
+    return {"5M": 12, "15M": 4, "30M": 2, "1H": 1, "4H": 1}.get(signal_tf, 12)
+
+
 def _run_val_trial(
-    val_sig_df: pd.DataFrame,    # val 5M df with regime + atr_1h already attached
+    val_sig_df: pd.DataFrame,    # val signal-TF df with regime + atr_1h already attached
     config: Dict[str, Any],
     atr_stop_mult: float,
     atr_tp_mult: float,
@@ -28,6 +34,7 @@ def _run_val_trial(
     require_pin_bar: bool,
     hmm_min_confidence: float = None,
     transition_cooldown_bars: int = None,
+    optuna_target: str = "val_sharpe",
     # Per-regime params (regime_specialized mode only)
     trend_min_prob: float = None,
     trend_adx_threshold: float = None,
@@ -39,7 +46,7 @@ def _run_val_trial(
     range_atr_tp_mult: float = None,
 ) -> float:
     """
-    Run one trial: generate signals on val, run backtest, return val_sharpe.
+    Run one trial: generate signals on val, run backtest, return target metric.
     Returns -999 on failure or < 10 trades.
     """
     try:
@@ -78,7 +85,8 @@ def _run_val_trial(
         costs_cfg  = config["costs"]
         risk_cfg   = config["risk"]
         slippage   = compute_slippage_array(sig["Close"].astype(float), config).values
-        max_hold   = risk_cfg["max_hold_bars"] * 12  # 5M scale
+        tf_scale   = _get_tf_scale(config)
+        max_hold   = risk_cfg["max_hold_bars"] * tf_scale
 
         equity, trades_df = _simulate_trades(
             df                   = sig,
@@ -97,10 +105,13 @@ def _run_val_trial(
             equity_curve     = equity,
             trades           = trades_df[["pnl", "duration_bars"]],
             benchmark_equity = bh_equity,
-            bars_per_year    = 252 * 24 * 12,
+            bars_per_year    = 252 * 24 * tf_scale,
         )
-        sharpe = metrics.get("sharpe_ratio", -999.0)
-        return float(sharpe) if np.isfinite(sharpe) else -999.0
+        if optuna_target == "val_return":
+            val = metrics.get("annualized_return", -999.0)
+        else:
+            val = metrics.get("sharpe_ratio", -999.0)
+        return float(val) if np.isfinite(val) else -999.0
 
     except Exception:
         return -999.0
@@ -111,6 +122,7 @@ def run_optimization(
     config: Dict[str, Any],
     n_trials: int = 100,
     train_sig_df: pd.DataFrame = None,
+    optuna_target: str = "val_sharpe",
 ) -> Tuple[Dict[str, Any], float]:
     """
     Run Optuna TPE optimization over signal/risk parameters.
@@ -190,14 +202,15 @@ def run_optimization(
             trial_kwargs["range_atr_stop_mult"]   = trial.suggest_float("range_atr_stop_mult",   r_stop_lo,    r_stop_hi)
             trial_kwargs["range_atr_tp_mult"]     = trial.suggest_float("range_atr_tp_mult",     r_tp_lo,      r_tp_hi)
 
-        val_sharpe = _run_val_trial(val_sig_df=val_sig_df, **trial_kwargs)
-        if train_sig_df is not None and val_sharpe > -990:
-            train_sharpe = _run_val_trial(val_sig_df=train_sig_df, **trial_kwargs)
-            if train_sharpe <= -990:
-                return val_sharpe * 0.5  # penalize if train fails
+        trial_kwargs["optuna_target"] = optuna_target
+        val_score = _run_val_trial(val_sig_df=val_sig_df, **trial_kwargs)
+        if train_sig_df is not None and val_score > -990:
+            train_score = _run_val_trial(val_sig_df=train_sig_df, **trial_kwargs)
+            if train_score <= -990:
+                return val_score * 0.5  # penalize if train fails
             # Combined: take the minimum (most conservative)
-            return min(val_sharpe, train_sharpe)
-        return val_sharpe
+            return min(val_score, train_score)
+        return val_score
 
     study = optuna.create_study(
         direction  = "maximize",
@@ -209,7 +222,7 @@ def run_optimization(
     best_params = dict(best.params)
     best_sharpe = best.value
 
-    print(f"\n[optimizer] Best val Sharpe: {best_sharpe:.4f}")
+    print(f"\n[optimizer] Best {optuna_target}: {best_sharpe:.4f}")
     print(f"[optimizer] Best params:")
     for k, v in best_params.items():
         print(f"  {k}: {v}")

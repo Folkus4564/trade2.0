@@ -24,7 +24,7 @@ from trade2.signals.strategies.cdc      import cdc_strategy
 
 
 def _empty_signals(df: pd.DataFrame) -> pd.DataFrame:
-    """Return df with all signal columns zeroed out."""
+    """Return df with all signal/exit columns zeroed out (disabled strategy contributes nothing)."""
     out = df.copy()
     for col in ("signal_long", "signal_short", "exit_long", "exit_short"):
         out[col] = 0
@@ -136,17 +136,19 @@ def route_signals(
         (cdc_df["signal_short"]   == 1)
     ).astype(int)
 
+    # OR merge for exits: any active strategy wanting to exit triggers exit.
+    # Disabled strategies return 0 (no vote), so they never block or force exits.
     result["exit_long"]  = (
-        (trend_df["exit_long"]  == 1) &
-        (range_df["exit_long"]  == 1) &
-        (vol_df["exit_long"]    == 1) &
+        (trend_df["exit_long"]  == 1) |
+        (range_df["exit_long"]  == 1) |
+        (vol_df["exit_long"]    == 1) |
         (cdc_df["exit_long"]    == 1)
     ).astype(int)
 
     result["exit_short"] = (
-        (trend_df["exit_short"] == 1) &
-        (range_df["exit_short"] == 1) &
-        (vol_df["exit_short"]   == 1) &
+        (trend_df["exit_short"] == 1) |
+        (range_df["exit_short"] == 1) |
+        (vol_df["exit_short"]   == 1) |
         (cdc_df["exit_short"]   == 1)
     ).astype(int)
 

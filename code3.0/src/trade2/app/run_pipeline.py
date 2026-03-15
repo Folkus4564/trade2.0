@@ -159,6 +159,7 @@ def run_pipeline(
     optimize: bool = False,
     n_trials: int = 100,
     legacy_signals: bool = False,
+    optuna_target: str = "val_sharpe",
 ) -> dict:
     """
     Full research pipeline:
@@ -194,46 +195,50 @@ def run_pipeline(
     print(f"{'='*60}\n")
 
     # ---- 1. Load data ----
-    print("[pipeline] Loading 1H data...")
-    train_1h, val_1h, test_1h = load_split_tf("1H", config)
+    regime_tf = config.get("strategy", {}).get("regime_timeframe", "1H")
+    signal_tf = config.get("strategy", {}).get("signal_timeframe", "5M")
+    _TF_TO_FREQ = {"5M": "5min", "15M": "15min", "30M": "30min", "1H": "1h", "4H": "4h"}
+
+    print(f"[pipeline] Loading regime TF ({regime_tf}) data...")
+    train_reg, val_reg, test_reg = load_split_tf(regime_tf, config)
 
     raw_1h_path = DATA_ROOT / config.get("data", {}).get("raw_1h_csv", "data/raw/XAUUSD_1H_2019_2025.csv")
-    gap_audit  = audit_missing_bars(train_1h, "1h", config)
+    gap_audit  = audit_missing_bars(train_reg, regime_tf.lower(), config)
     data_ver   = dataset_version(raw_1h_path) if raw_1h_path.exists() else {}
     print(f"  [data] Missing bars: {gap_audit['missing_bars']} ({gap_audit['missing_pct']}%)")
 
     if mode == "multi_tf":
-        print("[pipeline] Loading 5M data...")
-        train_5m, val_5m, test_5m = load_split_tf("5M", config)
-        print(f"  1H  train={len(train_1h)} | val={len(val_1h)} | test={len(test_1h)}")
-        print(f"  5M  train={len(train_5m)} | val={len(val_5m)} | test={len(test_5m)}")
+        print(f"[pipeline] Loading signal TF ({signal_tf}) data...")
+        train_sig_raw, val_sig_raw, test_sig_raw = load_split_tf(signal_tf, config)
+        print(f"  {regime_tf} train={len(train_reg)} | val={len(val_reg)} | test={len(test_reg)}")
+        print(f"  {signal_tf} train={len(train_sig_raw)} | val={len(val_sig_raw)} | test={len(test_sig_raw)}")
     else:
-        print(f"  1H  train={len(train_1h)} | val={len(val_1h)} | test={len(test_1h)}")
+        print(f"  {regime_tf} train={len(train_reg)} | val={len(val_reg)} | test={len(test_reg)}")
 
     # ---- 2. Build features (optionally cached) ----
-    print("[pipeline] Engineering 1H features...")
-    train_1h_feat = _load_features_cached(train_1h, "1H", "train", config, dirs, add_1h_features)
-    val_1h_feat   = _load_features_cached(val_1h,   "1H", "val",   config, dirs, add_1h_features)
-    test_1h_feat  = _load_features_cached(test_1h,  "1H", "test",  config, dirs, add_1h_features)
+    print(f"[pipeline] Engineering {regime_tf} regime features...")
+    train_reg_feat = _load_features_cached(train_reg, regime_tf, "train", config, dirs, add_1h_features)
+    val_reg_feat   = _load_features_cached(val_reg,   regime_tf, "val",   config, dirs, add_1h_features)
+    test_reg_feat  = _load_features_cached(test_reg,  regime_tf, "test",  config, dirs, add_1h_features)
 
     if mode == "multi_tf":
-        print("[pipeline] Engineering 5M features (SMC)...")
-        train_5m_feat = _load_features_cached(train_5m, "5M", "train", config, dirs, add_5m_features, dc_period=p["dc_period"])
-        val_5m_feat   = _load_features_cached(val_5m,   "5M", "val",   config, dirs, add_5m_features, dc_period=p["dc_period"])
-        test_5m_feat  = _load_features_cached(test_5m,  "5M", "test",  config, dirs, add_5m_features, dc_period=p["dc_period"])
+        print(f"[pipeline] Engineering {signal_tf} signal features (SMC)...")
+        train_sig_feat = _load_features_cached(train_sig_raw, signal_tf, "train", config, dirs, add_5m_features, dc_period=p["dc_period"])
+        val_sig_feat   = _load_features_cached(val_sig_raw,   signal_tf, "val",   config, dirs, add_5m_features, dc_period=p["dc_period"])
+        test_sig_feat  = _load_features_cached(test_sig_raw,  signal_tf, "test",  config, dirs, add_5m_features, dc_period=p["dc_period"])
         for col in ["ob_bullish","ob_bearish","fvg_bullish","fvg_bearish","sweep_low","sweep_high"]:
-            if col in train_5m_feat.columns:
-                print(f"  [SMC 5M] {col}: {int(train_5m_feat[col].sum())} active bars (train)")
+            if col in train_sig_feat.columns:
+                print(f"  [SMC {signal_tf}] {col}: {int(train_sig_feat[col].sum())} active bars (train)")
     else:
         for col in ["ob_bullish","ob_bearish","fvg_bullish","fvg_bearish","sweep_low","sweep_high"]:
-            if col in train_1h_feat.columns:
-                print(f"  [SMC 1H] {col}: {int(train_1h_feat[col].sum())} active bars (train)")
+            if col in train_reg_feat.columns:
+                print(f"  [SMC {regime_tf}] {col}: {int(train_reg_feat[col].sum())} active bars (train)")
 
     # ---- 3. Train / load HMM ----
     model_path = dirs["models"] / "hmm_regime_model.pkl"
     if retrain_model or not model_path.exists():
         print("[pipeline] Training HMM regime model...")
-        X_train, _ = get_hmm_feature_matrix(train_1h_feat)
+        X_train, _ = get_hmm_feature_matrix(train_reg_feat, config)
         hmm = XAUUSDRegimeModel(
             n_states    = p["hmm_states"],
             random_seed = config.get("hmm", {}).get("random_seed", 42),
@@ -245,15 +250,15 @@ def run_pipeline(
         print(f"[pipeline] Loading existing HMM model from {model_path}")
         hmm = XAUUSDRegimeModel.load(model_path)
 
-    # ---- 4. Get regime for all 1H splits ----
-    def _get_regime(feat_1h):
-        X, idx = get_hmm_feature_matrix(feat_1h)
+    # ---- 4. Get regime for all regime-TF splits ----
+    def _get_regime(feat_reg):
+        X, idx = get_hmm_feature_matrix(feat_reg, config)
         return (hmm.regime_labels(X), hmm.bull_probability(X), hmm.bear_probability(X),
                 hmm.sideways_probability(X), X, idx)
 
-    train_labels, train_bull, train_bear, train_sideways, X_train_1h, idx_train_1h = _get_regime(train_1h_feat)
-    val_labels,   val_bull,   val_bear,   val_sideways,   X_val_1h,   idx_val_1h   = _get_regime(val_1h_feat)
-    test_labels,  test_bull,  test_bear,  test_sideways,  X_test_1h,  idx_test_1h  = _get_regime(test_1h_feat)
+    train_labels, train_bull, train_bear, train_sideways, X_train_reg, idx_train_reg = _get_regime(train_reg_feat)
+    val_labels,   val_bull,   val_bear,   val_sideways,   X_val_reg,   idx_val_reg   = _get_regime(val_reg_feat)
+    test_labels,  test_bull,  test_bear,  test_sideways,  X_test_reg,  idx_test_reg  = _get_regime(test_reg_feat)
 
     train_regime_dist = _regime_distribution(train_labels)
     test_regime_dist  = _regime_distribution(test_labels)
@@ -261,36 +266,35 @@ def run_pipeline(
     print(f"  [regime] Test : {test_regime_dist}")
 
     # State distribution from HMM
-    dist = hmm.state_distribution(X_train_1h)
+    dist = hmm.state_distribution(X_train_reg)
     if config.get("hmm", {}).get("n_states", 3) == 3:
         if dist.get("sideways", 0) < 0.10:
             print("[pipeline] WARNING: sideways < 10% of bars")
 
     # ---- 5. Build signal dataframes ----
     if mode == "multi_tf":
-        # Forward-fill 1H regime onto 5M bars.
-        # Also forward-fill 1H ATR so compute_stops uses 1H-scale risk levels.
-        print("[pipeline] Forward-filling 1H regime onto 5M bars...")
-        train_sig_df = forward_fill_1h_regime(train_5m_feat, train_labels, train_bull, train_bear, idx_train_1h,
-                                               atr_1h=train_1h_feat["atr_14"].rename(None),
-                                               hma_rising=train_1h_feat["hma_rising"].rename(None),
-                                               price_above_hma=train_1h_feat["price_above_hma"].rename(None),
+        # Forward-fill regime TF labels onto signal TF bars.
+        print(f"[pipeline] Forward-filling {regime_tf} regime onto {signal_tf} bars...")
+        train_sig_df = forward_fill_1h_regime(train_sig_feat, train_labels, train_bull, train_bear, idx_train_reg,
+                                               atr_1h=train_reg_feat["atr_14"].rename(None),
+                                               hma_rising=train_reg_feat["hma_rising"].rename(None),
+                                               price_above_hma=train_reg_feat["price_above_hma"].rename(None),
                                                hmm_sideways_prob=train_sideways)
-        val_sig_df   = forward_fill_1h_regime(val_5m_feat,   val_labels,   val_bull,   val_bear,   idx_val_1h,
-                                               atr_1h=val_1h_feat["atr_14"].rename(None),
-                                               hma_rising=val_1h_feat["hma_rising"].rename(None),
-                                               price_above_hma=val_1h_feat["price_above_hma"].rename(None),
+        val_sig_df   = forward_fill_1h_regime(val_sig_feat,   val_labels,   val_bull,   val_bear,   idx_val_reg,
+                                               atr_1h=val_reg_feat["atr_14"].rename(None),
+                                               hma_rising=val_reg_feat["hma_rising"].rename(None),
+                                               price_above_hma=val_reg_feat["price_above_hma"].rename(None),
                                                hmm_sideways_prob=val_sideways)
-        test_sig_df  = forward_fill_1h_regime(test_5m_feat,  test_labels,  test_bull,  test_bear,  idx_test_1h,
-                                               atr_1h=test_1h_feat["atr_14"].rename(None),
-                                               hma_rising=test_1h_feat["hma_rising"].rename(None),
-                                               price_above_hma=test_1h_feat["price_above_hma"].rename(None),
+        test_sig_df  = forward_fill_1h_regime(test_sig_feat,  test_labels,  test_bull,  test_bear,  idx_test_reg,
+                                               atr_1h=test_reg_feat["atr_14"].rename(None),
+                                               hma_rising=test_reg_feat["hma_rising"].rename(None),
+                                               price_above_hma=test_reg_feat["price_above_hma"].rename(None),
                                                hmm_sideways_prob=test_sideways)
-        freq         = "5min"
+        freq = _TF_TO_FREQ.get(signal_tf, "5min")
     else:
-        train_sig_df = train_1h_feat
-        val_sig_df   = val_1h_feat
-        test_sig_df  = test_1h_feat
+        train_sig_df = train_reg_feat
+        val_sig_df   = val_reg_feat
+        test_sig_df  = test_reg_feat
         freq         = "1h"
 
     # Generate signals
@@ -313,11 +317,11 @@ def run_pipeline(
             test_sig  = route_signals(test_sig_df,  config)
         else:
             train_sig = route_signals(train_sig_df, config,
-                hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_1h)
+                hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_reg)
             val_sig   = route_signals(val_sig_df, config,
-                hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_1h)
+                hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_reg)
             test_sig  = route_signals(test_sig_df, config,
-                hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_1h)
+                hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg)
         train_sig = compute_stops_regime_aware(train_sig, config)
         val_sig   = compute_stops_regime_aware(val_sig,   config)
         test_sig  = compute_stops_regime_aware(test_sig,  config)
@@ -330,15 +334,15 @@ def run_pipeline(
         else:
             train_sig = generate_signals(
                 train_sig_df, **sig_kwargs,
-                hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_1h,
+                hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_reg,
             )
             val_sig   = generate_signals(
                 val_sig_df, **sig_kwargs,
-                hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_1h,
+                hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_reg,
             )
             test_sig  = generate_signals(
                 test_sig_df, **sig_kwargs,
-                hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_1h,
+                hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg,
             )
         train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"])
         val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"])
@@ -352,12 +356,19 @@ def run_pipeline(
 
     # ---- 5b. Optional: Optuna optimization on val ----
     if optimize:
-        print(f"\n[pipeline] Running Optuna optimization ({n_trials} trials) targeting val_sharpe...")
+        print(f"\n[pipeline] Running Optuna optimization ({n_trials} trials) targeting {optuna_target}...")
+        # When legacy_signals=True, optimizer must also use legacy mode (consistent objective)
+        import copy as _copy
+        opt_config = config
+        if legacy_signals and config.get("strategies", {}).get("mode") != "legacy":
+            opt_config = _copy.deepcopy(config)
+            opt_config.setdefault("strategies", {})["mode"] = "legacy"
         best_params, best_val_sharpe = run_optimization(
             val_sig_df   = val_sig_df,
-            config       = config,
+            config       = opt_config,
             n_trials     = n_trials,
             train_sig_df = train_sig_df,  # combined train+val objective avoids overfitting
+            optuna_target = optuna_target,
         )
 
         # Override p with best params
@@ -381,11 +392,11 @@ def run_pipeline(
                     test_sig  = route_signals(test_sig_df,  config)
                 else:
                     train_sig = route_signals(train_sig_df, config,
-                        hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_1h)
+                        hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_reg)
                     val_sig   = route_signals(val_sig_df, config,
-                        hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_1h)
+                        hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_reg)
                     test_sig  = route_signals(test_sig_df, config,
-                        hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_1h)
+                        hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg)
                 train_sig = compute_stops_regime_aware(train_sig, config)
                 val_sig   = compute_stops_regime_aware(val_sig,   config)
                 test_sig  = compute_stops_regime_aware(test_sig,  config)
@@ -396,11 +407,11 @@ def run_pipeline(
                     test_sig  = generate_signals(test_sig_df,  **sig_kwargs_opt)
                 else:
                     train_sig = generate_signals(train_sig_df, **sig_kwargs_opt,
-                        hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_1h)
+                        hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_reg)
                     val_sig   = generate_signals(val_sig_df,   **sig_kwargs_opt,
-                        hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_1h)
+                        hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_reg)
                     test_sig  = generate_signals(test_sig_df,  **sig_kwargs_opt,
-                        hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_1h)
+                        hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg)
                 train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"])
                 val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"])
                 test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"])

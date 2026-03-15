@@ -106,7 +106,7 @@ def generate_signals(
 
     # ---- Transition cooldown: suppress entries N bars after regime flip ----
     if cooldown > 0:
-        freq_mult    = 12 if _is_5m_data(out) else 1
+        freq_mult    = _get_bars_per_hour(out)
         cooldown_bars = cooldown * freq_mult
         regime_changed = out["regime"] != out["regime"].shift(1)
         in_cooldown    = regime_changed.rolling(cooldown_bars, min_periods=1).sum() > 0
@@ -119,7 +119,7 @@ def generate_signals(
 
     if persistence > 1 or persistence_short > 1:
         # For multi-TF 5M: persistence is in 1H bars, so x12 on 5M
-        freq_mult = 12 if _is_5m_data(out) else 1
+        freq_mult = _get_bars_per_hour(out)
         win_long  = max(persistence,       1) * freq_mult
         win_short = max(persistence_short, 1) * freq_mult
         bull_regime = bull_raw.rolling(win_long).sum()  == win_long
@@ -298,3 +298,17 @@ def _is_5m_data(df: pd.DataFrame) -> bool:
         return delta.total_seconds() <= 360  # <= 6 minutes = 5M
     except Exception:
         return False
+
+
+def _get_bars_per_hour(df: pd.DataFrame) -> int:
+    """Return bars-per-hour for any sub-hourly DataFrame."""
+    if len(df) < 2:
+        return 1
+    try:
+        delta_sec = (df.index[1] - df.index[0]).total_seconds()
+        if delta_sec <= 360:    return 12  # 5M
+        elif delta_sec <= 960:  return 4   # 15M
+        elif delta_sec <= 1920: return 2   # 30M
+        return 1                           # 1H or coarser
+    except Exception:
+        return 1

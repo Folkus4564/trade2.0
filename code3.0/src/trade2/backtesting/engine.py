@@ -271,10 +271,17 @@ def run_backtest(
     max_hold_bars = risk_cfg["max_hold_bars"]
     base_alloc    = risk_cfg["base_allocation_frac"]
 
-    # Scale max_hold_bars to match the data frequency.
-    # Config value is expressed in 1H-equivalent bars; 5M data needs x12.
-    if freq in ("5min", "5m", "5M"):
-        max_hold_bars = max_hold_bars * 12
+    # Scale max_hold_bars and bars_per_year to match the data frequency.
+    # Config value is expressed in 1H-equivalent bars.
+    _TF_SCALE = {
+        "5min": 12, "5m": 12, "5M": 12,
+        "15min": 4, "15m": 4, "15M": 4,
+        "30min": 2, "30m": 2, "30M": 2,
+        "1h": 1, "1H": 1, "4h": 0,  # 4H: scale=0 (same bars, different unit)
+    }
+    tf_scale = _TF_SCALE.get(freq, 1)
+    if tf_scale > 1:
+        max_hold_bars = max_hold_bars * tf_scale
 
     close = df["Close"].astype(float)
 
@@ -290,7 +297,7 @@ def run_backtest(
 
     slippage = compute_slippage_array(close, cfg).values
 
-    bars_per_year = (252 * 24 * 12) if freq in ("5min", "5m", "5M") else (252 * 24)
+    bars_per_year = 252 * 24 * max(tf_scale, 1)
 
     equity, trades_df = _simulate_trades(
         df                   = df,
@@ -424,8 +431,8 @@ def run_walk_forward(
             train_feat = add_1h_features(train_df, config)
             val_feat   = add_1h_features(val_df,   config)
 
-            X_train, idx_train = get_hmm_feature_matrix(train_feat)
-            X_val,   idx_val   = get_hmm_feature_matrix(val_feat)
+            X_train, idx_train = get_hmm_feature_matrix(train_feat, config)
+            X_val,   idx_val   = get_hmm_feature_matrix(val_feat, config)
 
             model = XAUUSDRegimeModel(
                 n_states    = hmm_cfg.get("n_states", 3),

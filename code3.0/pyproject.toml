@@ -25,6 +25,7 @@ ui = ["streamlit>=1.30", "plotly>=5.18"]
 
 [project.scripts]
 trade2 = "trade2.app.run_pipeline:main"
+full_scheme_search = "trade2.app.full_scheme_search:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

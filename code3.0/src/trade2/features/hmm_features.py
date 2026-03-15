@@ -97,12 +97,19 @@ def add_hmm_features(
     return out
 
 
-def get_hmm_feature_matrix(df: pd.DataFrame) -> Tuple[np.ndarray, pd.Index]:
-    """Extract the HMM feature matrix (NaN-free rows) and corresponding index."""
-    cols = [
-        "hmm_feat_ret", "hmm_feat_rsi", "hmm_feat_atr", "hmm_feat_vol",
-        "hmm_feat_hma_slope", "hmm_feat_bb_width", "hmm_feat_macd",
-    ]
+def get_hmm_feature_matrix(df: pd.DataFrame, config: dict = None) -> Tuple[np.ndarray, pd.Index]:
+    """Extract the HMM feature matrix (NaN-free rows) and corresponding index.
+
+    If config["hmm"]["features"] is provided, uses that list; otherwise uses all
+    hmm_feat_* columns found in df.
+    """
+    if config is not None and "hmm" in config and "features" in config["hmm"]:
+        cols = list(config["hmm"]["features"])
+    else:
+        cols = [
+            "hmm_feat_ret", "hmm_feat_rsi", "hmm_feat_atr", "hmm_feat_vol",
+            "hmm_feat_hma_slope", "hmm_feat_bb_width", "hmm_feat_macd",
+        ]
     cols = [c for c in cols if c in df.columns]
     feat = df[cols].dropna()
     return feat.values, feat.index
