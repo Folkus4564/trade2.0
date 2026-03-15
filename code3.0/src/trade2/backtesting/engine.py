@@ -56,6 +56,13 @@ def _simulate_trades(
     ps_long    = df["position_size_long"].values.astype(float)
     ps_short   = df["position_size_short"].values.astype(float)
 
+    # Trailing stop: per-bar ATR multiplier (0 = no trailing)
+    trail_long  = df["trailing_atr_mult_long"].values.astype(float)  if "trailing_atr_mult_long"  in df.columns else np.zeros(len(df))
+    trail_short = df["trailing_atr_mult_short"].values.astype(float) if "trailing_atr_mult_short" in df.columns else np.zeros(len(df))
+    atr_vals    = (df["atr_1h"].values if "atr_1h" in df.columns
+                   else df["atr_14"].values if "atr_14" in df.columns
+                   else np.ones(len(df))).astype(float)
+
     n          = len(df)
     equity_arr = np.zeros(n, dtype=float)
     trades: List[Dict] = []
@@ -103,6 +110,17 @@ def _simulate_trades(
                 equity_arr[i] = cash + (entry_px - closes[i]) * n_units
         else:
             equity_arr[i] = cash
+
+        # --- Update trailing stop (before SL check) ---
+        if in_pos:
+            if direction == "long" and trail_long[i] > 0:
+                new_sl = closes[i] - trail_long[i] * atr_vals[i]
+                if new_sl > frozen_sl:
+                    frozen_sl = new_sl
+            elif direction == "short" and trail_short[i] > 0:
+                new_sl = closes[i] + trail_short[i] * atr_vals[i]
+                if new_sl < frozen_sl:
+                    frozen_sl = new_sl
 
         # --- Check SL / TP / signal exit / timeout ---
         if in_pos:

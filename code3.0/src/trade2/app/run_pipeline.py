@@ -10,7 +10,9 @@ Usage:
 """
 
 import argparse
+import hashlib
 import json
+import pickle
 import sys
 import numpy as np
 from datetime import date
@@ -35,6 +37,39 @@ from trade2.optimization.optimizer import run_optimization
 
 PROJECT_ROOT = Path(__file__).parents[3]  # code3.0/
 DATA_ROOT    = Path(__file__).parents[4]  # trade2.0/ (where data/ lives)
+
+
+def _feat_cache_key(config: dict, tf: str, split: str) -> str:
+    """Short hash of feature-relevant config keys + tf + split."""
+    keys = {
+        "tf": tf, "split": split,
+        "features": config.get("features", {}),
+        "smc":      config.get("smc",      {}),
+        "smc_5m":   config.get("smc_5m",   {}),
+        "smc_luxalgo":    config.get("smc_luxalgo",    {}),
+        "smc_luxalgo_5m": config.get("smc_luxalgo_5m", {}),
+        "strategies_cdc": config.get("strategies", {}).get("cdc", {}),
+    }
+    return hashlib.md5(json.dumps(keys, sort_keys=True, default=str).encode()).hexdigest()[:12]
+
+
+def _load_features_cached(df, tf, split, config, dirs, add_fn, **kwargs):
+    """Call add_fn(df, config, **kwargs), optionally caching result to disk."""
+    if not config.get("pipeline", {}).get("cache_features", False):
+        return add_fn(df, config, **kwargs)
+    cache_dir = dirs["root"] / "feature_cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    key  = _feat_cache_key(config, tf, split)
+    path = cache_dir / f"{tf}_{split}_{key}.pkl"
+    if path.exists():
+        print(f"  [cache] Loading {tf} {split} features from cache")
+        with open(path, "rb") as f:
+            return pickle.load(f)
+    result = add_fn(df, config, **kwargs)
+    with open(path, "wb") as f:
+        pickle.dump(result, f)
+    print(f"  [cache] Saved {tf} {split} features to cache")
+    return result
 
 
 def _resolve_artefact_dirs(config: dict) -> dict:
@@ -175,17 +210,17 @@ def run_pipeline(
     else:
         print(f"  1H  train={len(train_1h)} | val={len(val_1h)} | test={len(test_1h)}")
 
-    # ---- 2. Build features ----
+    # ---- 2. Build features (optionally cached) ----
     print("[pipeline] Engineering 1H features...")
-    train_1h_feat = add_1h_features(train_1h, config)
-    val_1h_feat   = add_1h_features(val_1h,   config)
-    test_1h_feat  = add_1h_features(test_1h,  config)
+    train_1h_feat = _load_features_cached(train_1h, "1H", "train", config, dirs, add_1h_features)
+    val_1h_feat   = _load_features_cached(val_1h,   "1H", "val",   config, dirs, add_1h_features)
+    test_1h_feat  = _load_features_cached(test_1h,  "1H", "test",  config, dirs, add_1h_features)
 
     if mode == "multi_tf":
         print("[pipeline] Engineering 5M features (SMC)...")
-        train_5m_feat = add_5m_features(train_5m, config, dc_period=p["dc_period"])
-        val_5m_feat   = add_5m_features(val_5m,   config, dc_period=p["dc_period"])
-        test_5m_feat  = add_5m_features(test_5m,  config, dc_period=p["dc_period"])
+        train_5m_feat = _load_features_cached(train_5m, "5M", "train", config, dirs, add_5m_features, dc_period=p["dc_period"])
+        val_5m_feat   = _load_features_cached(val_5m,   "5M", "val",   config, dirs, add_5m_features, dc_period=p["dc_period"])
+        test_5m_feat  = _load_features_cached(test_5m,  "5M", "test",  config, dirs, add_5m_features, dc_period=p["dc_period"])
         for col in ["ob_bullish","ob_bearish","fvg_bullish","fvg_bearish","sweep_low","sweep_high"]:
             if col in train_5m_feat.columns:
                 print(f"  [SMC 5M] {col}: {int(train_5m_feat[col].sum())} active bars (train)")
@@ -407,6 +442,8 @@ def run_pipeline(
         test_regime_dist         = test_regime_dist,
         cost_sensitivity_metrics = test_2x_metrics,
         walk_forward_run         = (wf_results is not None and wf_results.get("available", False)),
+        train_metrics            = train_metrics,
+        val_metrics              = val_metrics,
     )
     if hrd["hard_rejected"]:
         print(f"\n[pipeline] HARD REJECTION triggered:")

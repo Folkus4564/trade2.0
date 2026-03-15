@@ -273,6 +273,19 @@ def compute_stops_regime_aware(
     out["tp_long"]    = cl_vals + tp_mults   * atr_vals
     out["tp_short"]   = cl_vals - tp_mults   * atr_vals
 
+    # ---- Trailing stop multipliers (per-bar, 0 = disabled) ----
+    # Consumed by _simulate_trades() to update frozen_sl dynamically.
+    trail_mults = np.zeros(len(out), dtype=float)
+    for src_name in ("trend", "range", "volatile", "cdc"):
+        mask = (source == src_name).values
+        if mask.any():
+            scfg = strat_cfg.get(src_name, {})
+            if scfg.get("trailing_enabled", False):
+                trail_mults[mask] = float(scfg["trailing_atr_mult"])
+
+    out["trailing_atr_mult_long"]  = trail_mults
+    out["trailing_atr_mult_short"] = trail_mults
+
     return out
 
 

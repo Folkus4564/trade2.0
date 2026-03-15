@@ -139,12 +139,15 @@ strategies:
     min_prob: 0.70
     require_dc_breakout: true
     require_smc_confirm: false
+    require_bos_confirm: false   # LuxAlgo BOS/CHoCH confirmation gate
     require_macro_trend: true
     adx_threshold: 20.0
     atr_expansion_filter: true
     persistence_bars: 3
     atr_stop_mult: 2.5
     atr_tp_mult: 0.0            # 0 = no fixed TP, ride regime
+    trailing_enabled: false      # Phase 4: trailing stop for trend trades
+    trailing_atr_mult: 1.5       # trail stop = close - N*ATR (updated each bar)
     max_hold_bars: 72
     sizing_base: 0.70
     sizing_max: 1.50
@@ -231,6 +234,9 @@ hard_rejection:
   max_regime_drift_pp: 0.20
   max_cost_sharpe_drop_pct: 0.35
   require_walk_forward: true
+  min_trades_train: 30           # Phase 6: minimum trades on train split
+  min_trades_val: 10             # Phase 6: minimum trades on val split
+  max_overfitting_sharpe_ratio: 3.0  # Phase 6: test/train Sharpe must be < this
 
 # ---- Optimization ------------------------------------------
 optimization:
@@ -254,6 +260,10 @@ optimization:
 baseline:
   buy_and_hold: true
   random_long:  true
+
+# ---- Pipeline behaviour ------------------------------------
+pipeline:
+  cache_features: false    # Phase 5: cache feature DataFrames to disk (speeds up re-runs)
 
 # ---- Artefact directories ----------------------------------
 artefacts:

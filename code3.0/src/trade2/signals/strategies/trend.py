@@ -66,6 +66,19 @@ def trend_strategy(
         smc_long  = pd.Series(True, index=out.index)
         smc_short = pd.Series(True, index=out.index)
 
+    # ---- Optional BOS/CHoCH confirmation (LuxAlgo SMC) ----
+    if tcfg["require_bos_confirm"]:
+        has_bos = "bos_bullish" in out.columns and "bos_bearish" in out.columns
+        if has_bos:
+            bos_long  = out["bos_bullish"].astype(bool)
+            bos_short = out["bos_bearish"].astype(bool)
+        else:
+            bos_long  = pd.Series(True, index=out.index)
+            bos_short = pd.Series(True, index=out.index)
+    else:
+        bos_long  = pd.Series(True, index=out.index)
+        bos_short = pd.Series(True, index=out.index)
+
     # ---- Macro trend filter ----
     if tcfg["require_macro_trend"] and "hma_rising" in out.columns and "price_above_hma" in out.columns:
         macro_bull = out["hma_rising"].astype(bool) & out["price_above_hma"].astype(bool)
@@ -93,8 +106,8 @@ def trend_strategy(
         dc_short = dc_short & in_sess
 
     # ---- Combine ----
-    sig_long  = (bull_regime & macro_bull & dc_long  & smc_long).astype(int)
-    sig_short = (bear_regime & macro_bear & dc_short & smc_short).astype(int)
+    sig_long  = (bull_regime & macro_bull & dc_long  & smc_long  & bos_long).astype(int)
+    sig_short = (bear_regime & macro_bear & dc_short & smc_short & bos_short).astype(int)
 
     # ---- Exit: regime flip ----
     exit_long  = (~bull_regime).astype(int)
