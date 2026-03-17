@@ -13,9 +13,10 @@ import argparse
 import hashlib
 import json
 import pickle
+import shutil
 import sys
 import numpy as np
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 from trade2.config.loader import load_config
@@ -27,7 +28,7 @@ from trade2.features.hmm_features import get_hmm_feature_matrix
 from trade2.models.hmm import XAUUSDRegimeModel
 from trade2.signals.regime import forward_fill_1h_regime
 from trade2.signals.generator import generate_signals, compute_stops, compute_stops_regime_aware
-from trade2.signals.router import route_signals
+from trade2.signals.router import route_signals, apply_tv_signal_filter, ffill_tv_cols_to_5m
 from trade2.backtesting.engine import run_backtest, run_backtest_2x_costs, run_walk_forward
 from trade2.evaluation.hard_rejection import hard_rejection_checks
 from trade2.evaluation.verdict import multi_split_verdict
@@ -150,6 +151,36 @@ def _log_signal_stats(sig_df, config: dict) -> None:
         print(f"  [prob-gate] mean position size: long={mean_size_long:.3f} | short={mean_size_short:.3f}")
 
 
+def _backup_model(model_path: Path, models_dir: Path) -> None:
+    """Backup existing model to models/backups/ before retraining."""
+    backup_dir = models_dir / "backups"
+    backup_dir.mkdir(parents=True, exist_ok=True)
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_path = backup_dir / f"{model_path.stem}_{ts}.pkl"
+    shutil.copy(model_path, backup_path)
+    print(f"[pipeline] Backed up existing model -> {backup_path}")
+
+
+def _save_golden_model(model_path: Path, models_dir: Path, test_metrics: dict, strategy_name: str) -> None:
+    """Copy model to models/golden/ with a metrics sidecar when return threshold is met."""
+    golden_dir = models_dir / "golden"
+    golden_dir.mkdir(parents=True, exist_ok=True)
+    today  = date.today().strftime("%Y_%m_%d")
+    ret    = test_metrics.get("annualized_return", 0) * 100
+    sharpe = test_metrics.get("sharpe_ratio", 0)
+    name   = f"{model_path.stem}_{today}_ret{ret:.0f}pct_sh{sharpe:.2f}"
+    golden_path = golden_dir / f"{name}.pkl"
+    shutil.copy(model_path, golden_path)
+    sidecar = {
+        "strategy":     strategy_name,
+        "date":         today,
+        "source_model": str(model_path),
+        "test_metrics": test_metrics,
+    }
+    (golden_dir / f"{name}_metrics.json").write_text(json.dumps(sidecar, indent=2, default=str))
+    print(f"[pipeline] Golden model saved -> {golden_path}")
+
+
 def run_pipeline(
     config: dict,
     params: dict = None,
@@ -161,6 +192,7 @@ def run_pipeline(
     legacy_signals: bool = False,
     optuna_target: str = "val_sharpe",
     return_trades: bool = False,
+    model_path_override: str = None,
 ) -> dict:
     """
     Full research pipeline:
@@ -253,7 +285,17 @@ def run_pipeline(
     # e.g. hmm_1h_3states.pkl, hmm_4h_3states.pkl, hmm_1h_2states.pkl
     _model_tf_key = regime_tf.lower().replace(" ", "")   # "1H" -> "1h", "4H" -> "4h"
     model_path = dirs["models"] / f"hmm_{_model_tf_key}_{p['hmm_states']}states.pkl"
-    if retrain_model or not model_path.exists():
+
+    if model_path_override:
+        override_p = Path(model_path_override)
+        if not override_p.exists():
+            raise FileNotFoundError(f"[pipeline] --model-path not found: {override_p}")
+        print(f"[pipeline] Loading model from override path: {override_p}")
+        hmm = XAUUSDRegimeModel.load(override_p)
+    elif retrain_model or not model_path.exists():
+        # Backup existing model before overwriting so golden strategies are never lost
+        if model_path.exists() and retrain_model:
+            _backup_model(model_path, dirs["models"])
         print("[pipeline] Training HMM regime model...")
         X_train, _ = get_hmm_feature_matrix(train_reg_feat, config)
         hmm = XAUUSDRegimeModel(
@@ -307,6 +349,10 @@ def run_pipeline(
                                                hma_rising=test_reg_feat["hma_rising"].rename(None),
                                                price_above_hma=test_reg_feat["price_above_hma"].rename(None),
                                                hmm_sideways_prob=test_sideways)
+        # Forward-fill TV indicator _bull/_bear columns from 1H regime into 5M signal DFs
+        train_sig_df = ffill_tv_cols_to_5m(train_sig_df, train_reg_feat)
+        val_sig_df   = ffill_tv_cols_to_5m(val_sig_df,   val_reg_feat)
+        test_sig_df  = ffill_tv_cols_to_5m(test_sig_df,  test_reg_feat)
         freq = _TF_TO_FREQ.get(signal_tf, "5min")
     else:
         train_sig_df = train_reg_feat
@@ -339,6 +385,9 @@ def run_pipeline(
                 hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_reg, hmm_model=hmm)
             test_sig  = route_signals(test_sig_df, config,
                 hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg, hmm_model=hmm)
+        train_sig = apply_tv_signal_filter(train_sig, config)
+        val_sig   = apply_tv_signal_filter(val_sig,   config)
+        test_sig  = apply_tv_signal_filter(test_sig,  config)
         train_sig = compute_stops_regime_aware(train_sig, config)
         val_sig   = compute_stops_regime_aware(val_sig,   config)
         test_sig  = compute_stops_regime_aware(test_sig,  config)
@@ -414,6 +463,9 @@ def run_pipeline(
                         hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_reg, hmm_model=hmm)
                     test_sig  = route_signals(test_sig_df, config,
                         hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg, hmm_model=hmm)
+                train_sig = apply_tv_signal_filter(train_sig, config)
+                val_sig   = apply_tv_signal_filter(val_sig,   config)
+                test_sig  = apply_tv_signal_filter(test_sig,  config)
                 train_sig = compute_stops_regime_aware(train_sig, config)
                 val_sig   = compute_stops_regime_aware(val_sig,   config)
                 test_sig  = compute_stops_regime_aware(test_sig,  config)
@@ -456,9 +508,12 @@ def run_pipeline(
     wf_results = None
     if walk_forward:
         print("\n[pipeline] Running walk-forward validation...")
+        raw_5m_path = DATA_ROOT / config["data"]["raw_5m_csv"] if mode == "multi_tf" else None
+        _wf_freq = _TF_TO_FREQ.get(signal_tf, "5min") if mode == "multi_tf" else _TF_TO_FREQ.get(regime_tf, "1h")
         wf_results = run_walk_forward(
             strategy_name, config, raw_regime_path, dirs["backtests"],
-            freq=_TF_TO_FREQ.get(regime_tf, "1h"),
+            freq=_wf_freq,
+            raw_signal_path=raw_5m_path,
         )
         if wf_results.get("available"):
             print(f"[pipeline] Walk-forward: mean_sharpe={wf_results.get('mean_sharpe',0):.3f} | positive={wf_results.get('pct_positive',0)*100:.0f}%")
@@ -478,6 +533,12 @@ def run_pipeline(
         print(f"\n[pipeline] HARD REJECTION triggered:")
         for k, v in hrd["rejections"].items():
             print(f"  - {k}: {v}")
+
+    # ---- 8b. Auto-save golden model if test return meets threshold ----
+    golden_threshold = config.get("pipeline", {}).get("golden_model_threshold", 0.20)
+    test_return = test_metrics.get("annualized_return", 0)
+    if test_return >= golden_threshold and not model_path_override:
+        _save_golden_model(model_path, dirs["models"], test_metrics, strategy_name)
 
     # ---- 9. Multi-split verdict ----
     mv            = multi_split_verdict(train_metrics, val_metrics, test_metrics, config, wf_results, hrd)
@@ -589,6 +650,7 @@ def main():
     parser.add_argument("--trials",             type=int, default=100,             help="Optuna trial count")
     parser.add_argument("--export-approved",    action="store_true",               help="Export strategy if APPROVED")
     parser.add_argument("--legacy-signals",     action="store_true",               help="Force legacy signal generation (ignore strategies.mode)")
+    parser.add_argument("--model-path",         default=None,                      help="Load a specific HMM model .pkl (bypasses default path, skips retrain)")
     args = parser.parse_args()
 
     # Resolve paths relative to project root
@@ -598,13 +660,14 @@ def main():
     config = load_config(base_path, override_path)
 
     results = run_pipeline(
-        config          = config,
-        walk_forward    = not args.skip_walk_forward,
-        retrain_model   = args.retrain_model,
-        export_approved = args.export_approved,
-        optimize        = args.optimize,
-        n_trials        = args.trials,
-        legacy_signals  = args.legacy_signals,
+        config               = config,
+        walk_forward         = not args.skip_walk_forward,
+        retrain_model        = args.retrain_model,
+        export_approved      = args.export_approved,
+        optimize             = args.optimize,
+        n_trials             = args.trials,
+        legacy_signals       = args.legacy_signals,
+        model_path_override  = args.model_path,
     )
     sys.exit(0 if results["verdict"] == "APPROVED" else 1)
 

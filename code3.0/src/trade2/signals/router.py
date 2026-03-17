@@ -23,6 +23,40 @@ from trade2.signals.strategies.volatile import volatile_strategy
 from trade2.signals.strategies.cdc      import cdc_strategy
 
 
+def apply_tv_signal_filter(sig_df: pd.DataFrame, config: dict) -> pd.DataFrame:
+    """Gate signal_long/signal_short using TV indicator _bull/_bear columns (signal_filter/both mode)."""
+    tv_cfg = config.get("tv_indicators", {})
+    tv_filter_long  = pd.Series(True, index=sig_df.index)
+    tv_filter_short = pd.Series(True, index=sig_df.index)
+    for tv_name, tv_ind_cfg in tv_cfg.items():
+        if not isinstance(tv_ind_cfg, dict) or not tv_ind_cfg.get("enabled", False):
+            continue
+        if tv_ind_cfg.get("integration_mode", "hmm") not in ("signal_filter", "both"):
+            continue
+        bull_col = f"{tv_name}_bull"
+        bear_col = f"{tv_name}_bear"
+        if bull_col in sig_df.columns:
+            tv_filter_long  = tv_filter_long  & sig_df[bull_col].astype(bool)
+        if bear_col in sig_df.columns:
+            tv_filter_short = tv_filter_short & sig_df[bear_col].astype(bool)
+    out = sig_df.copy()
+    out["signal_long"]  = (out["signal_long"].astype(bool)  & tv_filter_long).astype(int)
+    out["signal_short"] = (out["signal_short"].astype(bool) & tv_filter_short).astype(int)
+    return out
+
+
+def ffill_tv_cols_to_5m(sig_df: pd.DataFrame, reg_feat: pd.DataFrame) -> pd.DataFrame:
+    """Forward-fill TV indicator _bull/_bear columns from 1H reg_feat into 5M sig_df."""
+    tv_bb_cols = [c for c in reg_feat.columns
+                  if (c.endswith("_bull") or c.endswith("_bear")) and not c.startswith("hmm_")]
+    if not tv_bb_cols:
+        return sig_df
+    out = sig_df.copy()
+    for col in tv_bb_cols:
+        out[col] = reg_feat[col].reindex(out.index).ffill().fillna(False)
+    return out
+
+
 def _empty_signals(df: pd.DataFrame) -> pd.DataFrame:
     """Return df with all signal/exit columns zeroed out (disabled strategy contributes nothing)."""
     out = df.copy()

@@ -228,9 +228,13 @@ def _translate_to_python(
     )
 
     code = _llm_complete(client, provider, model, user_msg, system=system_prompt)
-    # Strip markdown code blocks if present
-    code = re.sub(r'^```python\s*', '', code.strip(), flags=re.MULTILINE)
-    code = re.sub(r'```\s*$', '', code.strip(), flags=re.MULTILINE)
+    # Extract code from markdown code block if present (robust extraction)
+    match = re.search(r'```(?:python)?\s*\n(.*?)```', code, flags=re.DOTALL)
+    if match:
+        code = match.group(1).strip()
+    else:
+        # Fallback: remove any stray backtick fences
+        code = re.sub(r'```(?:python)?', '', code).strip()
     return code.strip() or None
 
 
@@ -456,12 +460,15 @@ def _test_three_modes(
     n_trials: int,
     walk_forward: bool,
     hmm_trained: bool,
+    force_no_retrain: bool = False,
 ) -> Tuple[str, Dict, Dict[str, Dict]]:
     """Run pipeline in 3 modes and return (best_mode, best_metrics, all_results).
 
     Mode A: hmm           — TV columns injected into HMM features, retrain HMM
     Mode B: signal_filter — TV columns used as entry gate only, reuse existing HMM
     Mode C: both          — TV columns in HMM AND as entry gate, retrain HMM
+
+    force_no_retrain: if True, all modes use retrain_model=False (reuse existing HMM).
     """
     name = indicator["name"]
     seed_integration = indicator.get("integration_mode", "hmm")
@@ -473,11 +480,18 @@ def _test_three_modes(
     best_return = -999.0
     best_metrics: Dict = {}
 
-    modes = [
-        ("hmm",           True),
-        ("signal_filter", False if hmm_trained else True),
-        ("both",          True),
-    ]
+    if force_no_retrain:
+        modes = [
+            ("hmm",           False),
+            ("signal_filter", False),
+            ("both",          False),
+        ]
+    else:
+        modes = [
+            ("hmm",           True),
+            ("signal_filter", False if hmm_trained else True),
+            ("both",          True),
+        ]
 
     for mode, retrain in modes:
         print(f"[tv]   Mode {mode}: retrain={retrain}")
@@ -548,6 +562,9 @@ def _greedy_stack(
     best_return = 0.0
     best_metrics: Dict = {}
 
+    # Build a name -> entry lookup so we can find module paths for all active indicators
+    entry_by_name = {e["name"]: e for e in ranked}
+
     for entry in ranked:
         name = entry["name"]
         # Get the best config override from 3-mode results if available
@@ -578,7 +595,8 @@ def _greedy_stack(
         for ind_name, ind_params in candidate.items():
             mode = ind_params.get("integration_mode", "hmm")
             if mode in ("hmm", "both"):
-                code_path = entry.get("python_module_path")
+                ind_entry = entry_by_name.get(ind_name, {})
+                code_path = ind_entry.get("python_module_path")
                 if code_path:
                     full_path = Path(__file__).parents[3] / code_path
                     if full_path.exists():
@@ -669,6 +687,8 @@ def main() -> None:
     parser.add_argument("--goal-sharpe",   type=float, default=None)
     parser.add_argument("--walk-forward",      action="store_true")
     parser.add_argument("--retrain-model",     action="store_true")
+    parser.add_argument("--no-retrain",        action="store_true",
+                        help="Use existing HMM model for all modes (skip retraining)")
     parser.add_argument("--base-config",       default="configs/base.yaml")
     parser.add_argument("--use-best-baseline", action="store_true",
                         help="Use 43.6%% return baseline config (4H 2-state HMM, idea16)")
@@ -906,6 +926,7 @@ def main() -> None:
             best_mode, test_metrics, mode_results = _test_three_modes(
                 base_config, indicator, code,
                 n_trials, args.walk_forward, hmm_already_trained,
+                force_no_retrain=args.no_retrain,
             )
             verdict = mode_results.get(best_mode, {}).get("verdict", "?")
 

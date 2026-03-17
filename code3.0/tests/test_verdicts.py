@@ -47,43 +47,50 @@ def test_passes_criteria_train_split(base_config):
 
 # ---- hard_rejection_checks ----
 
-def test_hard_rejection_overtrading():
+def test_hard_rejection_overtrading(base_config):
     metrics = {"avg_trade_duration_bars": 1.5, "sharpe_ratio": 2.0}
-    result  = hard_rejection_checks(metrics)
+    result  = hard_rejection_checks(metrics, base_config)
     assert result["hard_rejected"]
     assert "overtrading" in result["rejections"]
 
 
-def test_hard_rejection_regime_drift():
-    metrics = {"avg_trade_duration_bars": 10}
+def test_hard_rejection_regime_drift(base_config):
+    metrics    = {"avg_trade_duration_bars": 10}
     train_dist = {"bull": 0.40, "bear": 0.30, "sideways": 0.30}
     test_dist  = {"bull": 0.10, "bear": 0.60, "sideways": 0.30}  # bull drifted 30pp
-    result = hard_rejection_checks(metrics, train_dist, test_dist)
+    result = hard_rejection_checks(
+        metrics, base_config,
+        train_regime_dist=train_dist, test_regime_dist=test_dist,
+    )
     assert result["hard_rejected"]
     assert "regime_drift" in result["rejections"]
 
 
-def test_hard_rejection_cost_sensitivity():
+def test_hard_rejection_cost_sensitivity(base_config):
     base_metrics = {"avg_trade_duration_bars": 10, "sharpe_ratio": 2.0}
-    cost2x       = {"sharpe_ratio": 0.5}   # dropped 75% -> > 30% threshold
-    result = hard_rejection_checks(base_metrics, cost_sensitivity_metrics=cost2x, walk_forward_run=True)
+    cost2x       = {"sharpe_ratio": 0.5}   # dropped 75% -> > 35% threshold
+    result = hard_rejection_checks(base_metrics, base_config, cost_sensitivity_metrics=cost2x, walk_forward_run=True)
     assert result["hard_rejected"]
     assert "cost_sensitive" in result["rejections"]
 
 
-def test_hard_rejection_wf_not_run():
+def test_hard_rejection_wf_not_run(base_config):
     metrics = {"avg_trade_duration_bars": 10, "sharpe_ratio": 1.5}
-    result  = hard_rejection_checks(metrics, walk_forward_run=False)
+    result  = hard_rejection_checks(metrics, base_config, walk_forward_run=False)
     assert result["hard_rejected"]
     assert "wf_not_run" in result["rejections"]
 
 
-def test_no_hard_rejection_clean():
-    metrics = {"avg_trade_duration_bars": 10, "sharpe_ratio": 1.5}
+def test_no_hard_rejection_clean(base_config):
+    metrics    = {"avg_trade_duration_bars": 10, "sharpe_ratio": 1.5}
     train_dist = {"bull": 0.40, "bear": 0.30, "sideways": 0.30}
     test_dist  = {"bull": 0.38, "bear": 0.32, "sideways": 0.30}
     cost2x     = {"sharpe_ratio": 1.2}  # dropped only 20%
-    result = hard_rejection_checks(metrics, train_dist, test_dist, cost2x, walk_forward_run=True)
+    result = hard_rejection_checks(
+        metrics, base_config,
+        train_regime_dist=train_dist, test_regime_dist=test_dist,
+        cost_sensitivity_metrics=cost2x, walk_forward_run=True,
+    )
     assert not result["hard_rejected"]
 
 

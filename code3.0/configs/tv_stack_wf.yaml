@@ -1,0 +1,45 @@
+# Walk-forward override for stacked TV indicator set
+# ehlers_filter + squeeze_momentum (56.36% return, Sharpe 2.09 from greedy stack)
+# NOTE: Due to greedy stack bug, only squeeze_momentum cols were injected into HMM.
+# ehlers_filter runs as signal filter only (filter_column_bull/bear).
+# Tested with --use-best-baseline: 4H regime, 2-state HMM, max_hold_bars=48
+strategy:
+  regime_timeframe: 4H
+
+hmm:
+  n_states: 2
+  sizing_max: 2.0
+  features:
+    - hmm_feat_ret
+    - hmm_feat_rsi
+    - hmm_feat_atr
+    - hmm_feat_vol
+    - hmm_feat_hma_slope
+    - hmm_feat_bb_width
+    - hmm_feat_macd
+    - squeeze_momentum_squeeze_on
+    - squeeze_momentum_momentum
+    - squeeze_momentum_histogram
+    - squeeze_momentum_bb_upper
+    - squeeze_momentum_bb_middle
+    - squeeze_momentum_bb_lower
+    - squeeze_momentum_kc_upper
+    - squeeze_momentum_kc_middle
+    - squeeze_momentum_kc_lower
+
+risk:
+  base_allocation_frac: 0.90
+  max_hold_bars: 48
+
+tv_indicators:
+  luxalgo_fvg_ob:
+    enabled: false
+  ehlers_filter:
+    enabled: true
+    integration_mode: hmm
+    period: 20
+    filter_column_bull: ehlers_filter_slope
+    filter_column_bear: ehlers_filter_slope
+  squeeze_momentum:
+    enabled: true
+    integration_mode: hmm

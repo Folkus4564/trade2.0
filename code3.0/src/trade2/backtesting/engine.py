@@ -401,41 +401,57 @@ def run_walk_forward(
     raw_regime_path: Path,
     backtests_dir: Path = None,
     freq: str = None,
+    raw_signal_path: Path = None,
 ) -> Dict[str, Any]:
     """
     Walk-forward validation. Each window independently:
     loads data, builds features, RETRAINS HMM, generates signals, backtests.
 
+    When raw_signal_path is provided AND strategy.mode == multi_tf:
+        - Regime features built from regime TF (1H/4H) bars
+        - Signals generated on signal TF (5M) bars with regime forward-filled
+        - Backtest runs on signal TF bars (freq="5min")
+    Otherwise falls back to regime-TF-only signal path.
+
     Args:
-        strategy_name:   Name for result files
-        config:          Full config dict
-        raw_regime_path: Path to raw CSV for the regime timeframe (1H, 4H, etc.)
-        backtests_dir:   Where to save per-window results
-        freq:            Backtest frequency for bars_per_year (auto-detected from config if None)
+        strategy_name:    Name for result files
+        config:           Full config dict
+        raw_regime_path:  Path to raw CSV for the regime timeframe (1H, 4H, etc.)
+        backtests_dir:    Where to save per-window results
+        freq:             Backtest frequency override (auto-detected from config if None)
+        raw_signal_path:  Path to 5M raw CSV for multi_tf signal generation (optional)
 
     Returns:
         Summary dict with per-window metrics and aggregate stats.
     """
     from trade2.data.loader import load_raw
-    from trade2.features.builder import add_1h_features
+    from trade2.features.builder import add_1h_features, add_5m_features
     from trade2.features.hmm_features import get_hmm_feature_matrix
     from trade2.models.hmm import XAUUSDRegimeModel
     from trade2.signals.generator import generate_signals, compute_stops, compute_stops_regime_aware
-    from trade2.signals.router import route_signals
+    from trade2.signals.regime import forward_fill_1h_regime
+    from trade2.signals.router import route_signals, apply_tv_signal_filter, ffill_tv_cols_to_5m
 
     windows = config.get("walk_forward", {}).get("windows", [])
     if not windows:
         return {"available": False, "error": "No walk-forward windows defined in config"}
 
-    # Auto-detect backtest frequency from regime timeframe in config
-    if freq is None:
-        regime_tf = config.get("strategy", {}).get("regime_timeframe", "1H")
-        _TF_TO_FREQ_WF = {"5M": "5min", "15M": "15min", "30M": "30min", "1H": "1h", "4H": "4h"}
-        freq = _TF_TO_FREQ_WF.get(regime_tf, "1h")
+    strategy_mode_pipeline = config.get("strategy", {}).get("mode", "single_tf")
+    use_5m = (raw_signal_path is not None) and (strategy_mode_pipeline == "multi_tf")
 
-    raw     = load_raw(raw_regime_path)
-    hmm_cfg = config.get("hmm", {})
-    results = []
+    _TF_TO_FREQ_WF = {"5M": "5min", "15M": "15min", "30M": "30min", "1H": "1h", "4H": "4h"}
+    if freq is None:
+        if use_5m:
+            signal_tf = config.get("strategy", {}).get("signal_timeframe", "5M")
+            freq = _TF_TO_FREQ_WF.get(signal_tf, "5min")
+        else:
+            regime_tf = config.get("strategy", {}).get("regime_timeframe", "1H")
+            freq = _TF_TO_FREQ_WF.get(regime_tf, "1h")
+
+    raw_reg  = load_raw(raw_regime_path)
+    raw_sig  = load_raw(Path(raw_signal_path)) if use_5m else None
+    hmm_cfg  = config.get("hmm", {})
+    results  = []
 
     for i, win in enumerate(windows):
         te = pd.Timestamp(win["train_end"],   tz="UTC")
@@ -443,11 +459,11 @@ def run_walk_forward(
         ve = pd.Timestamp(win["val_end"],     tz="UTC")
         ts = pd.Timestamp(win["train_start"], tz="UTC")
 
-        train_df = raw[(raw.index >= ts) & (raw.index <= te)].copy()
-        val_df   = raw[(raw.index >= vs) & (raw.index <= ve)].copy()
+        train_df = raw_reg[(raw_reg.index >= ts) & (raw_reg.index <= te)].copy()
+        val_df   = raw_reg[(raw_reg.index >= vs) & (raw_reg.index <= ve)].copy()
 
         if len(train_df) < 500 or len(val_df) < 100:
-            print(f"[walk_forward] Window {i+1}: insufficient data, skipping")
+            print(f"[walk_forward] Window {i+1}: insufficient regime data, skipping")
             continue
 
         try:
@@ -465,7 +481,34 @@ def run_walk_forward(
 
             wf_strategy_mode = config.get("strategies", {}).get("mode", "legacy")
 
-            if wf_strategy_mode == "regime_specialized":
+            if use_5m:
+                # Multi-TF path: build 5M signal bars with regime forward-filled
+                val_5m = raw_sig[(raw_sig.index >= vs) & (raw_sig.index <= ve)].copy()
+                if len(val_5m) < 100:
+                    print(f"[walk_forward] Window {i+1}: insufficient 5M data, skipping")
+                    continue
+                val_5m_feat = add_5m_features(val_5m, config)
+                sideways_prob = model.sideways_probability(X_val) if hasattr(model, "sideways_probability") else None
+                val_sig_df = forward_fill_1h_regime(
+                    val_5m_feat,
+                    hmm_labels        = model.regime_labels(X_val),
+                    hmm_bull_prob     = model.bull_probability(X_val),
+                    hmm_bear_prob     = model.bear_probability(X_val),
+                    hmm_index         = idx_val,
+                    atr_1h            = val_feat["atr_14"].rename(None),
+                    hma_rising        = val_feat["hma_rising"].rename(None),
+                    price_above_hma   = val_feat["price_above_hma"].rename(None),
+                    hmm_sideways_prob = sideways_prob,
+                )
+                val_sig_df = ffill_tv_cols_to_5m(val_sig_df, val_feat)
+                if wf_strategy_mode == "regime_specialized":
+                    val_sig = route_signals(val_sig_df, config)
+                    val_sig = apply_tv_signal_filter(val_sig, config)
+                    val_sig = compute_stops_regime_aware(val_sig, config)
+                else:
+                    val_sig = generate_signals(val_sig_df, config)
+                    val_sig = compute_stops(val_sig, config["risk"]["atr_stop_mult"], config["risk"]["atr_tp_mult"])
+            elif wf_strategy_mode == "regime_specialized":
                 val_sig = route_signals(
                     val_feat, config,
                     hmm_labels    = model.regime_labels(X_val),

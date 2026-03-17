@@ -92,11 +92,31 @@ trade2.0/
 If test-period results show annualized_return >= 50% AND sharpe >= 1.5 AND max_dd >= -25%:
 Strategy is automatically saved as `YYYY-MM-DD_xauusd_hmm_hma_regime.py`
 
+## Golden Model Protection (added 2026-03-17)
+The pipeline automatically preserves high-potential models to prevent loss on retrain:
+
+- **Auto-backup before retrain**: `--retrain-model` backs up the current model to
+  `artefacts/models/backups/hmm_{tf}_{n}states_{timestamp}.pkl` before overwriting.
+- **Auto-save golden**: After any run where test annualized_return >= 20% (configurable via
+  `pipeline.golden_model_threshold` in base.yaml), the model is copied to
+  `artefacts/models/golden/{name}_ret{X}pct_sh{Y}.pkl` with a `_metrics.json` sidecar.
+- **Load specific model**: Use `--model-path artefacts/models/golden/hmm_1h_3states_2026_03_17_ret25pct_sh1.20.pkl`
+  to run the full pipeline with any saved model (skips retrain entirely).
+
+```bash
+# Retrain (old model backed up automatically)
+trade2 --retrain-model --skip-walk-forward
+
+# Reuse a specific golden model without retraining
+trade2 --model-path artefacts/models/golden/hmm_1h_3states_2026_03_17_ret25pct_sh1.20.pkl
+```
+
 ## User Preferences
 - Auto-proceed without asking for confirmation
 - No unicode special characters in print statements (cp874 encoding)
 - Custom event-driven engine (pandas/numpy, no vectorbt) is the backtesting framework
 - Save strategies achieving >= 20% return
+- Golden model auto-save threshold: >= 20% annualized return (pipeline.golden_model_threshold in base.yaml)
 
 ## Planning Workflow
 When the user asks to plan something (new feature, refactor, investigation, etc.):
@@ -112,3 +132,12 @@ When the user asks to plan something (new feature, refactor, investigation, etc.
    - Include the date and commit hash.
 
 The `.claude/steps/` folder holds all plans (pending and completed).
+
+## CLAUDE.md Maintenance
+CLAUDE.md must be kept up to date at all times. After any session where new modules, results, architecture decisions, configs, CLI usage patterns, or user preferences are introduced or changed, update the relevant section(s) of CLAUDE.md before finishing.
+
+- Update **Repository Structure** when new files/folders are added
+- Update **User Preferences** when new preferences are established
+- Update **Quick Start / CLI Usage** when entry points or flags change
+- Add new sections as needed for major features (e.g., new agents, strategies, dashboards)
+- Remove stale information that no longer reflects the codebase

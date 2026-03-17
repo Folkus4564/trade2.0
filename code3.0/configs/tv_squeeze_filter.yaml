@@ -1,0 +1,23 @@
+# squeeze_momentum as signal filter only — no HMM feature injection
+# Uses standard 7-feature HMM, squeeze gates entries only
+# Tested with --use-best-baseline: 4H regime, 2-state HMM, max_hold_bars=48
+strategy:
+  regime_timeframe: 4H
+
+hmm:
+  n_states: 2
+  sizing_max: 2.0
+
+risk:
+  base_allocation_frac: 0.90
+  max_hold_bars: 48
+
+tv_indicators:
+  luxalgo_fvg_ob:
+    enabled: false
+  squeeze_momentum:
+    enabled: true
+    integration_mode: signal_filter
+    bb_length: 20
+    kc_length: 20
+    kc_mult: 1.5
