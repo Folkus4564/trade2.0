@@ -18,7 +18,7 @@ data:
   instrument: XAUUSD
   source: Dukascopy
   raw_1h_csv: data/raw/XAUUSD_1H_2019_2026.csv
-  raw_4h_csv: data/raw/XAUUSD_4H_2019_2025.csv
+  raw_4h_csv: data/raw/XAUUSD_4H_2019_2026.csv
   raw_5m_csv: data/raw/XAUUSD_5M_2019_2026.csv
   timezone: UTC
   missing_bar_policy: forward_fill
@@ -30,21 +30,23 @@ data:
 # ---- Split dates -------------------------------------------
 splits:
   train_start: "2019-01-01"
-  train_end:   "2022-12-31"
-  val_start:   "2023-01-01"
-  val_end:     "2023-12-31"
-  test_start:  "2026-01-01"
+  train_end:   "2023-12-31"
+  val_start:   "2024-01-01"
+  val_end:     "2024-12-31"
+  test_start:  "2025-01-01"
   test_end:    "2026-03-15"
 
 # ---- Walk-forward windows ----------------------------------
 walk_forward:
-  n_windows: 5
+  n_windows: 7
   windows:
     - {train_start: "2019-01-01", train_end: "2020-12-31", val_start: "2021-01-01", val_end: "2021-06-30"}
     - {train_start: "2019-01-01", train_end: "2021-12-31", val_start: "2022-01-01", val_end: "2022-06-30"}
     - {train_start: "2019-01-01", train_end: "2022-06-30", val_start: "2022-07-01", val_end: "2022-12-31"}
     - {train_start: "2019-01-01", train_end: "2022-12-31", val_start: "2023-01-01", val_end: "2023-06-30"}
     - {train_start: "2019-01-01", train_end: "2023-06-30", val_start: "2023-07-01", val_end: "2023-12-31"}
+    - {train_start: "2019-01-01", train_end: "2023-12-31", val_start: "2024-01-01", val_end: "2024-06-30"}
+    - {train_start: "2019-01-01", train_end: "2024-06-30", val_start: "2024-07-01", val_end: "2024-12-31"}
   min_mean_sharpe:    0.0
   min_positive_pct:   0.40
 
@@ -56,11 +58,12 @@ hmm:
   features:
     - hmm_feat_ret
     - hmm_feat_rsi
-    - hmm_feat_atr
+    - hmm_feat_atr          # raw ATR/price - level-dependent (use hmm_feat_atr_ratio for cycle stability)
     - hmm_feat_vol
     - hmm_feat_hma_slope
     - hmm_feat_bb_width
     - hmm_feat_macd
+  # D2 alternative: hmm_feat_atr_ratio (atr / 20-bar rolling atr) is more stable across cycles
   min_sideways_pct: 0.10
   use_as_hard_gate: false
   min_self_transition_prob: 0.80   # C1: suppress entries if HMM self-persistence < this (0=disabled)
@@ -72,6 +75,7 @@ hmm:
   sizing_base:      0.50
   sizing_max:       1.50
   min_confidence:   0.45      # min max-state-probability to allow any entry
+  prob_momentum_bars: 0       # A2: require bull_prob rising N consecutive bars before entry (0=disabled)
 
 # ---- Feature engineering (1H) ------------------------------
 features:

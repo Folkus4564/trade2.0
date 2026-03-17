@@ -99,8 +99,11 @@ def route_signals(
             bull_tp_ok = bull_tp >= min_self_tp
             bear_tp_ok = bear_tp >= min_self_tp
             if hmm_cfg.get("log_transition_matrix", False):
-                side_tp = hmm_model.self_transition_prob("sideways")
-                print(f"  [hmm-C1] self-transition: bull={bull_tp:.3f} | bear={bear_tp:.3f} | sideways={side_tp:.3f}")
+                try:
+                    side_tp = hmm_model.self_transition_prob("sideways")
+                    print(f"  [hmm-C1] self-transition: bull={bull_tp:.3f} | bear={bear_tp:.3f} | sideways={side_tp:.3f}")
+                except Exception:
+                    print(f"  [hmm-C1] self-transition: bull={bull_tp:.3f} | bear={bear_tp:.3f} (2-state: no sideways)")
                 print(f"  [hmm-C1] gate threshold={min_self_tp:.3f} | bull_ok={bull_tp_ok} | bear_ok={bear_tp_ok}")
         except Exception as e:
             print(f"  [hmm-C1] self_transition_prob error: {e} -- gate skipped")
@@ -130,6 +133,32 @@ def route_signals(
         n_suppressed = int(suppress_long.sum() + suppress_short.sum())
         if n_suppressed > 0:
             print(f"  [dd-filter] suppressed {n_suppressed} bars (long={int(suppress_long.sum())} | short={int(suppress_short.sum())})")
+
+    # ---- A2: Probability momentum filter ----
+    # Suppress bull entries when bull_prob is NOT higher than it was N regime-TF bars ago.
+    # "Momentum" = prob is still rising vs N bars back (directional check, not strictly consecutive).
+    # In multi-TF mode (5M signals, 4H regime), bull_prob is forward-filled so we
+    # shift by N * (signal bars per regime bar) to look back N regime bars.
+    # prob_momentum_bars: number of regime-TF bars to look back (0 = disabled).
+    prob_momentum_bars = hmm_cfg.get("prob_momentum_bars", 0)
+    if prob_momentum_bars > 0 and "bull_prob" in out.columns:
+        regime_tf_str = config.get("strategy", {}).get("regime_timeframe", "1H")
+        sig_tf_str    = config.get("strategy", {}).get("signal_timeframe", "5M")
+        mode_str      = config.get("strategy", {}).get("mode", "single_tf")
+        _SIG_BARS_PER_H = {"5M": 12.0, "15M": 4.0, "30M": 2.0, "1H": 1.0, "4H": 0.25}
+        if mode_str == "multi_tf":
+            sig_per_regime = _SIG_BARS_PER_H.get(sig_tf_str, 12.0) / _SIG_BARS_PER_H.get(regime_tf_str, 1.0)
+        else:
+            sig_per_regime = 1.0
+        pm_shift = int(prob_momentum_bars * sig_per_regime)
+        prob_series = out["bull_prob"]
+        # Momentum condition: current bull_prob strictly greater than N regime-bars ago
+        bull_prob_n_ago = prob_series.shift(pm_shift)
+        bull_momentum_ok = prob_series > bull_prob_n_ago
+        bull_raw = bull_raw & bull_momentum_ok.fillna(False)
+        n_pm_filtered = int((~bull_momentum_ok.fillna(False) & (out["bull_prob"] >= entry_prob)).sum())
+        if n_pm_filtered > 0:
+            print(f"  [prob-momentum] filtered {n_pm_filtered} bars (bull_prob not > value {prob_momentum_bars} bars ago)")
 
     # ---- C3: Regime freshness filter (Improvement #4) ----
     # Suppress entries when the regime has lasted far longer than the HMM expects.
@@ -255,7 +284,18 @@ def route_signals(
         cdc_df["signal_source"].values,
     )
 
-    # ---- 6. Diagnostics ----
+    # ---- 6. Direction filter (long_only / short_only) ----
+    strat_top = config.get("strategy", {})
+    if strat_top.get("long_only", False):
+        result["signal_short"]        = 0
+        result["exit_short"]          = 0
+        result["position_size_short"] = 0.0
+    if strat_top.get("short_only", False):
+        result["signal_long"]        = 0
+        result["exit_long"]          = 0
+        result["position_size_long"] = 0.0
+
+    # ---- 7. Diagnostics ----
     n_trend   = int((result["signal_source"] == "trend").sum())
     n_range   = int((result["signal_source"] == "range").sum())
     n_vol     = int((result["signal_source"] == "volatile").sum())

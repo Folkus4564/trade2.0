@@ -85,6 +85,13 @@ def add_hmm_features(
     atr_ma = out["atr_14"].rolling(20).mean()
     out["atr_expansion"] = (out["atr_14"] > atr_ma).astype(int)
 
+    # D2: ATR volatility ratio - ATR relative to its 20-bar rolling mean.
+    # More stable across different market cycles than raw ATR/price (atr_norm).
+    # In 2019-2023 gold traded ~1600-2000; in 2024-2025 it traded ~2000-2700.
+    # The absolute ATR has risen ~40% but the ratio stays near 1.0 in both periods.
+    atr_ma_20 = out["atr_14"].rolling(20).mean()
+    out["atr_ratio"] = out["atr_14"] / (atr_ma_20 + 1e-10)
+
     # HMM input features - ALL shifted 1 bar for lookahead safety
     out["hmm_feat_ret"]       = out["log_ret"].shift(1)
     out["hmm_feat_rsi"]       = out["rsi_norm"].shift(1)
@@ -93,6 +100,7 @@ def add_hmm_features(
     out["hmm_feat_hma_slope"] = out["hma_slope"].shift(1)
     out["hmm_feat_bb_width"]  = out["bb_width"].shift(1)
     out["hmm_feat_macd"]      = out["macd_hist"].shift(1)
+    out["hmm_feat_atr_ratio"] = out["atr_ratio"].shift(1)   # D2: normalized volatility
 
     return out
 

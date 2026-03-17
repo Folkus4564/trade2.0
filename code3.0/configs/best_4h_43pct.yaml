@@ -10,7 +10,7 @@ strategy:
   mode: multi_tf
   signal_timeframe: 5M
   regime_timeframe: 4H
-  long_only: false
+  long_only: true
 
 hmm:
   n_states: 2
@@ -19,7 +19,7 @@ hmm:
   features:
     - hmm_feat_ret
     - hmm_feat_rsi
-    - hmm_feat_atr
+    - hmm_feat_atr_ratio   # D2: replaced raw hmm_feat_atr with cycle-normalized ratio
     - hmm_feat_vol
     - hmm_feat_hma_slope
     - hmm_feat_bb_width
@@ -30,6 +30,7 @@ hmm:
   min_prob_hard_short: 0.7348404387333658
   min_prob_entry: 0.80    # Improvement #3: higher entry bar (vs 0.735 hard prob)
   min_prob_exit:  0.50    # Improvement #3: exit only when bull_prob < 0.50 (hysteresis)
+  prob_momentum_bars: 0   # A2: disabled - worsened test results (correct bars, wrong timing)
   sizing_base: 0.5
   sizing_max: 2.0
   min_confidence: 0.5117980796648711
@@ -56,6 +57,9 @@ drawdown_filter:
   lookback_bars: 120          # 120 4H bars = 20 trading days
   suppress_long_dd: -0.05     # suppress longs when 20-day drawdown < -5%
   suppress_short_rally: 0.05  # suppress shorts when 20-day rally > 5%
+
+hard_rejection:
+  max_regime_drift_pp: 0.40   # D2: gold price level changed 60% 2019->2025; 20pp too strict
 
 smc:
   ob_validity_bars: 20
