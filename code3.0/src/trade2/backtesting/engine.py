@@ -21,6 +21,7 @@ def _simulate_trades(
     slippage: np.ndarray,
     commission_rt: float,
     max_hold_bars: int,
+    be_atr_trigger: float = 0.0,
 ) -> Tuple[pd.Series, pd.DataFrame]:
     """
     Bar-by-bar event-driven simulation with frozen ATR-based SL/TP
@@ -70,14 +71,16 @@ def _simulate_trades(
     cash = float(init_cash)
 
     # Active position state
-    in_pos    = False
-    direction = None    # 'long' | 'short'
-    entry_bar = -1
-    entry_px  = 0.0
-    frozen_sl = 0.0
-    frozen_tp = 0.0
-    pos_val   = 0.0     # dollar value committed
-    n_units   = 0.0     # units held
+    in_pos      = False
+    direction   = None    # 'long' | 'short'
+    entry_bar   = -1
+    entry_px    = 0.0
+    frozen_sl   = 0.0
+    frozen_tp   = 0.0
+    pos_val     = 0.0     # dollar value committed
+    n_units     = 0.0     # units held
+    be_active   = False   # break-even stop already triggered
+    entry_atr   = 0.0     # ATR at entry bar (for BE trigger distance)
 
     # Pending entry: signal at bar i fires at bar i+1 open
     pend_dir = None
@@ -99,7 +102,9 @@ def _simulate_trades(
             frozen_tp = pend_tp
             direction = pend_dir
             entry_bar = i
+            entry_atr = atr_vals[i]
             in_pos    = True
+            be_active = False
             pend_dir  = None
 
         # --- Mark-to-market equity ---
@@ -122,6 +127,16 @@ def _simulate_trades(
                 if new_sl < frozen_sl:
                     frozen_sl = new_sl
 
+        # --- Break-even stop: move SL to entry when price moves be_atr_trigger * ATR in favor ---
+        if in_pos and be_atr_trigger > 0 and not be_active and entry_atr > 0:
+            trigger_dist = be_atr_trigger * entry_atr
+            if direction == "long" and highs[i] >= entry_px + trigger_dist:
+                frozen_sl = max(frozen_sl, entry_px)
+                be_active = True
+            elif direction == "short" and lows[i] <= entry_px - trigger_dist:
+                frozen_sl = min(frozen_sl, entry_px)
+                be_active = True
+
         # --- Check SL / TP / signal exit / timeout ---
         if in_pos:
             reason  = None
@@ -137,7 +152,7 @@ def _simulate_trades(
                 elif exit_long[i] == 1 and i > entry_bar:
                     reason  = "signal"
                     exit_px = closes[i] * (1.0 - slippage[i])
-                elif (i - entry_bar) >= max_hold_bars:
+                elif max_hold_bars > 0 and (i - entry_bar) >= max_hold_bars:
                     reason  = "timeout"
                     exit_px = closes[i] * (1.0 - slippage[i])
             else:  # short
@@ -150,7 +165,7 @@ def _simulate_trades(
                 elif exit_short[i] == 1 and i > entry_bar:
                     reason  = "signal"
                     exit_px = closes[i] * (1.0 + slippage[i])
-                elif (i - entry_bar) >= max_hold_bars:
+                elif max_hold_bars > 0 and (i - entry_bar) >= max_hold_bars:
                     reason  = "timeout"
                     exit_px = closes[i] * (1.0 + slippage[i])
 
@@ -266,10 +281,11 @@ def run_backtest(
     risk_cfg  = cfg["risk"]
     hmm_cfg   = cfg["hmm"]
 
-    init_cash     = cfg["backtest"]["init_cash"]
-    commission    = costs_cfg["commission_rt"]
-    max_hold_bars = risk_cfg["max_hold_bars"]
-    base_alloc    = risk_cfg["base_allocation_frac"]
+    init_cash       = cfg["backtest"]["init_cash"]
+    commission      = costs_cfg["commission_rt"]
+    max_hold_bars   = risk_cfg["max_hold_bars"]
+    base_alloc      = risk_cfg["base_allocation_frac"]
+    be_atr_trigger  = risk_cfg.get("break_even_atr_trigger", 0.0)
 
     # Scale max_hold_bars and bars_per_year to match the data frequency.
     # Config value is expressed in 1H-equivalent bars.
@@ -306,6 +322,7 @@ def run_backtest(
         slippage             = slippage,
         commission_rt        = commission,
         max_hold_bars        = max_hold_bars,
+        be_atr_trigger       = be_atr_trigger,
     )
 
     trade_records = None
@@ -381,20 +398,20 @@ def run_backtest_2x_costs(
 def run_walk_forward(
     strategy_name: str,
     config: Dict[str, Any],
-    raw_1h_path: Path,
+    raw_regime_path: Path,
     backtests_dir: Path = None,
-    freq: str = "1h",
+    freq: str = None,
 ) -> Dict[str, Any]:
     """
     Walk-forward validation. Each window independently:
     loads data, builds features, RETRAINS HMM, generates signals, backtests.
 
     Args:
-        strategy_name: Name for result files
-        config:        Full config dict
-        raw_1h_path:   Path to raw 1H CSV (HMM is always trained on 1H)
-        backtests_dir: Where to save per-window results
-        freq:          Backtest frequency for bars_per_year
+        strategy_name:   Name for result files
+        config:          Full config dict
+        raw_regime_path: Path to raw CSV for the regime timeframe (1H, 4H, etc.)
+        backtests_dir:   Where to save per-window results
+        freq:            Backtest frequency for bars_per_year (auto-detected from config if None)
 
     Returns:
         Summary dict with per-window metrics and aggregate stats.
@@ -410,7 +427,13 @@ def run_walk_forward(
     if not windows:
         return {"available": False, "error": "No walk-forward windows defined in config"}
 
-    raw     = load_raw(raw_1h_path)
+    # Auto-detect backtest frequency from regime timeframe in config
+    if freq is None:
+        regime_tf = config.get("strategy", {}).get("regime_timeframe", "1H")
+        _TF_TO_FREQ_WF = {"5M": "5min", "15M": "15min", "30M": "30min", "1H": "1h", "4H": "4h"}
+        freq = _TF_TO_FREQ_WF.get(regime_tf, "1h")
+
+    raw     = load_raw(raw_regime_path)
     hmm_cfg = config.get("hmm", {})
     results = []
 

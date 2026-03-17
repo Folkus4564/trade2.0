@@ -93,9 +93,9 @@ def range_strategy(
     sig_long  = (range_regime & bb_long  & rsi_long  & adx_low & ob_long).astype(int)
     sig_short = (range_regime & bb_short & rsi_short & adx_low & ob_short).astype(int)
 
-    # Exit: regime no longer sideways
-    exit_long  = (~range_regime).astype(int)
-    exit_short = (~range_regime).astype(int)
+    # Exit: range regime just ended (transition-based)
+    exit_long  = (range_regime.shift(1).fillna(False) & ~range_regime).astype(int)
+    exit_short = (range_regime.shift(1).fillna(False) & ~range_regime).astype(int)
 
     # ---- Confidence-based sizing ----
     min_prob   = rcfg["min_prob"]

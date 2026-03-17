@@ -22,10 +22,18 @@ dependencies = [
 
 [project.optional-dependencies]
 ui = ["streamlit>=1.30", "plotly>=5.18"]
+ai = ["anthropic>=0.40"]
 
 [project.scripts]
 trade2 = "trade2.app.run_pipeline:main"
 full_scheme_search = "trade2.app.full_scheme_search:main"
+full_scheme_search_v2 = "trade2.app.full_scheme_search_v2:main"
+full_scheme_search_v3 = "trade2.app.full_scheme_search_v3:main"
+wf_positive = "trade2.app.wf_positive:main"
+test_long_only = "trade2.app.test_long_only:main"
+test_3state_4h = "trade2.app.test_3state_4h:main"
+trade2-ui = "trade2.app.launch_ui:main"
+full_scheme_search_ai = "trade2.app.full_scheme_search_ai:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

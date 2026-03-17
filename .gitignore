@@ -18,13 +18,29 @@ venv/
 # Jupyter
 .ipynb_checkpoints/
 
+# Testing
+.pytest_cache/
+
+# Logs
+*.log
+
 # OS
 .DS_Store
 Thumbs.db
 
-# Data (raw CSVs and processed intermediates)
-data/processed/
-data/raw/
+# Claude Code (machine-local settings)
+.claude/settings.local.json
+
+# Data (raw CSVs and processed intermediates — all levels)
+**/data/raw/
+**/data/processed/
+
+# Large data file extensions (safety net)
+*.parquet
+*.csv
+*.h5
+*.hdf5
+*.feather
 
 # Artefacts (generated outputs - not source)
 artefacts/

@@ -1,0 +1,541 @@
+[
+  {
+    "name": "ai_4h_2s_trend_only",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "range":    {"enabled": false},
+        "volatile": {"enabled": false}
+      }
+    },
+    "rationale": "idea_16 base with trend-only router. Range/volatile add lower-quality trades that dilute trend alpha; removing them concentrates all sizing on high-confidence regime-aligned trend trades."
+  },
+
+  {
+    "name": "ai_4h_2s_trail_trend",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"trailing_enabled": true, "trailing_atr_mult": 1.5, "atr_tp_mult": 0.0}
+      }
+    },
+    "rationale": "idea_16 base with trailing stop on trend. Lets winning trades run further while locking in profits dynamically, potentially capturing larger gold trend moves."
+  },
+
+  {
+    "name": "ai_4h_2s_long_only",
+    "override": {
+      "strategy": {"regime_timeframe": "4H", "long_only": true},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90}
+    },
+    "rationale": "idea_16 base restricted to long trades only. Gold has a structural long bias (inflation hedge). Removing shorts eliminates false bear-regime signals and focuses on the dominant bullish trend in 2024-2025."
+  },
+
+  {
+    "name": "ai_4h_2s_london_session",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend":    {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]},
+        "range":    {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]},
+        "volatile": {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]}
+      }
+    },
+    "rationale": "idea_16 base restricted to London session (7-16 UTC). Gold volatility and trend reliability peak during European hours; restricting reduces noise from illiquid Asian session bars."
+  },
+
+  {
+    "name": "ai_4h_2s_ny_session",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend":    {"session_enabled": true, "allowed_hours_utc": [13, 14, 15, 16, 17, 18, 19, 20, 21, 22]},
+        "range":    {"session_enabled": true, "allowed_hours_utc": [13, 14, 15, 16, 17, 18, 19, 20, 21, 22]},
+        "volatile": {"session_enabled": true, "allowed_hours_utc": [13, 14, 15, 16, 17, 18, 19, 20, 21, 22]}
+      }
+    },
+    "rationale": "idea_16 base restricted to NY session (13-22 UTC). US trading hours drive the largest gold directional moves triggered by macro data (Fed, CPI, NFP); these hours have the highest follow-through."
+  },
+
+  {
+    "name": "ai_4h_2s_max_alloc",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.95}
+    },
+    "rationale": "idea_16 base with maximum capital deployment (alloc=0.95 vs 0.90). Max_dd=-10% leaves room to deploy more capital; 5% more allocation should linearly scale returns without breaching drawdown limits."
+  },
+
+  {
+    "name": "ai_4h_2s_aggressive_size",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.5, "sizing_base": 0.7},
+      "risk": {"base_allocation_frac": 0.90}
+    },
+    "rationale": "idea_16 base with more aggressive HMM sizing (sizing_max=2.5 vs 2.0). When HMM is highly confident in a regime, allocate up to 2.5x the base position to maximise the regime-aligned edge."
+  },
+
+  {
+    "name": "ai_4h_2s_cdc_on",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "cdc": {"enabled": true}
+      }
+    },
+    "rationale": "idea_16 base with CDC Action Zone strategy enabled. CDC adds MACD-based crossover entries as complementary alpha, potentially increasing trade count and capturing regime-consistent entries missed by SMC-only approach."
+  },
+
+  {
+    "name": "ai_4h_2s_feat_core4",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {
+        "n_states": 2,
+        "sizing_max": 2.0,
+        "features": ["hmm_feat_ret", "hmm_feat_rsi", "hmm_feat_atr", "hmm_feat_hma_slope"]
+      },
+      "risk": {"base_allocation_frac": 0.90}
+    },
+    "rationale": "4H 2-state with 4 core momentum features only (ret+rsi+atr+hma). Removing vol and bb_width reduces noise in HMM observation space; cleaner feature set may sharpen bull/bear state separation."
+  },
+
+  {
+    "name": "ai_4h_2s_feat_no_macd",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {
+        "n_states": 2,
+        "sizing_max": 2.0,
+        "features": ["hmm_feat_ret", "hmm_feat_rsi", "hmm_feat_atr", "hmm_feat_vol", "hmm_feat_hma_slope", "hmm_feat_bb_width"]
+      },
+      "risk": {"base_allocation_frac": 0.90}
+    },
+    "rationale": "4H 2-state without MACD in HMM features. MACD is lagging and may slow regime transitions; removing it may let the HMM detect state changes earlier via cleaner price-action features."
+  },
+
+  {
+    "name": "ai_4h_2s_feat_momentum",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {
+        "n_states": 2,
+        "sizing_max": 2.0,
+        "features": ["hmm_feat_ret", "hmm_feat_rsi", "hmm_feat_hma_slope", "hmm_feat_macd"]
+      },
+      "risk": {"base_allocation_frac": 0.90}
+    },
+    "rationale": "4H 2-state with pure momentum features (ret+rsi+hma_slope+macd). Bull regimes are defined by upward momentum; using only momentum features should produce the cleanest bull/bear separation for trend-following."
+  },
+
+  {
+    "name": "ai_4h_2s_feat_volatility",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {
+        "n_states": 2,
+        "sizing_max": 2.0,
+        "features": ["hmm_feat_ret", "hmm_feat_atr", "hmm_feat_vol", "hmm_feat_bb_width"]
+      },
+      "risk": {"base_allocation_frac": 0.90}
+    },
+    "rationale": "4H 2-state with volatility features only (ret+atr+vol+bb_width). Regimes may be better separated by volatility expansion/contraction than lagging oscillators; tests if a volatility-based HMM beats momentum-based."
+  },
+
+  {
+    "name": "ai_4h_2s_high_iter",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0, "n_iter": 500},
+      "risk": {"base_allocation_frac": 0.90}
+    },
+    "rationale": "4H 2-state with 500 HMM training iterations (vs 200). More Baum-Welch iterations may converge to a more stable emission distribution, giving more reliable state probabilities for signal gating."
+  },
+
+  {
+    "name": "ai_4h_2s_fixed_tp5",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"atr_tp_mult": 5.0, "trailing_enabled": false}
+      }
+    },
+    "rationale": "idea_16 base with fixed TP=5*ATR on trend (vs no fixed TP). Riding regime until flip can give up gains on reversals; a 5*ATR TP may lock in profits more reliably and improve win rate."
+  },
+
+  {
+    "name": "ai_4h_2s_fixed_tp8",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"atr_tp_mult": 8.0, "trailing_enabled": false}
+      }
+    },
+    "rationale": "idea_16 base with aggressive TP=8*ATR on trend. Larger TP lets gold trend trades run further before exiting; 8*ATR captures the full extent of strong 4H bull/bear moves before they reverse."
+  },
+
+  {
+    "name": "ai_4h_2s_trail_tight",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"trailing_enabled": true, "trailing_atr_mult": 0.8, "atr_tp_mult": 0.0}
+      }
+    },
+    "rationale": "idea_16 base with tight trailing stop (0.8*ATR). A tighter trail locks in gains faster when gold pulls back, reducing the chance of giving back profits on regime transitions or sudden reversals."
+  },
+
+  {
+    "name": "ai_4h_2s_wider_stop",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"atr_stop_mult": 4.0}
+      }
+    },
+    "rationale": "idea_16 base with wider trend stop (4*ATR vs ~3.1*ATR). Gold trends on 4H can have deep intraday retracements before resuming; wider stop reduces premature SL-outs on otherwise valid trend trades."
+  },
+
+  {
+    "name": "ai_4h_2s_break_even",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90, "break_even_atr_trigger": 1.5}
+    },
+    "rationale": "idea_16 base with break-even stop (move SL to entry when price moves 1.5*ATR in favour). Eliminates losses on trades that were in profit, improving win rate and allowing more aggressive sizing."
+  },
+
+  {
+    "name": "ai_4h_2s_high_alloc_trail",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.95},
+      "strategies": {
+        "trend": {"trailing_enabled": true, "trailing_atr_mult": 1.5, "atr_tp_mult": 0.0}
+      }
+    },
+    "rationale": "Maximum allocation (0.95) + trailing stop on trend. Combines higher capital deployment with dynamic exit to capture full trend magnitude while protecting gains. Dual lever to push returns beyond 43.7%."
+  },
+
+  {
+    "name": "ai_4h_2s_london_trail",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend":    {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16], "trailing_enabled": true, "trailing_atr_mult": 1.5, "atr_tp_mult": 0.0},
+        "range":    {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]},
+        "volatile": {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]}
+      }
+    },
+    "rationale": "London session + trailing stop on trend. European hours provide clearest gold directional moves; trailing stop then maximises how much of those moves the strategy captures without giving back gains."
+  },
+
+  {
+    "name": "ai_4h_2s_overlap_session",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend":    {"session_enabled": true, "allowed_hours_utc": [12, 13, 14, 15, 16, 17]},
+        "range":    {"session_enabled": true, "allowed_hours_utc": [12, 13, 14, 15, 16, 17]},
+        "volatile": {"session_enabled": true, "allowed_hours_utc": [12, 13, 14, 15, 16, 17]}
+      }
+    },
+    "rationale": "London-NY overlap session only (12-17 UTC). The overlap window has highest institutional participation for gold; entries here have tighter spreads and more reliable momentum follow-through."
+  },
+
+  {
+    "name": "ai_4h_2s_trend_only_london",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend":    {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]},
+        "range":    {"enabled": false},
+        "volatile": {"enabled": false}
+      }
+    },
+    "rationale": "Trend-only router + London session. Most focused configuration: only regime-aligned trend entries during peak gold liquidity hours, eliminating all range and volatile sub-strategy noise."
+  },
+
+  {
+    "name": "ai_4h_2s_long_only_london",
+    "override": {
+      "strategy": {"regime_timeframe": "4H", "long_only": true},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend":    {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]},
+        "range":    {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]},
+        "volatile": {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]}
+      }
+    },
+    "rationale": "Long-only + London session. Gold's 2024-2025 bull run makes long-only during European hours ideal: eliminates short-side false signals while keeping highest-quality long entries during peak liquidity."
+  },
+
+  {
+    "name": "ai_4h_2s_ny_trail",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend":    {"session_enabled": true, "allowed_hours_utc": [13, 14, 15, 16, 17, 18, 19, 20], "trailing_enabled": true, "trailing_atr_mult": 1.5, "atr_tp_mult": 0.0},
+        "range":    {"session_enabled": true, "allowed_hours_utc": [13, 14, 15, 16, 17, 18, 19, 20]},
+        "volatile": {"session_enabled": true, "allowed_hours_utc": [13, 14, 15, 16, 17, 18, 19, 20]}
+      }
+    },
+    "rationale": "NY session + trailing stop on trend. US market hours drive large directional gold moves from macro catalysts; trailing stop lets the strategy ride the full post-catalyst move."
+  },
+
+  {
+    "name": "ai_4h_2s_broad_session",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend":    {"session_enabled": true, "allowed_hours_utc": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]},
+        "range":    {"session_enabled": true, "allowed_hours_utc": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]},
+        "volatile": {"session_enabled": true, "allowed_hours_utc": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]}
+      }
+    },
+    "rationale": "Extended session window (6-22 UTC vs baseline 7-20). Adds early pre-London and late post-NY hours where gold sometimes starts/extends major moves, capturing entries the baseline session filter misses."
+  },
+
+  {
+    "name": "ai_4h_2s_high_conf",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0, "min_confidence": 0.60, "min_prob_hard": 0.80, "min_prob_hard_short": 0.80},
+      "risk": {"base_allocation_frac": 0.90}
+    },
+    "rationale": "idea_16 base with high confidence gating (min_conf=0.60, min_prob=0.80). Fewer but much higher-quality trades should boost win rate and profit factor, potentially outperforming idea_16 on risk-adjusted returns."
+  },
+
+  {
+    "name": "ai_4h_2s_very_high_conf",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.5, "min_confidence": 0.65, "min_prob_hard": 0.82, "min_prob_hard_short": 0.82},
+      "risk": {"base_allocation_frac": 0.95}
+    },
+    "rationale": "Ultra-high confidence (0.65/0.82) + aggressive sizing + max alloc. When HMM is nearly certain, deploy maximum capital on those rare high-conviction signals; quality-over-quantity to maximise return-per-trade."
+  },
+
+  {
+    "name": "ai_4h_2s_low_adx",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"adx_threshold": 10.0}
+      }
+    },
+    "rationale": "Lower ADX threshold on trend (10 vs 15). Admits weaker-trend bars, increasing trade count; if the HMM regime signal is strong enough, lower ADX simply gives more entries in valid bull regimes."
+  },
+
+  {
+    "name": "ai_4h_2s_high_adx",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"adx_threshold": 22.0}
+      }
+    },
+    "rationale": "Higher ADX threshold on trend (22 vs 15). Only enter when gold is clearly trending (ADX>22); fewer but more reliable entries should increase average win size and reduce premature entries in weak trends."
+  },
+
+  {
+    "name": "ai_4h_2s_no_dc_breakout",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"require_dc_breakout": false}
+      }
+    },
+    "rationale": "idea_16 base without DC breakout requirement on trend. DC breakout filter may exclude valid regime-aligned entries that haven't yet broken the channel; removing it captures earlier trend entries."
+  },
+
+  {
+    "name": "ai_4h_2s_long_trend_only_trail",
+    "override": {
+      "strategy": {"regime_timeframe": "4H", "long_only": true},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend":    {"trailing_enabled": true, "trailing_atr_mult": 1.5, "atr_tp_mult": 0.0},
+        "range":    {"enabled": false},
+        "volatile": {"enabled": false}
+      }
+    },
+    "rationale": "Triple constraint: long-only + trend-only + trailing stop. Gold's 2024-2025 bull market means long-only trend trades with trailing stops should capture the largest and most sustained directional moves."
+  },
+
+  {
+    "name": "ai_4h_2s_long_trend_london_trail",
+    "override": {
+      "strategy": {"regime_timeframe": "4H", "long_only": true},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend":    {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16], "trailing_enabled": true, "trailing_atr_mult": 1.5, "atr_tp_mult": 0.0},
+        "range":    {"enabled": false},
+        "volatile": {"enabled": false}
+      }
+    },
+    "rationale": "Most focused long-side config: long-only + trend-only + London session + trailing stop. Captures cleanest bull-regime trends during peak European liquidity with dynamic profit protection."
+  },
+
+  {
+    "name": "ai_4h_2s_mega_combo",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.5, "min_confidence": 0.55, "min_prob_hard": 0.78},
+      "risk": {"base_allocation_frac": 0.92},
+      "strategies": {
+        "trend":    {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], "trailing_enabled": true, "trailing_atr_mult": 1.2},
+        "range":    {"enabled": false},
+        "volatile": {"enabled": false}
+      }
+    },
+    "rationale": "Mega combination: 4H 2-state + trend-only + moderate confidence + aggressive sizing + trailing. Stacks the best elements of idea_16 while adding dynamic exits and removing sub-strategy noise."
+  },
+
+  {
+    "name": "ai_4h_2s_range_only",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend":    {"enabled": false},
+        "volatile": {"enabled": false},
+        "range":    {"sizing_base": 0.5, "sizing_max": 1.2}
+      }
+    },
+    "rationale": "Range-only router with larger sizing (0.5/1.2 vs 0.3/0.7). Tests whether range sub-strategy alone with more capital is viable; 4H regime gating may improve range entries in sideways gold market phases."
+  },
+
+  {
+    "name": "ai_4h_2s_relaxed_range",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "range": {
+          "bb_pos_long_max": 0.25,
+          "bb_pos_short_min": 0.75,
+          "rsi_long_max": 42.0,
+          "rsi_short_min": 58.0,
+          "sizing_base": 0.45,
+          "sizing_max": 1.0
+        }
+      }
+    },
+    "rationale": "idea_16 base with relaxed range thresholds (BB 0.25/0.75, RSI 42/58 vs 0.15/0.85, 35/65) and larger range sizing. More range trades with moderate signal quality may add meaningful return on top of trend trades."
+  },
+
+  {
+    "name": "ai_4h_2s_cdc_trend_only",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "range":    {"enabled": false},
+        "volatile": {"enabled": false},
+        "cdc":      {"enabled": true, "sizing_base": 0.6, "sizing_max": 1.2}
+      }
+    },
+    "rationale": "CDC replaces range/volatile as secondary alpha source. Trend + CDC with regime gating gives two complementary streams: momentum (trend) and MACD crossover (CDC), without noisy range-reversion trades."
+  },
+
+  {
+    "name": "ai_4h_2s_volatile_off",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "volatile": {"enabled": false}
+      }
+    },
+    "rationale": "idea_16 base with volatile sub-strategy disabled. Volatile trades use smallest sizing (0.15/0.30) and require triple confluence + pin bar, making them rare but potentially adding noise; removing may improve consistency."
+  },
+
+  {
+    "name": "ai_4h_2s_macro_trend_off",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"require_macro_trend": false}
+      }
+    },
+    "rationale": "idea_16 base without macro trend requirement. Removing require_macro_trend increases entries in shorter-term regime-aligned moves not confirmed by macro indicator, potentially adding valid trades missed by current filter."
+  },
+
+  {
+    "name": "ai_4h_2s_trend_size_boost",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"sizing_base": 1.0, "sizing_max": 2.0}
+      }
+    },
+    "rationale": "Boost trend sub-strategy sizing (base=1.0 vs 0.7, max=2.0 unchanged). Trend trades are the primary alpha source in idea_16; allocating more capital per signal when HMM confirms should scale trend contribution."
+  },
+
+  {
+    "name": "ai_4h_2s_full_stack",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.5, "sizing_base": 0.6, "min_confidence": 0.52},
+      "risk": {"base_allocation_frac": 0.93},
+      "strategies": {
+        "trend":    {"sizing_base": 1.0, "sizing_max": 2.0, "trailing_enabled": true, "trailing_atr_mult": 1.3, "atr_tp_mult": 0.0, "session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]},
+        "range":    {"enabled": false},
+        "volatile": {"enabled": false},
+        "cdc":      {"enabled": true}
+      }
+    },
+    "rationale": "Full stack best-guess: 4H 2-state, trend-only + CDC, high sizing, trailing stop, max allocation, moderate confidence. Combines every element that individually showed promise into one comprehensive configuration."
+  }
+]

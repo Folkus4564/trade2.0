@@ -160,6 +160,7 @@ def run_pipeline(
     n_trials: int = 100,
     legacy_signals: bool = False,
     optuna_target: str = "val_sharpe",
+    return_trades: bool = False,
 ) -> dict:
     """
     Full research pipeline:
@@ -203,6 +204,19 @@ def run_pipeline(
     train_reg, val_reg, test_reg = load_split_tf(regime_tf, config)
 
     raw_1h_path = DATA_ROOT / config.get("data", {}).get("raw_1h_csv", "data/raw/XAUUSD_1H_2019_2025.csv")
+
+    # Resolve raw CSV for regime TF (needed for walk-forward which reloads its own data)
+    _TF_TO_RAW_KEY = {"1H": "raw_1h_csv", "5M": "raw_5m_csv", "4H": "raw_4h_csv"}
+    _TF_DEFAULTS   = {"1H": "data/raw/XAUUSD_1H_2019_2025.csv",
+                      "5M": "data/raw/XAUUSD_5M_2019_2025.csv",
+                      "4H": "data/raw/XAUUSD_4H_2019_2025.csv"}
+    raw_regime_path = DATA_ROOT / config.get("data", {}).get(
+        _TF_TO_RAW_KEY.get(regime_tf, "raw_1h_csv"),
+        _TF_DEFAULTS.get(regime_tf, "data/raw/XAUUSD_1H_2019_2025.csv"),
+    )
+    if not raw_regime_path.exists():
+        print(f"[pipeline] WARNING: regime raw CSV not found at {raw_regime_path}, falling back to 1H")
+        raw_regime_path = raw_1h_path
     gap_audit  = audit_missing_bars(train_reg, regime_tf.lower(), config)
     data_ver   = dataset_version(raw_1h_path) if raw_1h_path.exists() else {}
     print(f"  [data] Missing bars: {gap_audit['missing_bars']} ({gap_audit['missing_pct']}%)")
@@ -235,7 +249,10 @@ def run_pipeline(
                 print(f"  [SMC {regime_tf}] {col}: {int(train_reg_feat[col].sum())} active bars (train)")
 
     # ---- 3. Train / load HMM ----
-    model_path = dirs["models"] / "hmm_regime_model.pkl"
+    # Model filename encodes regime_tf + n_states so each combo has its own file.
+    # e.g. hmm_1h_3states.pkl, hmm_4h_3states.pkl, hmm_1h_2states.pkl
+    _model_tf_key = regime_tf.lower().replace(" ", "")   # "1H" -> "1h", "4H" -> "4h"
+    model_path = dirs["models"] / f"hmm_{_model_tf_key}_{p['hmm_states']}states.pkl"
     if retrain_model or not model_path.exists():
         print("[pipeline] Training HMM regime model...")
         X_train, _ = get_hmm_feature_matrix(train_reg_feat, config)
@@ -312,16 +329,16 @@ def run_pipeline(
     if strategy_mode == "regime_specialized":
         print(f"  [pipeline] strategy_mode=regime_specialized")
         if mode == "multi_tf":
-            train_sig = route_signals(train_sig_df, config)
-            val_sig   = route_signals(val_sig_df,   config)
-            test_sig  = route_signals(test_sig_df,  config)
+            train_sig = route_signals(train_sig_df, config, hmm_model=hmm)
+            val_sig   = route_signals(val_sig_df,   config, hmm_model=hmm)
+            test_sig  = route_signals(test_sig_df,  config, hmm_model=hmm)
         else:
             train_sig = route_signals(train_sig_df, config,
-                hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_reg)
+                hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_reg, hmm_model=hmm)
             val_sig   = route_signals(val_sig_df, config,
-                hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_reg)
+                hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_reg, hmm_model=hmm)
             test_sig  = route_signals(test_sig_df, config,
-                hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg)
+                hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg, hmm_model=hmm)
         train_sig = compute_stops_regime_aware(train_sig, config)
         val_sig   = compute_stops_regime_aware(val_sig,   config)
         test_sig  = compute_stops_regime_aware(test_sig,  config)
@@ -387,16 +404,16 @@ def run_pipeline(
             )
             if strategy_mode == "regime_specialized":
                 if mode == "multi_tf":
-                    train_sig = route_signals(train_sig_df, config)
-                    val_sig   = route_signals(val_sig_df,   config)
-                    test_sig  = route_signals(test_sig_df,  config)
+                    train_sig = route_signals(train_sig_df, config, hmm_model=hmm)
+                    val_sig   = route_signals(val_sig_df,   config, hmm_model=hmm)
+                    test_sig  = route_signals(test_sig_df,  config, hmm_model=hmm)
                 else:
                     train_sig = route_signals(train_sig_df, config,
-                        hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_reg)
+                        hmm_labels=train_labels, hmm_bull_prob=train_bull, hmm_bear_prob=train_bear, hmm_index=idx_train_reg, hmm_model=hmm)
                     val_sig   = route_signals(val_sig_df, config,
-                        hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_reg)
+                        hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_reg, hmm_model=hmm)
                     test_sig  = route_signals(test_sig_df, config,
-                        hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg)
+                        hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg, hmm_model=hmm)
                 train_sig = compute_stops_regime_aware(train_sig, config)
                 val_sig   = compute_stops_regime_aware(val_sig,   config)
                 test_sig  = compute_stops_regime_aware(test_sig,  config)
@@ -425,7 +442,7 @@ def run_pipeline(
     val_metrics,   _ = run_backtest(val_sig,   strategy_name, "val",   config, dirs["backtests"], freq=freq)
 
     print("\n[pipeline] Running TEST backtest (out-of-sample)...")
-    test_metrics,  _ = run_backtest(test_sig,  strategy_name, "test",  config, dirs["backtests"], freq=freq)
+    test_metrics, test_trades_df = run_backtest(test_sig, strategy_name, "test", config, dirs["backtests"], freq=freq)
 
     print("\n[pipeline] Running 2x cost sensitivity test...")
     test_2x_metrics = run_backtest_2x_costs(test_sig, strategy_name, "test", config, dirs["backtests"], freq=freq)
@@ -440,7 +457,8 @@ def run_pipeline(
     if walk_forward:
         print("\n[pipeline] Running walk-forward validation...")
         wf_results = run_walk_forward(
-            strategy_name, config, raw_1h_path, dirs["backtests"], freq="1h"
+            strategy_name, config, raw_regime_path, dirs["backtests"],
+            freq=_TF_TO_FREQ.get(regime_tf, "1h"),
         )
         if wf_results.get("available"):
             print(f"[pipeline] Walk-forward: mean_sharpe={wf_results.get('mean_sharpe',0):.3f} | positive={wf_results.get('pct_positive',0)*100:.0f}%")
@@ -499,11 +517,14 @@ def run_pipeline(
         "walk_forward":   wf_results,
     }
 
+    if return_trades and test_trades_df is not None and len(test_trades_df) > 0:
+        results["test_trades"] = test_trades_df.to_dict(orient="records")
+
     # Save final verdict JSON
     dirs["reports"].mkdir(parents=True, exist_ok=True)
     verdict_path = dirs["reports"] / "final_verdict.json"
     with open(verdict_path, "w") as f:
-        json.dump(results, f, indent=2)
+        json.dump(results, f, indent=2, default=str)
     print(f"\n[pipeline] Final verdict saved to {verdict_path}")
 
     # ---- 11. Export if approved + flag set ----

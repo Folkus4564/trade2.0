@@ -31,13 +31,11 @@ def load_data(config_hash: str, _config: Dict[str, Any]) -> Dict[str, Any]:
 @st.cache_resource(show_spinner="Loading HMM model...")
 def load_hmm_model(_config: Dict[str, Any], artefacts_dir: str):
     """Load pre-trained HMM model. Cached as resource."""
-    from trade2.models.hmm import TradeHMM
-    model_path = Path(artefacts_dir) / "hmm_regime_model.pkl"
+    from trade2.models.hmm import XAUUSDRegimeModel
+    model_path = Path(artefacts_dir) / "models" / "hmm_regime_model.pkl"
     if not model_path.exists():
         return None
-    hmm = TradeHMM(_config)
-    hmm.load(model_path)
-    return hmm
+    return XAUUSDRegimeModel.load(model_path)
 
 
 def build_features(df_1h: pd.DataFrame, df_5m: pd.DataFrame, config: Dict[str, Any]) -> Tuple[pd.DataFrame, pd.DataFrame]:
@@ -49,12 +47,14 @@ def build_features(df_1h: pd.DataFrame, df_5m: pd.DataFrame, config: Dict[str, A
 
 
 @st.cache_data(show_spinner="Computing regime labels...")
-def get_regime(config_hash: str, _hmm, _feat_1h: pd.DataFrame):
+def get_regime(config_hash: str, _hmm, _feat_1h: pd.DataFrame, _config: Dict[str, Any]):
     """Compute HMM regime labels and probabilities."""
     from trade2.features.hmm_features import get_hmm_feature_matrix
-    X, valid_idx = get_hmm_feature_matrix(_feat_1h, _hmm.feature_cols)
-    labels, probs = _hmm.predict(X)
-    named = _hmm.name_states(labels, probs, _feat_1h.iloc[valid_idx])
+    X, valid_idx = get_hmm_feature_matrix(_feat_1h, _config)
+    labels = _hmm.predict(X)
+    probs = _hmm.predict_proba(X)
+    named = _hmm.regime_labels(X)
+    named.index = _feat_1h.loc[valid_idx].index
     return named, probs, valid_idx
 
 
@@ -70,39 +70,62 @@ def generate_and_backtest(
     from trade2.signals.router import route_signals
     from trade2.signals.generator import compute_stops_regime_aware
     from trade2.backtesting.engine import run_backtest
-    from trade2.backtesting.metrics import compute_metrics
     from trade2.features.hmm_features import get_hmm_feature_matrix
 
     # Regime prediction
-    X, valid_idx = get_hmm_feature_matrix(feat_1h, hmm.feature_cols)
-    labels_arr, probs = hmm.predict(X)
-    named = hmm.name_states(labels_arr, probs, feat_1h.iloc[valid_idx])
+    X, valid_idx = get_hmm_feature_matrix(feat_1h, config)
+    labels_arr = hmm.predict(X)
+    probs = hmm.predict_proba(X)
+    named = hmm.regime_labels(X)
+    named.index = feat_1h.loc[valid_idx].index
 
     # Forward-fill regime to 5M
-    bull_prob = probs[:, hmm.bull_state] if hasattr(hmm, "bull_state") else probs[:, 0]
-    bear_prob = probs[:, hmm.bear_state] if hasattr(hmm, "bear_state") else probs[:, 1]
+    bull_state = hmm.state_map.get("bull", 0)
+    bear_state = hmm.state_map.get("bear", 1)
+    bull_prob = probs[:, bull_state]
+    bear_prob = probs[:, bear_state]
 
     df_5m_regime = forward_fill_1h_regime(
         feat_5m,
         hmm_labels=named,
         hmm_bull_prob=bull_prob,
         hmm_bear_prob=bear_prob,
-        hmm_index=feat_1h.iloc[valid_idx].index,
+        hmm_index=feat_1h.loc[valid_idx].index,
     )
 
-    # Route signals
-    sig_df = route_signals(df_5m_regime, config)
+    # Route signals — legacy vs regime_specialized
+    strategy_mode = config.get("strategies", {}).get("mode", "legacy")
+    if strategy_mode == "regime_specialized":
+        sig_df = route_signals(df_5m_regime, config)
+        sig_df = compute_stops_regime_aware(sig_df, config)
+    else:
+        from trade2.signals.generator import generate_signals, compute_stops
+        sig_df = generate_signals(df_5m_regime, config)
+        p = config["risk"]
+        sig_df = compute_stops(sig_df, p["atr_stop_mult"], p["atr_tp_mult"])
 
-    # Compute stops
-    sig_df = compute_stops_regime_aware(sig_df, config)
+    # Run backtest (returns already-computed metrics + trades)
+    metrics, trades_df = run_backtest(
+        sig_df,
+        strategy_name="streamlit_run",
+        period_label=split_name,
+        config=config,
+        freq="5m",
+    )
 
-    # Run backtest
-    results = run_backtest(sig_df, config)
-    metrics = compute_metrics(results, config)
+    # Reconstruct equity curve from trades for chart
+    init_cash = config["backtest"]["init_cash"]
+    if len(trades_df) > 0:
+        eq = trades_df.set_index("exit_time")["pnl"].cumsum() + init_cash
+        eq.index = pd.to_datetime(eq.index)
+        equity_curve = eq.rename("equity").to_frame()
+    else:
+        equity_curve = None
 
     return {
         "signals": sig_df,
-        "results": results,
+        "equity_curve": equity_curve,
+        "trades": trades_df,
         "metrics": metrics,
         "split": split_name,
     }

@@ -80,8 +80,12 @@ def load_split_tf(
     df = load_raw(csv_path)
 
     policy = data_cfg.get("missing_bar_policy", "none")
-    if policy == "forward_fill" and timeframe == "1H":
-        df = fill_gaps(df, freq="1h")
+    if policy == "forward_fill":
+        if timeframe == "1H":
+            df = fill_gaps(df, freq="1h", max_gap_bars=5)
+        elif timeframe == "5M":
+            # Fill only micro-gaps (<=3 bars = <=15 min); weekends stay excluded
+            df = fill_gaps(df, freq="5min", max_gap_bars=3)
 
     train, val, test = split_by_dates(
         df,

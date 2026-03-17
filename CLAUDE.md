@@ -101,16 +101,14 @@ Strategy is automatically saved as `YYYY-MM-DD_xauusd_hmm_hma_regime.py`
 ## Planning Workflow
 When the user asks to plan something (new feature, refactor, investigation, etc.):
 
-1. **Create a plan file** in `.claude/to_be_done/` before writing any code.
+1. **Create a plan file** in `.claude/steps/` before writing any code.
    - Filename format: `YYYY-MM-DD_short_description.md`
    - Contents: goal, motivation, file list (new + modified), step-by-step implementation notes, verification steps.
    - Show the plan to the user and wait for approval before implementing.
 
 2. **Implement** only after the user confirms the plan.
 
-3. **Move the plan to `.claude/done/`** once implementation is complete and verified.
-   - Keep the same filename.
-   - Append a short "## Completed" section at the bottom with the date and commit hash.
+3. **Append a "## Completed" section** to the plan file once implementation is complete and verified.
+   - Include the date and commit hash.
 
-The `.claude/to_be_done/` folder holds pending plans.
-The `.claude/done/` folder is a permanent reference of everything that has been built.
+The `.claude/steps/` folder holds all plans (pending and completed).

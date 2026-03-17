@@ -109,9 +109,11 @@ def trend_strategy(
     sig_long  = (bull_regime & macro_bull & dc_long  & smc_long  & bos_long).astype(int)
     sig_short = (bear_regime & macro_bear & dc_short & smc_short & bos_short).astype(int)
 
-    # ---- Exit: regime flip ----
-    exit_long  = (~bull_regime).astype(int)
-    exit_short = (~bear_regime).astype(int)
+    # ---- Exit: regime flip (transition-based) ----
+    # Fires ONCE when bull_regime transitions True->False (regime just ended).
+    # Transition-based prevents OR-merge in router from exiting on every non-regime bar.
+    exit_long  = (bull_regime.shift(1).fillna(False) & ~bull_regime).astype(int)
+    exit_short = (bear_regime.shift(1).fillna(False) & ~bear_regime).astype(int)
 
     # ---- Confidence-based sizing ----
     min_prob   = tcfg["min_prob"]

@@ -1,0 +1,139 @@
+# best_4h_43pct.yaml
+# Best strategy found by full_scheme_search (2026-03-15)
+# idea_16_4h_2state_agg_opt_val_return
+# Test: Return=43.7% | Sharpe=1.86 | MaxDD=-10.1% | WinRate=59.6% | PF=1.82 | Trades=89
+# Verdict: REVISE (WF fails on 2022 bear market windows)
+# Experiment: 20260315_144108
+
+strategy:
+  name: xauusd_mtf_hmm1h_smc5m
+  mode: multi_tf
+  signal_timeframe: 5M
+  regime_timeframe: 4H
+  long_only: false
+
+hmm:
+  n_states: 2
+  n_iter: 200
+  random_seed: 42
+  features:
+    - hmm_feat_ret
+    - hmm_feat_rsi
+    - hmm_feat_atr
+    - hmm_feat_vol
+    - hmm_feat_hma_slope
+    - hmm_feat_bb_width
+    - hmm_feat_macd
+  min_sideways_pct: 0.1
+  use_as_hard_gate: false
+  min_prob_hard: 0.7348404387333658
+  min_prob_hard_short: 0.7348404387333658
+  min_prob_entry: 0.80    # Improvement #3: higher entry bar (vs 0.735 hard prob)
+  min_prob_exit:  0.50    # Improvement #3: exit only when bull_prob < 0.50 (hysteresis)
+  sizing_base: 0.5
+  sizing_max: 2.0
+  min_confidence: 0.5117980796648711
+
+features:
+  hma_period: 55
+  ema_period: 21
+  atr_period: 14
+  rsi_period: 14
+  adx_period: 14
+  dc_period: 40
+  bb_period_5m: 60
+
+regime:
+  persistence_bars: 4
+  persistence_bars_short: 5
+  adx_threshold: 16.715103754797116
+  transition_cooldown_bars: 1
+  max_regime_freshness: 2.0   # Improvement #4: suppress entries when regime > 2x expected duration
+  freshness_decay_start: 1.0  # start suppressing at 1x expected duration
+
+drawdown_filter:
+  enabled: true               # Improvement #2: circuit breaker for bear market longs
+  lookback_bars: 120          # 120 4H bars = 20 trading days
+  suppress_long_dd: -0.05     # suppress longs when 20-day drawdown < -5%
+  suppress_short_rally: 0.05  # suppress shorts when 20-day rally > 5%
+
+smc:
+  ob_validity_bars: 20
+  ob_impulse_bars: 3
+  ob_impulse_mult: 1.5
+  fvg_validity_bars: 15
+  swing_lookback_bars: 20
+  require_confluence: true
+  require_pin_bar: false
+
+smc_5m:
+  ob_validity_bars: 60
+  fvg_validity_bars: 36
+  swing_lookback_bars: 60
+  ob_impulse_bars: 3
+  ob_impulse_mult: 1.5
+  require_confluence: true
+  require_pin_bar: false
+
+risk:
+  atr_stop_mult: 3.095514338084446
+  atr_tp_mult: 4.488045570804698
+  max_hold_bars: 0  # disabled - exits via SL/TP/signal only
+  daily_loss_pct: 0.03
+  max_dd_limit: 0.25
+  base_allocation_frac: 0.9
+
+strategies:
+  mode: regime_specialized
+  trend:
+    enabled: true
+    min_prob: 0.77
+    require_dc_breakout: true
+    require_smc_confirm: false
+    require_bos_confirm: false
+    require_macro_trend: true
+    adx_threshold: 15.0
+    atr_expansion_filter: true
+    persistence_bars: 3
+    atr_stop_mult: 2.75
+    atr_tp_mult: 0.0
+    trailing_enabled: false
+    trailing_atr_mult: 1.5
+    max_hold_bars: 0
+    sizing_base: 0.7
+    sizing_max: 1.5
+    session_enabled: true
+    allowed_hours_utc: [7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+  range:
+    enabled: true
+    min_prob: 0.55
+    bb_pos_long_max: 0.15
+    bb_pos_short_min: 0.85
+    rsi_long_max: 35.0
+    rsi_short_min: 65.0
+    require_smc_ob: true
+    adx_max: 25.0
+    bb_period: 60
+    persistence_bars: 2
+    atr_stop_mult: 1.5
+    atr_tp_mult: 2.5
+    max_hold_bars: 0
+    sizing_base: 0.3
+    sizing_max: 0.7
+    session_enabled: true
+    allowed_hours_utc: [7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+  volatile:
+    enabled: true
+    max_confidence: 0.5
+    require_triple_confluence: true
+    require_pin_bar: true
+    adx_threshold: 30.0
+    atr_stop_mult: 1.0
+    atr_tp_mult: 1.5
+    max_hold_bars: 0
+    sizing_base: 0.15
+    sizing_max: 0.3
+    session_enabled: true
+    allowed_hours_utc: [8,9,10,11,12,13,14,15,16]
+  cdc:
+    enabled: false

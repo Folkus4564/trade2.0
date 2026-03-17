@@ -85,8 +85,9 @@ def volatile_strategy(
     sig_long  = (volatile_mask & triple_long  & adx_ok).astype(int)
     sig_short = (volatile_mask & triple_short & adx_ok).astype(int)
 
-    exit_long  = (~volatile_mask).astype(int)
-    exit_short = (~volatile_mask).astype(int)
+    # Transition-based exit: volatile mask just ended
+    exit_long  = (volatile_mask.shift(1).fillna(False) & ~volatile_mask).astype(int)
+    exit_short = (volatile_mask.shift(1).fillna(False) & ~volatile_mask).astype(int)
 
     # Minimal sizing
     sz_base  = vcfg["sizing_base"]

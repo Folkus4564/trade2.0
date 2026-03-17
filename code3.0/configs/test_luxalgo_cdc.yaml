@@ -1,0 +1,21 @@
+# Test config: enable CDC strategy (standalone, not regime-gated)
+# LuxAlgo SMC features (smc_luxalgo + smc_luxalgo_5m) are already enabled in base.yaml
+
+strategies:
+  mode: regime_specialized
+
+  cdc:
+    enabled: true
+    regime_gated: true      # only fires on trend regime bars alongside trend strategy
+    require_bos_confirm: false
+    adx_threshold: 15.0
+    fast_period: 12
+    slow_period: 26
+    ap_period: 2
+    atr_stop_mult: 2.0
+    atr_tp_mult: 4.0
+    max_hold_bars: 48
+    sizing_base: 0.50
+    sizing_max: 1.00
+    session_enabled: true
+    allowed_hours_utc: [7,8,9,10,11,12,13,14,15,16,17,18,19,20]

@@ -187,6 +187,16 @@ def generate_signals(
     out["signal_long"]  = (bull_regime & macro_bull & (smc_long  | dc_long)).astype(int)
     out["signal_short"] = (bear_regime & macro_bear & (smc_short | dc_short)).astype(int)
 
+    # ---- Direction filter: long_only blocks all shorts ----
+    if cfg.get("strategy", {}).get("long_only", False):
+        out["signal_short"]          = 0
+        out["position_size_short"]   = 0.0
+
+    # ---- Direction filter: short_only blocks all longs ----
+    if cfg.get("strategy", {}).get("short_only", False):
+        out["signal_long"]           = 0
+        out["position_size_long"]    = 0.0
+
     # ---- Exit: regime flip ----
     out["exit_long"]  = (~bull_regime).astype(int)
     out["exit_short"] = (~bear_regime).astype(int)
