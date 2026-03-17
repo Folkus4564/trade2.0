@@ -321,4 +321,10 @@ tv_research:
   seed_list: configs/tv_seed_list.yaml
 
 # ---- TV indicator feature flags (populated by tv_research) --
-tv_indicators: {}            # e.g. supertrend: {enabled: true, period: 10}
+tv_indicators:
+  luxalgo_fvg_ob:
+    enabled: true
+    ob_lookback: 20          # bars to look back for order block candle
+    integration_mode: "hmm"  # hmm | signal_filter | both
+    filter_column_bull: "in_bull_fvg"   # optional: derive {name}_bull from this column (>0 = bull)
+    filter_column_bear: "in_bear_fvg"   # optional: derive {name}_bear from this column (<0 = bear)

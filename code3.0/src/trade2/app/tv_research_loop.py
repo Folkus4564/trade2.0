@@ -17,6 +17,7 @@ import argparse
 import ast
 import copy
 import json
+import os
 import re
 import sys
 import time
@@ -25,10 +26,63 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-import anthropic
-
 PROJECT_ROOT = Path(__file__).parents[3]   # code3.0/
 DATA_ROOT    = Path(__file__).parents[4]   # trade2.0/
+
+# Load .env from code3.0/ if present
+try:
+    from dotenv import load_dotenv
+    load_dotenv(PROJECT_ROOT / ".env")
+except ImportError:
+    pass
+
+_DEFAULT_MODEL = {
+    "claude":   "claude-sonnet-4-6",
+    "deepseek": "deepseek-reasoner",
+}
+
+
+def _build_client(provider: str):
+    if provider == "claude":
+        import anthropic
+        return anthropic.Anthropic()
+    elif provider == "deepseek":
+        import openai
+        return openai.OpenAI(
+            api_key=os.environ.get("DEEPSEEK_API_KEY"),
+            base_url="https://api.deepseek.com",
+        )
+    else:
+        raise ValueError(f"Unknown provider: {provider}")
+
+
+def _llm_complete(
+    client,
+    provider: str,
+    model: str,
+    user_msg: str,
+    system: str = "",
+    max_tokens: int = 2048,
+) -> str:
+    """Unified LLM call: returns response text for Claude or DeepSeek."""
+    if provider == "claude":
+        kwargs = dict(model=model, max_tokens=max_tokens,
+                      thinking={"type": "adaptive"},
+                      messages=[{"role": "user", "content": user_msg}])
+        if system:
+            kwargs["system"] = system
+        with client.messages.stream(**kwargs) as stream:
+            response = stream.get_final_message()
+        return next((b.text for b in response.content if b.type == "text"), "")
+    else:  # deepseek (OpenAI-compatible)
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": user_msg})
+        response = client.chat.completions.create(
+            model=model, max_tokens=max_tokens, messages=messages,
+        )
+        return response.choices[0].message.content or ""
 
 
 # ---------------------------------------------------------------------------
@@ -96,38 +150,29 @@ def _pick_from_seed(
     return None
 
 
-def _discover_from_claude(
-    client: anthropic.Anthropic,
+def _discover_indicator(
+    client,
+    provider: str,
     tried: set,
     model: str,
 ) -> Optional[Dict]:
-    """Ask Claude to suggest a new TradingView indicator not already tried."""
+    """Ask LLM to suggest a new TradingView indicator not already tried."""
     tried_str = ", ".join(sorted(tried)) if tried else "none"
-    with client.messages.stream(
-        model=model,
-        max_tokens=512,
-        thinking={"type": "adaptive"},
-        messages=[{
-            "role": "user",
-            "content": (
-                "Suggest one well-known TradingView community indicator that:\n"
-                "1. Has clear mathematical rules (not AI-based)\n"
-                "2. Can be computed from OHLCV price data\n"
-                f"3. Has NOT been tried yet: [{tried_str}]\n\n"
-                "Respond with ONLY a JSON object:\n"
-                '{\n'
-                '  "name": "snake_case_name",\n'
-                '  "category": "trend|momentum|volatility|volume|oscillator",\n'
-                '  "description": "one sentence description",\n'
-                '  "default_params": {"key": value},\n'
-                '  "integration_mode": "feature"\n'
-                '}'
-            ),
-        }],
-    ) as stream:
-        response = stream.get_final_message()
-
-    text = next((b.text for b in response.content if b.type == "text"), "")
+    user_msg = (
+        "Suggest one well-known TradingView community indicator that:\n"
+        "1. Has clear mathematical rules (not AI-based)\n"
+        "2. Can be computed from OHLCV price data\n"
+        f"3. Has NOT been tried yet: [{tried_str}]\n\n"
+        "Respond with ONLY a JSON object:\n"
+        '{\n'
+        '  "name": "snake_case_name",\n'
+        '  "category": "trend|momentum|volatility|volume|oscillator",\n'
+        '  "description": "one sentence description",\n'
+        '  "default_params": {"key": value},\n'
+        '  "integration_mode": "feature"\n'
+        '}'
+    )
+    text = _llm_complete(client, provider, model, user_msg, max_tokens=512)
     json_match = re.search(r'\{[^{}]+\}', text, re.DOTALL)
     if json_match:
         try:
@@ -142,12 +187,13 @@ def _discover_from_claude(
 # ---------------------------------------------------------------------------
 
 def _translate_to_python(
-    client: anthropic.Anthropic,
+    client,
+    provider: str,
     indicator: Dict[str, Any],
     cdc_source: str,
     model: str,
 ) -> Optional[str]:
-    """Translate indicator description to Python using Claude."""
+    """Translate indicator description to Python using LLM."""
     name     = indicator["name"]
     category = indicator.get("category", "unknown")
     desc     = indicator.get("description", "")
@@ -165,7 +211,11 @@ def _translate_to_python(
         "6. No lookahead bias (never use future data)\n"
         "7. Include all imports at top of the code (numpy, pandas, talib)\n"
         "8. No class definitions, no global state\n"
-        "9. Output ONLY the Python code, no explanation, no markdown code blocks"
+        "9. Output ONLY the Python code, no explanation, no markdown code blocks\n"
+        f"10. MUST produce two boolean columns: {name}_bull and {name}_bear\n"
+        f"    - {name}_bull = True when indicator is bullish (trend up / momentum positive)\n"
+        f"    - {name}_bear = True when indicator is bearish (trend down / momentum negative)\n"
+        "    - Both columns must be shift(1) like all other columns"
     )
 
     user_msg = (
@@ -177,16 +227,7 @@ def _translate_to_python(
         f"Write the add_{name}_features(df, config) function."
     )
 
-    with client.messages.stream(
-        model=model,
-        max_tokens=2048,
-        thinking={"type": "adaptive"},
-        system=system_prompt,
-        messages=[{"role": "user", "content": user_msg}],
-    ) as stream:
-        response = stream.get_final_message()
-
-    code = next((b.text for b in response.content if b.type == "text"), "")
+    code = _llm_complete(client, provider, model, user_msg, system=system_prompt)
     # Strip markdown code blocks if present
     code = re.sub(r'^```python\s*', '', code.strip(), flags=re.MULTILINE)
     code = re.sub(r'```\s*$', '', code.strip(), flags=re.MULTILINE)
@@ -278,16 +319,77 @@ def _write_module(code: str, name: str, tv_indicators_dir: Path) -> Path:
 # Config override
 # ---------------------------------------------------------------------------
 
-def _build_run_config(base_config: Dict, indicator: Dict) -> Dict:
-    """Return a deep-copy of base_config with the TV indicator enabled."""
+def _get_tv_columns(code: str, name: str) -> List[str]:
+    """Exec the indicator on a tiny DataFrame and return column names it adds."""
+    import numpy as np
+    import pandas as pd
+    try:
+        ns: Dict[str, Any] = {"np": np, "pd": pd}
+        try:
+            import talib; ns["talib"] = talib
+        except ImportError:
+            pass
+        exec(compile(code, f"<tv_{name}>", "exec"), ns)  # noqa: S102
+        fn = ns.get(f"add_{name}_features")
+        if fn is None:
+            return []
+        np.random.seed(0)
+        n = 300
+        close = 1800.0 + np.cumsum(np.random.randn(n))
+        df = pd.DataFrame({
+            "Open": close - 1, "High": close + 2,
+            "Low": close - 2, "Close": close,
+            "Volume": np.ones(n) * 5000,
+        })
+        result = fn(df.copy(), {})
+        return [c for c in result.columns if c not in df.columns]
+    except Exception:
+        return []
+
+
+def _build_run_config(
+    base_config: Dict,
+    indicator: Dict,
+    code: str = "",
+    integration_mode: str = "hmm",
+    filter_column_bull: str = "",
+    filter_column_bear: str = "",
+) -> Dict:
+    """Return a deep-copy of base_config with the TV indicator enabled.
+
+    integration_mode:
+      "hmm"           — inject TV columns into HMM features only (original behavior)
+      "signal_filter" — set integration_mode: signal_filter; skip HMM injection
+      "both"          — inject into HMM features AND set signal_filter mode
+    """
     cfg  = copy.deepcopy(base_config)
     name = indicator["name"]
     if "tv_indicators" not in cfg:
         cfg["tv_indicators"] = {}
-    cfg["tv_indicators"][name] = {
+    ind_entry: Dict[str, Any] = {
         "enabled": True,
+        "integration_mode": integration_mode,
         **indicator.get("default_params", {}),
     }
+    if filter_column_bull:
+        ind_entry["filter_column_bull"] = filter_column_bull
+    if filter_column_bear:
+        ind_entry["filter_column_bear"] = filter_column_bear
+    cfg["tv_indicators"][name] = ind_entry
+
+    # Inject new columns into HMM feature list (only for hmm / both modes)
+    if code and integration_mode in ("hmm", "both"):
+        tv_cols = _get_tv_columns(code, name)
+        if tv_cols:
+            base_hmm_feats = [
+                "hmm_feat_ret", "hmm_feat_rsi", "hmm_feat_atr", "hmm_feat_vol",
+                "hmm_feat_hma_slope", "hmm_feat_bb_width", "hmm_feat_macd",
+                "hmm_feat_atr_ratio",
+            ]
+            existing = list(cfg.get("hmm", {}).get("features", base_hmm_feats))
+            cfg.setdefault("hmm", {})["features"] = existing + tv_cols
+            print(f"[tv] HMM features += {tv_cols[:4]}{'...' if len(tv_cols)>4 else ''}")
+
     return cfg
 
 
@@ -325,6 +427,194 @@ def _goal_met(metrics: Dict, tv_cfg: Dict) -> bool:
         and metrics.get("sharpe_ratio", 0)   >= goal_sharpe
         and metrics.get("max_drawdown", -999) >= goal_max_dd
     )
+
+
+# Best-baseline config override (idea16: 43.6% return, 4H 2-state HMM)
+_BEST_BASELINE_OVERRIDE: Dict[str, Any] = {
+    "strategy": {"regime_timeframe": "4H"},
+    "hmm":      {"n_states": 2, "sizing_max": 2.0},
+    "risk":     {"base_allocation_frac": 0.90, "max_hold_bars": 48},
+}
+
+
+def _apply_best_baseline(config: Dict) -> Dict:
+    """Deep-merge _BEST_BASELINE_OVERRIDE into config."""
+    cfg = copy.deepcopy(config)
+    for section, values in _BEST_BASELINE_OVERRIDE.items():
+        cfg.setdefault(section, {}).update(values)
+    return cfg
+
+
+# ---------------------------------------------------------------------------
+# 3-mode per-indicator testing
+# ---------------------------------------------------------------------------
+
+def _test_three_modes(
+    base_config: Dict,
+    indicator: Dict,
+    code: str,
+    n_trials: int,
+    walk_forward: bool,
+    hmm_trained: bool,
+) -> Tuple[str, Dict, Dict[str, Dict]]:
+    """Run pipeline in 3 modes and return (best_mode, best_metrics, all_results).
+
+    Mode A: hmm           — TV columns injected into HMM features, retrain HMM
+    Mode B: signal_filter — TV columns used as entry gate only, reuse existing HMM
+    Mode C: both          — TV columns in HMM AND as entry gate, retrain HMM
+    """
+    name = indicator["name"]
+    seed_integration = indicator.get("integration_mode", "hmm")
+    filter_bull = indicator.get("filter_column_bull", "")
+    filter_bear = indicator.get("filter_column_bear", "")
+
+    all_results: Dict[str, Dict] = {}
+    best_mode = "hmm"
+    best_return = -999.0
+    best_metrics: Dict = {}
+
+    modes = [
+        ("hmm",           True),
+        ("signal_filter", False if hmm_trained else True),
+        ("both",          True),
+    ]
+
+    for mode, retrain in modes:
+        print(f"[tv]   Mode {mode}: retrain={retrain}")
+        try:
+            run_cfg = _build_run_config(
+                base_config, indicator, code,
+                integration_mode=mode,
+                filter_column_bull=filter_bull,
+                filter_column_bear=filter_bear,
+            )
+            results     = _run_pipeline(run_cfg, n_trials, walk_forward, retrain)
+            tm          = results.get("test_metrics", {})
+            cur_return  = tm.get("annualized_return", 0)
+            all_results[mode] = {
+                "test_metrics": tm,
+                "verdict":      results.get("verdict", "?"),
+                "config":       {"tv_indicators": {name: run_cfg["tv_indicators"][name]}},
+            }
+            print(
+                f"[tv]     -> return={cur_return*100:.1f}%"
+                f" | sharpe={tm.get('sharpe_ratio', 0):.3f}"
+                f" | verdict={results.get('verdict', '?')}"
+            )
+            if cur_return > best_return:
+                best_return  = cur_return
+                best_mode    = mode
+                best_metrics = tm
+        except Exception as e:
+            all_results[mode] = {"error": str(e)}
+            print(f"[tv]     -> FAILED: {e}")
+
+    print(f"[tv]   Best mode: {best_mode} (return={best_return*100:.1f}%)")
+    return best_mode, best_metrics, all_results
+
+
+# ---------------------------------------------------------------------------
+# Greedy stacking
+# ---------------------------------------------------------------------------
+
+def _greedy_stack(
+    base_config: Dict,
+    completed_entries: List[Dict],
+    n_trials: int,
+    walk_forward: bool,
+) -> Dict[str, Any]:
+    """Greedily stack the best-performing indicators.
+
+    Algorithm:
+    1. Rank completed entries by best individual return (descending).
+    2. Start with an empty active set.
+    3. For each indicator (best to worst): add to active set, run pipeline.
+       Keep if return improves; drop otherwise.
+    4. Return dict with final active set and combined metrics.
+    """
+    ranked = sorted(
+        [e for e in completed_entries if e.get("test_metrics")],
+        key=lambda x: x["test_metrics"].get("annualized_return", 0),
+        reverse=True,
+    )
+
+    if not ranked:
+        print("[tv] Greedy stack: no completed entries to stack.")
+        return {}
+
+    print(f"\n[tv] === Greedy Stacking ({len(ranked)} indicators) ===")
+
+    active_set: Dict[str, Any] = {}  # name -> {integration_mode, filter_col_bull, filter_col_bear, ...}
+    best_return = 0.0
+    best_metrics: Dict = {}
+
+    for entry in ranked:
+        name = entry["name"]
+        # Get the best config override from 3-mode results if available
+        mode_results = entry.get("mode_results", {})
+        best_mode    = entry.get("best_mode", "hmm")
+        ind_override = (
+            mode_results.get(best_mode, {}).get("config", {}).get("tv_indicators", {}).get(name)
+            or {"enabled": True, "integration_mode": best_mode}
+        )
+
+        # Build candidate active set
+        candidate = dict(active_set)
+        candidate[name] = ind_override
+
+        # Build test config with all indicators in candidate set enabled
+        test_cfg = copy.deepcopy(base_config)
+        if "tv_indicators" not in test_cfg:
+            test_cfg["tv_indicators"] = {}
+        for ind_name, ind_params in candidate.items():
+            test_cfg["tv_indicators"][ind_name] = ind_params
+
+        # Rebuild HMM features: start from base and add all hmm/both indicator columns
+        base_hmm_feats = list(base_config.get("hmm", {}).get("features", [
+            "hmm_feat_ret", "hmm_feat_rsi", "hmm_feat_atr", "hmm_feat_vol",
+            "hmm_feat_hma_slope", "hmm_feat_bb_width", "hmm_feat_macd",
+        ]))
+        combined_feats = list(base_hmm_feats)
+        for ind_name, ind_params in candidate.items():
+            mode = ind_params.get("integration_mode", "hmm")
+            if mode in ("hmm", "both"):
+                code_path = entry.get("python_module_path")
+                if code_path:
+                    full_path = Path(__file__).parents[3] / code_path
+                    if full_path.exists():
+                        ind_code = full_path.read_text()
+                        tv_cols  = _get_tv_columns(ind_code, ind_name)
+                        combined_feats.extend(tv_cols)
+        test_cfg.setdefault("hmm", {})["features"] = combined_feats
+
+        print(f"[tv]   Testing stack +{name} ({len(candidate)} total)...")
+        try:
+            results    = _run_pipeline(test_cfg, n_trials, walk_forward, retrain_model=True)
+            tm         = results.get("test_metrics", {})
+            cur_return = tm.get("annualized_return", 0)
+            print(
+                f"[tv]     -> return={cur_return*100:.1f}%"
+                f" | sharpe={tm.get('sharpe_ratio', 0):.3f}"
+            )
+            if cur_return > best_return:
+                best_return  = cur_return
+                best_metrics = tm
+                active_set   = candidate
+                print(f"[tv]     -> KEPT {name} in stack (new best={cur_return*100:.1f}%)")
+            else:
+                print(f"[tv]     -> DROPPED {name} (no improvement)")
+        except Exception as e:
+            print(f"[tv]     -> FAILED: {e} (dropping {name})")
+
+    print(f"\n[tv] Greedy stack complete: {len(active_set)} indicators kept")
+    print(f"[tv]   Final return={best_return*100:.1f}%")
+    print(f"[tv]   Active indicators: {list(active_set.keys())}")
+
+    return {
+        "active_set":    active_set,
+        "final_metrics": best_metrics,
+        "n_indicators":  len(active_set),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -366,15 +656,24 @@ def main() -> None:
     parser.add_argument("--max-ideas",     type=int,   default=30)
     parser.add_argument("--source",        default="both", choices=["seed", "web", "both"])
     parser.add_argument("--trials",        type=int,   default=100)
-    parser.add_argument("--model",         default=None)
+    parser.add_argument("--provider",            default="claude", choices=["claude", "deepseek"],
+                        help="Provider for indicator discovery (source=web)")
+    parser.add_argument("--model",               default=None, help="Model for discovery provider")
+    parser.add_argument("--translate-provider",  default=None, choices=["claude", "deepseek"],
+                        help="Provider for Pine->Python translation (default: same as --provider)")
+    parser.add_argument("--translate-model",     default=None, help="Model for translation provider")
     parser.add_argument("--dry-run",       action="store_true")
     parser.add_argument("--indicators",    default=None, help="Comma-separated specific indicators")
     parser.add_argument("--skip-existing", action="store_true")
     parser.add_argument("--goal-return",   type=float, default=None)
     parser.add_argument("--goal-sharpe",   type=float, default=None)
-    parser.add_argument("--walk-forward",  action="store_true")
-    parser.add_argument("--retrain-model", action="store_true")
-    parser.add_argument("--base-config",   default="configs/base.yaml")
+    parser.add_argument("--walk-forward",      action="store_true")
+    parser.add_argument("--retrain-model",     action="store_true")
+    parser.add_argument("--base-config",       default="configs/base.yaml")
+    parser.add_argument("--use-best-baseline", action="store_true",
+                        help="Use 43.6%% return baseline config (4H 2-state HMM, idea16)")
+    parser.add_argument("--skip-greedy-stack", action="store_true",
+                        help="Skip greedy stacking step after individual tests")
     args = parser.parse_args()
 
     # ---- Paths ----
@@ -391,9 +690,31 @@ def main() -> None:
     # ---- Load base config ----
     from trade2.config.loader import load_config
     base_config = load_config(str(base_cfg_path))
-    tv_cfg      = base_config.get("tv_research", {})
 
-    model     = args.model or tv_cfg.get("model", "claude-sonnet-4-6")
+    # Apply best-baseline override if requested
+    if args.use_best_baseline:
+        base_config = _apply_best_baseline(base_config)
+        print("[tv] Using best-baseline override (4H 2-state HMM, idea16)")
+
+    tv_cfg = base_config.get("tv_research", {})
+
+    provider  = args.provider
+    # CLI arg > config (only if config model matches this provider) > provider default
+    if args.model:
+        model = args.model
+    elif tv_cfg.get("model") and provider == "claude":
+        model = tv_cfg["model"]
+    else:
+        model = _DEFAULT_MODEL[provider]
+
+    # Translation provider (can differ from discovery provider)
+    t_provider = args.translate_provider or provider
+    if args.translate_model:
+        t_model = args.translate_model
+    elif t_provider == "claude":
+        t_model = tv_cfg.get("model", _DEFAULT_MODEL["claude"])
+    else:
+        t_model = _DEFAULT_MODEL[t_provider]
     max_ideas = args.max_ideas
     n_trials  = args.trials
 
@@ -419,19 +740,57 @@ def main() -> None:
     cdc_path   = PROJECT_ROOT / "src" / "trade2" / "features" / "cdc.py"
     cdc_source = cdc_path.read_text() if cdc_path.exists() else ""
 
-    # ---- Baseline metrics ----
-    verdict_path    = PROJECT_ROOT / "artefacts" / "reports" / "final_verdict.json"
+    # ---- Baseline metrics (best known result across all sources) ----
     baseline_metrics: Dict = {}
+    baseline_source: str = "none"
+
+    def _try_load_test_metrics(path: Path, key: str = "test_metrics") -> Optional[Dict]:
+        try:
+            with open(path) as f:
+                data = json.load(f)
+            if isinstance(data, list):
+                # pick entry with highest test return
+                candidates = [e.get(key, {}) for e in data if e.get(key)]
+                return max(candidates, key=lambda m: m.get("annualized_return", -999)) if candidates else None
+            return data.get(key)
+        except Exception:
+            return None
+
+    # 1. final_verdict.json (last pipeline run)
+    verdict_path = PROJECT_ROOT / "artefacts" / "reports" / "final_verdict.json"
     if verdict_path.exists():
-        with open(verdict_path) as f:
-            baseline_metrics = json.load(f).get("test_metrics", {})
+        m = _try_load_test_metrics(verdict_path)
+        if m and m.get("annualized_return", -999) > baseline_metrics.get("annualized_return", -999):
+            baseline_metrics = m
+            baseline_source = "final_verdict.json"
+
+    # 2. full_scheme_search result files
+    for fpath in sorted((PROJECT_ROOT / "artefacts").glob("full_scheme_search_results*.json")):
+        m = _try_load_test_metrics(fpath)
+        if m and m.get("annualized_return", -999) > baseline_metrics.get("annualized_return", -999):
+            baseline_metrics = m
+            baseline_source = fpath.name
+
+    # 3. tv_research log (best previous TV run)
+    tv_log_path = PROJECT_ROOT / "artefacts" / "tv_research" / "tv_research_best.json"
+    if tv_log_path.exists():
+        m = _try_load_test_metrics(tv_log_path)
+        if m and m.get("annualized_return", -999) > baseline_metrics.get("annualized_return", -999):
+            baseline_metrics = m
+            baseline_source = "tv_research_best.json"
+
+    if baseline_metrics:
         print(
             f"[tv] Baseline: return={baseline_metrics.get('annualized_return', 0)*100:.1f}%"
             f" | sharpe={baseline_metrics.get('sharpe_ratio', 0):.3f}"
+            f" | source={baseline_source}"
         )
 
-    # ---- Anthropic client ----
-    client = anthropic.Anthropic()
+    # ---- LLM clients ----
+    client    = _build_client(provider)
+    t_client  = _build_client(t_provider) if t_provider != provider else client
+    print(f"[tv] discovery:    provider={provider} | model={model}")
+    print(f"[tv] translation:  provider={t_provider} | model={t_model}")
 
     best_return = baseline_metrics.get("annualized_return", 0.0)
     best_entry: Optional[Dict] = None
@@ -457,7 +816,7 @@ def main() -> None:
         if indicator is None and args.source in ("web", "both"):
             print("[tv] Seed exhausted — asking Claude for new indicator...")
             try:
-                indicator = _discover_from_claude(client, tried, model)
+                indicator = _discover_indicator(client, provider, tried, model)
                 source    = "discovery"
             except Exception as e:
                 print(f"[tv] Discovery error: {e}")
@@ -492,9 +851,9 @@ def main() -> None:
         t0 = time.time()
 
         # ---- Translate ----
-        print(f"[tv] Translating {name} to Python via Claude ({model})...")
+        print(f"[tv] Translating {name} to Python via {t_provider} ({t_model})...")
         try:
-            code = _translate_to_python(client, indicator, cdc_source, model)
+            code = _translate_to_python(t_client, t_provider, indicator, cdc_source, t_model)
             if not code:
                 raise ValueError("Translation returned empty output")
         except Exception as e:
@@ -540,20 +899,22 @@ def main() -> None:
             print("[tv] DRY RUN: pipeline skipped")
             continue
 
-        # ---- Build config override ----
-        run_config = _build_run_config(base_config, indicator)
-        entry["config_override"] = {"tv_indicators": {name: run_config["tv_indicators"][name]}}
-
-        # ---- Run pipeline ----
-        print(f"[tv] Running pipeline (optimize={n_trials > 0}, trials={n_trials})...")
+        # ---- Run 3-mode tests ----
+        print(f"[tv] Testing 3 modes (optimize={n_trials > 0}, trials={n_trials})...")
         try:
-            results     = _run_pipeline(run_config, n_trials, args.walk_forward, args.retrain_model)
-            test_metrics = results.get("test_metrics", {})
-            verdict      = results.get("verdict", "?")
+            hmm_already_trained = (iteration > 0)
+            best_mode, test_metrics, mode_results = _test_three_modes(
+                base_config, indicator, code,
+                n_trials, args.walk_forward, hmm_already_trained,
+            )
+            verdict = mode_results.get(best_mode, {}).get("verdict", "?")
 
-            entry["status"]      = "COMPLETED"
+            entry["status"]       = "COMPLETED"
             entry["test_metrics"] = test_metrics
             entry["verdict"]      = verdict
+            entry["best_mode"]    = best_mode
+            entry["mode_results"] = mode_results
+            entry["config_override"] = mode_results.get(best_mode, {}).get("config")
 
             if baseline_metrics:
                 entry["delta_vs_baseline"] = {
@@ -571,10 +932,11 @@ def main() -> None:
                 entry["is_best"] = True
                 best_entry = copy.deepcopy(entry)
                 _save_best(best_path, best_entry)
-                print(f"[tv] NEW BEST: {name} | return={cur_return*100:.1f}%")
+                print(f"[tv] NEW BEST: {name} (mode={best_mode}) | return={cur_return*100:.1f}%")
 
             print(
-                f"[tv] Done: return={cur_return*100:.1f}%"
+                f"[tv] Done: best_mode={best_mode}"
+                f" | return={cur_return*100:.1f}%"
                 f" | sharpe={test_metrics.get('sharpe_ratio', 0):.3f}"
                 f" | verdict={verdict}"
             )
@@ -597,6 +959,19 @@ def main() -> None:
         entry["duration_seconds"] = int(time.time() - t0)
         log.append(entry)
         _save_log(log_path, log)
+
+    # ---- Greedy stacking ----
+    if not args.dry_run and not args.skip_greedy_stack:
+        completed = [e for e in log if e.get("status") == "COMPLETED" and e.get("test_metrics")]
+        if len(completed) >= 2:
+            stack_result = _greedy_stack(
+                base_config, completed, n_trials, args.walk_forward,
+            )
+            stack_path = tv_research_dir / "tv_research_stack.json"
+            _save_best(stack_path, stack_result)
+            print(f"[tv] Stack result saved: {stack_path}")
+        else:
+            print("[tv] Greedy stack skipped: need at least 2 completed indicators.")
 
     # ---- Final summary ----
     _print_leaderboard(log)

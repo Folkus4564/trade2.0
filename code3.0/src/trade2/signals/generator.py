@@ -183,9 +183,26 @@ def generate_signals(
         macro_bull = pd.Series(True, index=out.index)
         macro_bear = pd.Series(True, index=out.index)
 
+    # ---- TV indicator confirmation filters ----
+    tv_filter_long  = pd.Series(True, index=out.index)
+    tv_filter_short = pd.Series(True, index=out.index)
+    tv_filters_cfg = cfg.get("tv_indicators", {})
+    for tv_name, tv_ind_cfg in tv_filters_cfg.items():
+        if not isinstance(tv_ind_cfg, dict) or not tv_ind_cfg.get("enabled", False):
+            continue
+        mode = tv_ind_cfg.get("integration_mode", "hmm")
+        if mode not in ("signal_filter", "both"):
+            continue
+        bull_col = f"{tv_name}_bull"
+        bear_col = f"{tv_name}_bear"
+        if bull_col in out.columns:
+            tv_filter_long = tv_filter_long & out[bull_col].astype(bool)
+        if bear_col in out.columns:
+            tv_filter_short = tv_filter_short & out[bear_col].astype(bool)
+
     # ---- Combine signals ----
-    out["signal_long"]  = (bull_regime & macro_bull & (smc_long  | dc_long)).astype(int)
-    out["signal_short"] = (bear_regime & macro_bear & (smc_short | dc_short)).astype(int)
+    out["signal_long"]  = (bull_regime & macro_bull & tv_filter_long  & (smc_long  | dc_long)).astype(int)
+    out["signal_short"] = (bear_regime & macro_bear & tv_filter_short & (smc_short | dc_short)).astype(int)
 
     # ---- Direction filter: long_only blocks all shorts ----
     if cfg.get("strategy", {}).get("long_only", False):

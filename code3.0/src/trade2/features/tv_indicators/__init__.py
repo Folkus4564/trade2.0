@@ -23,6 +23,21 @@ def apply_tv_indicators(df: pd.DataFrame, config: Dict[str, Any]) -> pd.DataFram
                 mod = importlib.import_module(f"trade2.features.tv_indicators.{name}")
                 add_fn = getattr(mod, f"add_{name}_features")
                 df = add_fn(df, config)
+
+                # Derive {name}_bull / {name}_bear boolean columns if not produced natively
+                bull_col = f"{name}_bull"
+                bear_col = f"{name}_bear"
+                if bull_col not in df.columns:
+                    src = ind_cfg.get("filter_column_bull")
+                    if src and src in df.columns:
+                        col = df[src]
+                        df[bull_col] = (col > 0) if col.dtype != bool else col
+                if bear_col not in df.columns:
+                    src = ind_cfg.get("filter_column_bear")
+                    if src and src in df.columns:
+                        col = df[src]
+                        df[bear_col] = (col < 0) if col.dtype != bool else col
+
             except Exception as e:
                 print(f"  [tv] WARN: {name} failed: {e}")
     return df
