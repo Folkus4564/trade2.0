@@ -18,6 +18,7 @@ from components.sidebar        import render_sidebar
 from components.charts         import candlestick_chart, equity_curve_chart, monthly_pnl_chart, trade_analysis_chart
 from components.metrics_table  import render_metric_cards, render_full_metrics_table
 from components.scheme_search  import render_scheme_search
+from components.tv_research    import render_tv_research
 from utils.pipeline_runner     import (
     load_data, load_hmm_model, build_features,
     get_regime, generate_and_backtest,
@@ -34,7 +35,7 @@ st.set_page_config(
 st.title("XAUUSD Strategy Dashboard")
 
 # ---- Tabs ----
-tab_backtest, tab_scheme = st.tabs(["Strategy Backtest", "Scheme Search"])
+tab_backtest, tab_scheme, tab_tv = st.tabs(["Strategy Backtest", "Scheme Search", "TV Indicator Research"])
 
 # ---- Load base config ----
 @st.cache_data
@@ -212,3 +213,9 @@ with tab_backtest:
 # ========================================================
 with tab_scheme:
     render_scheme_search(artefacts_dir)
+
+# ========================================================
+# TAB 3 — TV Indicator Research
+# ========================================================
+with tab_tv:
+    render_tv_research(artefacts_dir)

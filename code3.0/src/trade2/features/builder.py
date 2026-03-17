@@ -53,6 +53,10 @@ def add_1h_features(df: pd.DataFrame, config: Dict[str, Any] = None) -> pd.DataF
         from trade2.features.cdc import add_cdc_features
         df_feat = add_cdc_features(df_feat, config)
 
+    if (config or {}).get("tv_indicators"):
+        from trade2.features.tv_indicators import apply_tv_indicators
+        df_feat = apply_tv_indicators(df_feat, config)
+
     return df_feat
 
 
@@ -132,5 +136,9 @@ def add_5m_features(df: pd.DataFrame, config: Dict[str, Any] = None, dc_period: 
     if (config or {}).get("strategies", {}).get("cdc", {}).get("enabled", False):
         from trade2.features.cdc import add_cdc_features
         out = add_cdc_features(out, config)
+
+    if (config or {}).get("tv_indicators"):
+        from trade2.features.tv_indicators import apply_tv_indicators
+        out = apply_tv_indicators(out, config)
 
     return out

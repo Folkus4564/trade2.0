@@ -308,3 +308,17 @@ smc_luxalgo_5m:
   swing_left_bars: 10
   swing_right_bars: 10
   equal_hl_atr_mult: 0.1
+
+# ---- TV Indicator Research loop ----------------------------
+tv_research:
+  max_ideas: 30
+  goal_return: 0.50
+  goal_sharpe: 1.5
+  goal_max_dd: -0.25
+  source: both               # seed | web | both
+  model: claude-sonnet-4-6
+  trials_per_indicator: 100
+  seed_list: configs/tv_seed_list.yaml
+
+# ---- TV indicator feature flags (populated by tv_research) --
+tv_indicators: {}            # e.g. supertrend: {enabled: true, period: 10}

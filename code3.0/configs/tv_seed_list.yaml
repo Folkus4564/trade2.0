@@ -1,0 +1,124 @@
+# TradingView Indicator Seed List
+# Curated list of well-known indicators for the TV research loop.
+# Each entry will be translated to Python and tested as a feature.
+
+indicators:
+  - name: supertrend
+    category: trend
+    description: "ATR-based trailing stop that flips direction on breakout; bullish above, bearish below"
+    default_params: { period: 10, multiplier: 3.0 }
+    integration_mode: feature
+
+  - name: squeeze_momentum
+    category: momentum
+    description: "Bollinger Band / Keltner Channel squeeze with Lazybear momentum histogram"
+    default_params: { bb_length: 20, kc_length: 20, kc_mult: 1.5 }
+    integration_mode: feature
+
+  - name: ichimoku
+    category: trend
+    description: "Ichimoku Kinko Hyo cloud system with tenkan, kijun, senkou A/B, and chikou"
+    default_params: { tenkan: 9, kijun: 26, senkou_b: 52 }
+    integration_mode: feature
+
+  - name: donchian_width
+    category: volatility
+    description: "Donchian channel width normalised by mid-price; measures trend strength and breakout potential"
+    default_params: { period: 20 }
+    integration_mode: feature
+
+  - name: keltner_channel
+    category: volatility
+    description: "EMA-based channel with ATR bands; price position relative to channel"
+    default_params: { period: 20, atr_mult: 2.0 }
+    integration_mode: feature
+
+  - name: parabolic_sar
+    category: trend
+    description: "Parabolic SAR stop-and-reverse; bullish/bearish signal with distance from price"
+    default_params: { acceleration: 0.02, maximum: 0.2 }
+    integration_mode: feature
+
+  - name: aroon
+    category: trend
+    description: "Aroon up/down oscillator indicating trend direction and strength over lookback period"
+    default_params: { period: 25 }
+    integration_mode: feature
+
+  - name: stochastic_rsi
+    category: momentum
+    description: "RSI of RSI smoothed with Stochastic formula; overbought/oversold with K/D lines"
+    default_params: { rsi_length: 14, stoch_length: 14, k_smooth: 3, d_smooth: 3 }
+    integration_mode: feature
+
+  - name: fisher_transform
+    category: momentum
+    description: "Ehlers Fisher Transform of price; converts price distribution to Gaussian, sharp reversals"
+    default_params: { period: 10 }
+    integration_mode: feature
+
+  - name: vortex
+    category: trend
+    description: "Vortex Indicator (VI+ and VI-) measuring positive and negative trend movement"
+    default_params: { period: 14 }
+    integration_mode: feature
+
+  - name: trix
+    category: momentum
+    description: "Triple smoothed EMA rate of change; filters out minor price swings"
+    default_params: { period: 18, signal: 9 }
+    integration_mode: feature
+
+  - name: elder_ray
+    category: momentum
+    description: "Elder Ray bull/bear power: high/low minus EMA; measures buying and selling force"
+    default_params: { period: 13 }
+    integration_mode: feature
+
+  - name: mass_index
+    category: volatility
+    description: "Range expansion index detecting trend reversals via high-low range oscillation"
+    default_params: { fast: 9, slow: 25, signal: 27.0 }
+    integration_mode: feature
+
+  - name: schaff_trend_cycle
+    category: momentum
+    description: "Schaff Trend Cycle: MACD run through double-smoothed Stochastic for faster signals"
+    default_params: { fast_period: 23, slow_period: 50, cycle_period: 10 }
+    integration_mode: feature
+
+  - name: connors_rsi
+    category: momentum
+    description: "Connors RSI: composite of RSI, streak RSI, and rank percentile for short-term reversals"
+    default_params: { rsi_period: 3, streak_period: 2, rank_period: 100 }
+    integration_mode: feature
+
+  - name: chande_momentum
+    category: momentum
+    description: "Chande Momentum Oscillator: ratio of up-days vs down-days momentum over period"
+    default_params: { period: 14 }
+    integration_mode: feature
+
+  - name: coppock_curve
+    category: momentum
+    description: "Coppock Curve: long-term momentum oscillator for identifying major market bottoms"
+    default_params: { wma_period: 10, roc_long: 14, roc_short: 11 }
+    integration_mode: feature
+
+  - name: dpo
+    category: trend
+    description: "Detrended Price Oscillator: removes trend from price to isolate short-term cycles"
+    default_params: { period: 20 }
+    integration_mode: feature
+
+  - name: williams_alligator
+    category: trend
+    description: "Bill Williams Alligator: three smoothed moving averages (jaw/teeth/lips) for trend phases"
+    default_params: { jaw: 13, teeth: 8, lips: 5 }
+    integration_mode: feature
+
+  - name: ehlers_filter
+    category: trend
+    description: "Ehlers Two-Pole Super Smoother Filter: low-lag trend following with minimal lag"
+    default_params: { period: 20 }
+    integration_mode: feature
