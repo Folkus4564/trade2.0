@@ -249,6 +249,41 @@ def _validate_code(code: str, name: str) -> Tuple[bool, str]:
     return True, "syntax ok"
 
 
+def _debug_fix_code(
+    client,
+    provider: str,
+    model: str,
+    code: str,
+    name: str,
+    error_msg: str,
+) -> Optional[str]:
+    """Ask LLM to fix broken indicator code given the error message."""
+    system_prompt = (
+        "You are a Python debugging expert. Fix the provided code so it runs correctly.\n"
+        "Rules:\n"
+        f"1. Function name MUST be: add_{name}_features(df, config) -> pd.DataFrame\n"
+        "2. All output columns shift(1) for lag safety\n"
+        "3. No lookahead bias\n"
+        "4. Include all imports at top (numpy, pandas, talib)\n"
+        f"5. Return df copy with new columns prefixed: {name}_\n"
+        f"6. MUST produce two boolean columns: {name}_bull and {name}_bear\n"
+        "7. Output ONLY the fixed Python code, no explanation, no markdown code blocks\n"
+    )
+    user_msg = (
+        f"This Python code for the '{name}' indicator has an error:\n\n"
+        f"ERROR: {error_msg}\n\n"
+        f"BROKEN CODE:\n{code}\n\n"
+        f"Fix the code so it runs without errors. Output ONLY the corrected Python code."
+    )
+    fixed = _llm_complete(client, provider, model, user_msg, system=system_prompt)
+    match = re.search(r'```(?:python)?\s*\n(.*?)```', fixed, flags=re.DOTALL)
+    if match:
+        fixed = match.group(1).strip()
+    else:
+        fixed = re.sub(r'```(?:python)?', '', fixed).strip()
+    return fixed.strip() or None
+
+
 def _test_run(code: str, name: str) -> Tuple[bool, str]:
     """Test-run the indicator via exec on a small dummy DataFrame."""
     import numpy as np
@@ -884,28 +919,54 @@ def main() -> None:
             print(f"[tv] TRANSLATION FAILED: {e}")
             continue
 
-        # ---- Validate syntax ----
-        valid, msg = _validate_code(code, name)
-        if not valid:
-            entry.update(status="CODE_ERROR", error=f"Validation: {msg}",
-                         duration_seconds=int(time.time() - t0))
-            log.append(entry)
-            _save_log(log_path, log)
-            print(f"[tv] CODE ERROR: {msg}")
-            continue
-        print(f"[tv] Validation: {msg}")
+        # ---- Validate + test run (with self-debug retry loop) ----
+        MAX_DEBUG_ATTEMPTS = 10
+        code_ok = False
+        last_error = ""
+        for attempt in range(MAX_DEBUG_ATTEMPTS):
+            attempt_label = f"attempt {attempt+1}/{MAX_DEBUG_ATTEMPTS}"
 
-        # ---- Test run ----
-        print(f"[tv] Test-running {name}...")
-        ok, run_msg = _test_run(code, name)
-        if not ok:
-            entry.update(status="CODE_ERROR", error=f"TestRun: {run_msg}",
+            valid, msg = _validate_code(code, name)
+            if not valid:
+                last_error = f"Validation: {msg}"
+                print(f"[tv] CODE ERROR ({attempt_label}): {msg}")
+                if attempt < MAX_DEBUG_ATTEMPTS - 1:
+                    print(f"[tv] Auto-debugging {name}...")
+                    fixed = _debug_fix_code(t_client, t_provider, t_model, code, name, last_error)
+                    if fixed:
+                        code = fixed
+                    else:
+                        print(f"[tv] Debug returned empty code, stopping retries.")
+                        break
+                continue
+
+            ok, run_msg = _test_run(code, name)
+            if not ok:
+                last_error = f"TestRun: {run_msg}"
+                print(f"[tv] TEST RUN FAILED ({attempt_label}): {run_msg}")
+                if attempt < MAX_DEBUG_ATTEMPTS - 1:
+                    print(f"[tv] Auto-debugging {name}...")
+                    fixed = _debug_fix_code(t_client, t_provider, t_model, code, name, last_error)
+                    if fixed:
+                        code = fixed
+                    else:
+                        print(f"[tv] Debug returned empty code, stopping retries.")
+                        break
+                continue
+
+            # Both checks passed
+            print(f"[tv] Validation: {msg} ({attempt_label})")
+            print(f"[tv] Test run: {run_msg}")
+            code_ok = True
+            break
+
+        if not code_ok:
+            entry.update(status="CODE_ERROR", error=last_error,
                          duration_seconds=int(time.time() - t0))
             log.append(entry)
             _save_log(log_path, log)
-            print(f"[tv] TEST RUN FAILED: {run_msg}")
+            print(f"[tv] CODE ERROR after {MAX_DEBUG_ATTEMPTS} attempts: {last_error}")
             continue
-        print(f"[tv] Test run: {run_msg}")
 
         # ---- Write module ----
         module_path = _write_module(code, name, tv_indicators_dir)
