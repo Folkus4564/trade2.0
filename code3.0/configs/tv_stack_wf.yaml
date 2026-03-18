@@ -1,14 +1,6 @@
-# Walk-forward override for stacked TV indicator set
-# ehlers_filter + squeeze_momentum (56.36% return, Sharpe 2.09 from greedy stack)
-# NOTE: Due to greedy stack bug, only squeeze_momentum cols were injected into HMM.
-# ehlers_filter runs as signal filter only (filter_column_bull/bear).
-# Tested with --use-best-baseline: 4H regime, 2-state HMM, max_hold_bars=48
-strategy:
-  regime_timeframe: 4H
-
+# TV indicator 4-stack WF config
+# Uses exact 36-feature HMM matrix from the golden model (ret89% sh4.10)
 hmm:
-  n_states: 2
-  sizing_max: 2.0
   features:
     - hmm_feat_ret
     - hmm_feat_rsi
@@ -17,29 +9,52 @@ hmm:
     - hmm_feat_hma_slope
     - hmm_feat_bb_width
     - hmm_feat_macd
-    - squeeze_momentum_squeeze_on
-    - squeeze_momentum_momentum
-    - squeeze_momentum_histogram
-    - squeeze_momentum_bb_upper
-    - squeeze_momentum_bb_middle
-    - squeeze_momentum_bb_lower
-    - squeeze_momentum_kc_upper
-    - squeeze_momentum_kc_middle
-    - squeeze_momentum_kc_lower
-
-risk:
-  base_allocation_frac: 0.90
-  max_hold_bars: 48
+    - ehlers_filter_filt
+    - ehlers_filter_bull
+    - ehlers_filter_bear
+    - supertrend_bull
+    - supertrend_bear
+    - supertrend_value
+    - supertrend_upper
+    - supertrend_lower
+    - ichimoku_tenkan
+    - ichimoku_kijun
+    - ichimoku_senkou_a
+    - ichimoku_senkou_b
+    - ichimoku_chikou
+    - ichimoku_cloud_top
+    - ichimoku_cloud_bottom
+    - ichimoku_price_above_cloud
+    - ichimoku_price_below_cloud
+    - ichimoku_price_in_cloud
+    - ichimoku_tk_cross_up
+    - ichimoku_tk_cross_down
+    - ichimoku_kumo_twist_up
+    - ichimoku_kumo_twist_down
+    - ichimoku_cloud_bullish
+    - ichimoku_cloud_bearish
+    - elder_ray_bull
+    - elder_ray_bear
+    - elder_ray_bull_power
+    - elder_ray_bear_power
+    - elder_ray_ema
 
 tv_indicators:
-  luxalgo_fvg_ob:
-    enabled: false
   ehlers_filter:
     enabled: true
     integration_mode: hmm
     period: 20
     filter_column_bull: ehlers_filter_slope
     filter_column_bear: ehlers_filter_slope
-  squeeze_momentum:
+  supertrend:
     enabled: true
     integration_mode: hmm
+  ichimoku:
+    enabled: true
+    integration_mode: hmm
+  elder_ray:
+    enabled: true
+    integration_mode: hmm
+    period: 13
+    filter_column_bull: elder_ray_bull_power
+    filter_column_bear: elder_ray_bear_power

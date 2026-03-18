@@ -375,6 +375,11 @@ def run_backtest(
             }, f, indent=2)
         print(f"[engine] Results saved to {result_path}")
 
+        if len(trades_df) > 0:
+            trades_path = backtests_dir / f"{strategy_name}_{period_label}_trades.csv"
+            trades_df.to_csv(trades_path, index=False)
+            print(f"[engine] Trade log saved to {trades_path}")
+
     return metrics, trades_df
 
 
@@ -431,6 +436,9 @@ def run_walk_forward(
     from trade2.signals.generator import generate_signals, compute_stops, compute_stops_regime_aware
     from trade2.signals.regime import forward_fill_1h_regime
     from trade2.signals.router import route_signals, apply_tv_signal_filter, ffill_tv_cols_to_5m
+
+    import numpy as np
+    np.random.seed(42)  # Reset global state for reproducible WF results
 
     windows = config.get("walk_forward", {}).get("windows", [])
     if not windows:
