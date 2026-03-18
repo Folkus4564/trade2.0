@@ -133,6 +133,60 @@ When the user asks to plan something (new feature, refactor, investigation, etc.
 
 The `.claude/steps/` folder holds all plans (pending and completed).
 
+## Live Trading Module (added 2026-03-18)
+
+Live trading deployment for XAUUSD on Exness MT5 demo.
+
+### Architecture
+Single Python process, 24/5 polling loop (10s), two strategies running simultaneously.
+
+### CLI
+```bash
+trade2-live                           # run both strategies
+trade2-live --strategy-a-only         # run only the 89% strategy
+trade2-live --strategy-b-only         # run only the 49% strategy
+trade2-live --report                  # generate performance report and exit
+trade2-live --retrain                 # force immediate HMM retrain
+trade2-live --config configs/live.yaml   # use custom live config
+```
+
+### Setup
+1. Fill in MT5 credentials in `code3.0/.env`:
+   ```
+   MT5_LOGIN=your_login
+   MT5_PASSWORD=your_password
+   MT5_SERVER=Exness-MT5Trial
+   ```
+2. Install MetaTrader5: `pip install MetaTrader5`
+3. Run: `trade2-live`
+
+### Key Files
+- `code3.0/src/trade2/live/` — all live trading modules
+  - `mt5_connector.py`     — MT5 connection, bar fetch, order execution
+  - `bar_manager.py`       — new-bar detection, rolling window management
+  - `signal_pipeline.py`   — wraps full feature+HMM+signal chain
+  - `position_manager.py`  — manages one position per strategy (magic number)
+  - `strategy_instance.py` — binds config + model + pipeline + position
+  - `trade_logger.py`      — append-mode CSV trade log
+  - `reporter.py`          — performance metrics from trade log
+  - `data_accumulator.py`  — appends live bars to CSV for expanding retrain
+  - `retrainer.py`         — Sunday weekly HMM retrain on expanding window
+  - `health.py`            — connection monitoring, auto-reconnect, weekend skip
+  - `main.py`              — CLI entry point
+- `code3.0/configs/live.yaml` — strategy configs, magic numbers, retrain schedule
+
+### Strategy Magic Numbers
+- Strategy A (89% return): magic 100001
+- Strategy B (49% return): magic 100002
+
+### Important: Correct Model for Strategy A
+The approved strategy's `model.pkl` has 7 features but the config needs 36.
+`live.yaml` correctly points to: `artefacts/models/golden/hmm_1h_3states_2026_03_17_ret89pct_sh4.10.pkl`
+
+### Weekly Retrain
+Every Sunday, the HMM retrains on all data (original 2019-2025 + accumulated live bars).
+Live bars are accumulated to `data/raw/XAUUSD_1H_live.csv` and `data/raw/XAUUSD_5M_live.csv`.
+
 ## CLAUDE.md Maintenance
 CLAUDE.md must be kept up to date at all times. After any session where new modules, results, architecture decisions, configs, CLI usage patterns, or user preferences are introduced or changed, update the relevant section(s) of CLAUDE.md before finishing.
 

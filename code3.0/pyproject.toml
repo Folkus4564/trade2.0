@@ -36,6 +36,7 @@ trade2-ui = "trade2.app.launch_ui:main"
 full_scheme_search_ai = "trade2.app.full_scheme_search_ai:main"
 full_scheme_search_3state = "trade2.app.full_scheme_search_3state:main"
 tv_research = "trade2.app.tv_research_loop:main"
+trade2-live = "trade2.live.main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

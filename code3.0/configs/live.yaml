@@ -1,0 +1,38 @@
+# ============================================================
+#  live.yaml - Live trading configuration for XAUUSD on Exness MT5
+#  Used by trade2-live CLI entry point.
+# ============================================================
+
+live:
+  symbol: "XAUUSD"
+  poll_interval_sec: 10
+  bar_warmup_1h: 200
+  bar_warmup_5m: 300
+
+strategies:
+  - name: "hmm1h_smc5m_89pct"
+    config_path: "artefacts/approved_strategies/xauusd_mtf_hmm1h_smc5m_2026_03_18/config.yaml"
+    # approved model.pkl has 7 features (stale); use the correct 36-feature golden model
+    model_path:  "artefacts/models/golden/hmm_1h_3states_2026_03_17_ret89pct_sh4.10.pkl"
+    magic_number: 100001
+    base_allocation_frac: 0.10   # 10% of equity per trade
+
+  - name: "hmm1h_smc5m_tp2x_49pct"
+    config_path: "artefacts/approved_strategies/xauusd_mtf_hmm1h_smc5m_tp2x_49pct_2026_03_18/config.yaml"
+    model_path:  "artefacts/approved_strategies/xauusd_mtf_hmm1h_smc5m_tp2x_49pct_2026_03_18/model.pkl"
+    magic_number: 100002
+    base_allocation_frac: 0.10
+
+reporting:
+  interval_hours: 4
+  report_dir: "artefacts/live_reports"
+  trade_log_dir: "artefacts/live_trades"
+
+retrain:
+  enabled: true
+  schedule: "sunday"        # day of week for scheduled retrain
+  close_positions: true     # close open positions before model swap
+  backup_model: true        # auto-backup old model before overwrite
+  live_data_dir: "data/raw" # where accumulated live bars are stored
+  original_1h: "data/raw/XAUUSD_1H_2019_2025.csv"
+  original_5m: "data/raw/XAUUSD_5M_2019_2025.csv"
