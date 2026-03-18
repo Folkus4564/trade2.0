@@ -9,10 +9,24 @@ import streamlit as st
 
 
 def _load_trade_csvs(backtests_dir: str) -> dict[str, Path]:
-    """Return {display_name: path} for all *_trades.csv files, newest first."""
+    """Return {display_name: path} for all trade CSVs, approved strategies first."""
+    result = {}
+
+    # Approved strategies (named, stable) — load first
+    approved_dir = Path(backtests_dir).parent / "approved_strategies"
+    if approved_dir.exists():
+        for strat_dir in sorted(approved_dir.iterdir(), key=lambda d: d.stat().st_mtime, reverse=True):
+            csv = strat_dir / "trades_test.csv"
+            if csv.exists():
+                result[f"[APPROVED] {strat_dir.name}"] = csv
+
+    # Raw backtest CSVs (may be overwritten each run)
     p = Path(backtests_dir)
     files = sorted(p.glob("*_trades.csv"), key=lambda f: f.stat().st_mtime, reverse=True)
-    return {f.stem.replace("_trades", ""): f for f in files}
+    for f in files:
+        result[f.stem.replace("_trades", "")] = f
+
+    return result
 
 
 def _equity_from_trades(df: pd.DataFrame, init_cash: float = 100_000) -> pd.DataFrame:
