@@ -119,12 +119,11 @@ regime:
 # ---- Backtest settings -------------------------------------
 backtest:
   init_cash: 100000
-  contract_size_oz: 100        # gold futures: 1 lot = 100 troy oz (CME GC)
 
 # ---- Risk management ---------------------------------------
 risk:
   atr_stop_mult:          2.75   # optimizer: 2.73 (wider stop, less noise-triggered SL)
-  atr_tp_mult:            2.0    # 2x ATR; primary exit = signal/regime flip
+  atr_tp_mult:            15.0   # optimizer: 14.98 (ride regime; primary exit = regime flip)
   max_hold_bars:          0      # 0 = disabled (no timeout; exits via SL/TP/signal only)
   break_even_atr_trigger: 0.0   # 0 = disabled; >0 = move SL to entry when price moves N*ATR in favor
   daily_loss_pct:       0.03
@@ -167,7 +166,7 @@ strategies:
     atr_expansion_filter: true
     persistence_bars: 3
     atr_stop_mult: 2.75
-    atr_tp_mult: 2.0            # 2x ATR fixed TP for trend trades
+    atr_tp_mult: 0.0            # 0 = no fixed TP, ride regime
     trailing_enabled: false      # Phase 4: trailing stop for trend trades
     trailing_atr_mult: 1.5       # trail stop = close - N*ATR (updated each bar)
     max_hold_bars: 0

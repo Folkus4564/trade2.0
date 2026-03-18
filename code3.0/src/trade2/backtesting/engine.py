@@ -22,6 +22,7 @@ def _simulate_trades(
     commission_rt: float,
     max_hold_bars: int,
     be_atr_trigger: float = 0.0,
+    contract_size_oz: float = 100.0,
 ) -> Tuple[pd.Series, pd.DataFrame]:
     """
     Bar-by-bar event-driven simulation with frozen ATR-based SL/TP
@@ -179,6 +180,7 @@ def _simulate_trades(
                 cash     += net_pnl
                 equity_arr[i] = cash  # lock in realized equity
 
+                lots = n_units / contract_size_oz if contract_size_oz > 0 else 0.0
                 trades.append({
                     "entry_time":    df.index[entry_bar],
                     "exit_time":     df.index[i],
@@ -188,6 +190,7 @@ def _simulate_trades(
                     "sl":            round(frozen_sl,  5),
                     "tp":            round(frozen_tp,  5),
                     "size":          round(pos_val,    2),
+                    "lots":          round(lots,       4),
                     "pnl":           round(net_pnl,    4),
                     "duration_bars": i - entry_bar,
                     "exit_reason":   reason,
@@ -281,11 +284,12 @@ def run_backtest(
     risk_cfg  = cfg["risk"]
     hmm_cfg   = cfg["hmm"]
 
-    init_cash       = cfg["backtest"]["init_cash"]
-    commission      = costs_cfg["commission_rt"]
-    max_hold_bars   = risk_cfg["max_hold_bars"]
-    base_alloc      = risk_cfg["base_allocation_frac"]
-    be_atr_trigger  = risk_cfg.get("break_even_atr_trigger", 0.0)
+    init_cash          = cfg["backtest"]["init_cash"]
+    commission         = costs_cfg["commission_rt"]
+    max_hold_bars      = risk_cfg["max_hold_bars"]
+    base_alloc         = risk_cfg["base_allocation_frac"]
+    be_atr_trigger     = risk_cfg.get("break_even_atr_trigger", 0.0)
+    contract_size_oz   = cfg["backtest"]["contract_size_oz"]
 
     # Scale max_hold_bars and bars_per_year to match the data frequency.
     # Config value is expressed in 1H-equivalent bars.
@@ -323,6 +327,7 @@ def run_backtest(
         commission_rt        = commission,
         max_hold_bars        = max_hold_bars,
         be_atr_trigger       = be_atr_trigger,
+        contract_size_oz     = contract_size_oz,
     )
 
     trade_records = None

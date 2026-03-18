@@ -19,6 +19,8 @@ from components.charts         import candlestick_chart, equity_curve_chart, mon
 from components.metrics_table  import render_metric_cards, render_full_metrics_table
 from components.scheme_search  import render_scheme_search
 from components.tv_research    import render_tv_research
+from components.trade_log           import render_trade_log
+from components.approved_strategies import render_approved_strategies
 from utils.pipeline_runner     import (
     load_data, load_hmm_model, build_features,
     get_regime, generate_and_backtest,
@@ -35,7 +37,7 @@ st.set_page_config(
 st.title("XAUUSD Strategy Dashboard")
 
 # ---- Tabs ----
-tab_backtest, tab_scheme, tab_tv = st.tabs(["Strategy Backtest", "Scheme Search", "TV Indicator Research"])
+tab_backtest, tab_tradelog, tab_approved, tab_scheme, tab_tv = st.tabs(["Strategy Backtest", "Trade Log", "Approved Strategies", "Scheme Search", "TV Indicator Research"])
 
 # ---- Load base config ----
 @st.cache_data
@@ -177,7 +179,7 @@ with tab_backtest:
                 if "duration_bars" in log.columns:
                     log["hold_h"] = (log["duration_bars"] * 5 / 60).round(1)
                 display_cols = [c for c in [
-                    "entry_time", "exit_time", "direction",
+                    "entry_time", "exit_time", "direction", "lots",
                     "entry_price", "sl", "tp", "exit_price",
                     "hold_h", "pnl", "exit_reason",
                 ] if c in log.columns]
@@ -209,13 +211,26 @@ with tab_backtest:
         )
 
 # ========================================================
-# TAB 2 — Scheme Search
+# TAB 2 — Trade Log
+# ========================================================
+with tab_tradelog:
+    live_trades = current.get("trades") if current is not None else None
+    render_trade_log(artefacts_dir, live_trades=live_trades)
+
+# ========================================================
+# TAB 3 — Approved Strategies
+# ========================================================
+with tab_approved:
+    render_approved_strategies(artefacts_dir)
+
+# ========================================================
+# TAB 4 — Scheme Search
 # ========================================================
 with tab_scheme:
     render_scheme_search(artefacts_dir)
 
 # ========================================================
-# TAB 3 — TV Indicator Research
+# TAB 5 — TV Indicator Research
 # ========================================================
 with tab_tv:
     render_tv_research(artefacts_dir)
