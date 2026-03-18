@@ -1,0 +1,5543 @@
+[
+  {
+    "id": 1,
+    "name": "supertrend",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T15:47:01",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "\"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\""
+  },
+  {
+    "id": 2,
+    "name": "squeeze_momentum",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T15:47:01",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "\"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\""
+  },
+  {
+    "id": 3,
+    "name": "ichimoku",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T15:47:01",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "\"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\""
+  },
+  {
+    "id": 4,
+    "name": "donchian_width",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T15:47:01",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "\"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\""
+  },
+  {
+    "id": 5,
+    "name": "keltner_channel",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T15:47:01",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "\"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\""
+  },
+  {
+    "id": 6,
+    "name": "supertrend",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T15:51:04",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'error': {'message': 'Model Not Exist', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 7,
+    "name": "squeeze_momentum",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T15:51:04",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'error': {'message': 'Model Not Exist', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 8,
+    "name": "ichimoku",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T15:51:05",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'error': {'message': 'Model Not Exist', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 9,
+    "name": "donchian_width",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T15:51:05",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'error': {'message': 'Model Not Exist', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 10,
+    "name": "keltner_channel",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T15:51:05",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'error': {'message': 'Model Not Exist', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 11,
+    "name": "supertrend",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-17T15:51:28",
+    "duration_seconds": 279,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\supertrend.py",
+    "config_override": {
+      "tv_indicators": {
+        "supertrend": {
+          "enabled": true,
+          "period": 10,
+          "multiplier": 3.0
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0529,
+      "total_return": 0.0531,
+      "annualized_volatility": 0.0562,
+      "sharpe_ratio": 0.2339,
+      "sortino_ratio": 0.1219,
+      "max_drawdown": -0.043,
+      "calmar_ratio": 1.2299,
+      "n_years": 1.0,
+      "total_trades": 83,
+      "win_rate": 0.3976,
+      "profit_factor": 1.2694,
+      "avg_win_loss_ratio": 1.9233,
+      "avg_trade_pnl": 64.0101,
+      "avg_trade_duration_bars": 139.04,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8569,
+      "information_ratio": -3.4381,
+      "exit_reasons": {
+        "signal": 63,
+        "sl": 20
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.898,
+        "random_median_return": 0.3461,
+        "random_p95_sharpe": 3.2691,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.0656,
+        "annualized_return": 0.0353,
+        "max_drawdown": -0.0479
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.0991,
+      "sharpe_delta": -1.5904,
+      "dd_delta": 0.006100000000000001
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null
+  },
+  {
+    "id": 12,
+    "name": "squeeze_momentum",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-17T15:56:07",
+    "duration_seconds": 257,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\squeeze_momentum.py",
+    "config_override": {
+      "tv_indicators": {
+        "squeeze_momentum": {
+          "enabled": true,
+          "bb_length": 20,
+          "kc_length": 20,
+          "kc_mult": 1.5
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0529,
+      "total_return": 0.0531,
+      "annualized_volatility": 0.0562,
+      "sharpe_ratio": 0.2339,
+      "sortino_ratio": 0.1219,
+      "max_drawdown": -0.043,
+      "calmar_ratio": 1.2299,
+      "n_years": 1.0,
+      "total_trades": 83,
+      "win_rate": 0.3976,
+      "profit_factor": 1.2694,
+      "avg_win_loss_ratio": 1.9233,
+      "avg_trade_pnl": 64.0101,
+      "avg_trade_duration_bars": 139.04,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8569,
+      "information_ratio": -3.4381,
+      "exit_reasons": {
+        "signal": 63,
+        "sl": 20
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.898,
+        "random_median_return": 0.3461,
+        "random_p95_sharpe": 3.2691,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.0656,
+        "annualized_return": 0.0353,
+        "max_drawdown": -0.0479
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.0991,
+      "sharpe_delta": -1.5904,
+      "dd_delta": 0.006100000000000001
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null
+  },
+  {
+    "id": 13,
+    "name": "ichimoku",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-17T16:00:25",
+    "duration_seconds": 265,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\ichimoku.py",
+    "config_override": {
+      "tv_indicators": {
+        "ichimoku": {
+          "enabled": true,
+          "tenkan": 9,
+          "kijun": 26,
+          "senkou_b": 52
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0529,
+      "total_return": 0.0531,
+      "annualized_volatility": 0.0562,
+      "sharpe_ratio": 0.2339,
+      "sortino_ratio": 0.1219,
+      "max_drawdown": -0.043,
+      "calmar_ratio": 1.2299,
+      "n_years": 1.0,
+      "total_trades": 83,
+      "win_rate": 0.3976,
+      "profit_factor": 1.2694,
+      "avg_win_loss_ratio": 1.9233,
+      "avg_trade_pnl": 64.0102,
+      "avg_trade_duration_bars": 139.04,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8569,
+      "information_ratio": -3.4381,
+      "exit_reasons": {
+        "signal": 63,
+        "sl": 20
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.898,
+        "random_median_return": 0.3461,
+        "random_p95_sharpe": 3.2691,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.0656,
+        "annualized_return": 0.0353,
+        "max_drawdown": -0.0479
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.0991,
+      "sharpe_delta": -1.5904,
+      "dd_delta": 0.006100000000000001
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null
+  },
+  {
+    "id": 14,
+    "name": "donchian_width",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-17T16:04:50",
+    "duration_seconds": 238,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\donchian_width.py",
+    "config_override": {
+      "tv_indicators": {
+        "donchian_width": {
+          "enabled": true,
+          "period": 20
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0529,
+      "total_return": 0.0531,
+      "annualized_volatility": 0.0562,
+      "sharpe_ratio": 0.2339,
+      "sortino_ratio": 0.1219,
+      "max_drawdown": -0.043,
+      "calmar_ratio": 1.2299,
+      "n_years": 1.0,
+      "total_trades": 83,
+      "win_rate": 0.3976,
+      "profit_factor": 1.2694,
+      "avg_win_loss_ratio": 1.9233,
+      "avg_trade_pnl": 64.0102,
+      "avg_trade_duration_bars": 139.04,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8569,
+      "information_ratio": -3.4381,
+      "exit_reasons": {
+        "signal": 63,
+        "sl": 20
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.898,
+        "random_median_return": 0.3461,
+        "random_p95_sharpe": 3.2691,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.0656,
+        "annualized_return": 0.0353,
+        "max_drawdown": -0.0479
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.152,
+      "total_return": 0.1526,
+      "annualized_volatility": 0.0565,
+      "sharpe_ratio": 1.8243,
+      "sortino_ratio": 0.8421,
+      "max_drawdown": -0.0491,
+      "calmar_ratio": 3.0944,
+      "n_years": 1.0,
+      "total_trades": 14,
+      "win_rate": 0.7857,
+      "profit_factor": 3.8613,
+      "avg_win_loss_ratio": 1.0531,
+      "avg_trade_pnl": 1090.1286,
+      "avg_trade_duration_bars": 499.71,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7578,
+      "information_ratio": -3.0406,
+      "exit_reasons": {
+        "signal": 12,
+        "sl": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8912,
+        "random_median_return": 0.3334,
+        "random_p95_sharpe": 3.3549,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7468,
+        "annualized_return": 0.1472,
+        "max_drawdown": -0.05
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.0991,
+      "sharpe_delta": -1.5904,
+      "dd_delta": 0.006100000000000001
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null
+  },
+  {
+    "id": 15,
+    "name": "supertrend",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-17T16:12:32",
+    "duration_seconds": 542,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\supertrend.py",
+    "config_override": {
+      "tv_indicators": {
+        "supertrend": {
+          "enabled": true,
+          "period": 10,
+          "multiplier": 3.0
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0529,
+      "total_return": 0.0531,
+      "annualized_volatility": 0.0562,
+      "sharpe_ratio": 0.2339,
+      "sortino_ratio": 0.1219,
+      "max_drawdown": -0.043,
+      "calmar_ratio": 1.2299,
+      "n_years": 1.0,
+      "total_trades": 83,
+      "win_rate": 0.3976,
+      "profit_factor": 1.2694,
+      "avg_win_loss_ratio": 1.9233,
+      "avg_trade_pnl": 64.0101,
+      "avg_trade_duration_bars": 139.04,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8569,
+      "information_ratio": -3.4381,
+      "exit_reasons": {
+        "signal": 63,
+        "sl": 20
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.898,
+        "random_median_return": 0.3461,
+        "random_p95_sharpe": 3.2691,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.0656,
+        "annualized_return": 0.0353,
+        "max_drawdown": -0.0479
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.3835,
+      "sharpe_delta": -1.6304,
+      "dd_delta": 0.05850000000000001
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null
+  },
+  {
+    "id": 16,
+    "name": "squeeze_momentum",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-17T16:21:34",
+    "duration_seconds": 45,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: unterminated triple-quoted string literal (detected at line 28) (<unknown>, line 14)"
+  },
+  {
+    "id": 17,
+    "name": "ichimoku",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T16:22:19",
+    "duration_seconds": 46,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 18,
+    "name": "donchian_width",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "PIPELINE_FAILED",
+    "timestamp": "2026-03-17T16:23:06",
+    "duration_seconds": 173,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\donchian_width.py",
+    "config_override": {
+      "tv_indicators": {
+        "donchian_width": {
+          "enabled": true,
+          "period": 20
+        }
+      }
+    },
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": "ERROR",
+    "is_best": false,
+    "error": "Traceback (most recent call last):\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\tv_research_loop.py\", line 646, in main\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\tv_research_loop.py\", line 342, in _run_pipeline\n        except Exception:\n               ^^^^^^^^^^\n    ...<6 lines>...\n        cfg  = copy.deepcopy(base_config)\n        ^\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\run_pipeline.py\", line 276, in run_pipeline\n    train_labels, train_bull, train_bear, train_sideways, X_train_reg, idx_train_reg = _get_regime(train_reg_feat)\n                                                                                       ~~~~~~~~~~~^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\run_pipeline.py\", line 273, in _get_regime\n    return (hmm.regime_labels(X), hmm.bull_probability(X), hmm.bear_probability(X),\n            ~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\models\\hmm.py\", line 109, in regime_labels\n    states  = self.predict(X)\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\models\\hmm.py\", line 99, in predict\n    return self.model.predict(self.scaler.transform(X))\n                              ~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\utils\\_set_output.py\", line 319, in wrapped\n    data_to_wrap = f(self, X, *args, **kwargs)\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\preprocessing\\_data.py\", line 1062, in transform\n    X = validate_data(\n        self,\n    ...<6 lines>...\n        ensure_all_finite=\"allow-nan\",\n    )\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\utils\\validation.py\", line 2965, in validate_data\n    _check_n_features(_estimator, X, reset=reset)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\utils\\validation.py\", line 2829, in _check_n_features\n    raise ValueError(\n    ...<2 lines>...\n    )\nValueError: X has 7 features, but StandardScaler is expecting 10 features as input.\n"
+  },
+  {
+    "id": 19,
+    "name": "keltner_channel",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "PIPELINE_FAILED",
+    "timestamp": "2026-03-17T16:25:59",
+    "duration_seconds": 184,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\keltner_channel.py",
+    "config_override": {
+      "tv_indicators": {
+        "keltner_channel": {
+          "enabled": true,
+          "period": 20,
+          "atr_mult": 2.0
+        }
+      }
+    },
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": "ERROR",
+    "is_best": false,
+    "error": "Traceback (most recent call last):\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\tv_research_loop.py\", line 646, in main\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\tv_research_loop.py\", line 342, in _run_pipeline\n        except Exception:\n               ^^^^^^^^^^\n    ...<6 lines>...\n        cfg  = copy.deepcopy(base_config)\n        ^\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\run_pipeline.py\", line 276, in run_pipeline\n    train_labels, train_bull, train_bear, train_sideways, X_train_reg, idx_train_reg = _get_regime(train_reg_feat)\n                                                                                       ~~~~~~~~~~~^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\run_pipeline.py\", line 273, in _get_regime\n    return (hmm.regime_labels(X), hmm.bull_probability(X), hmm.bear_probability(X),\n            ~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\models\\hmm.py\", line 109, in regime_labels\n    states  = self.predict(X)\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\models\\hmm.py\", line 99, in predict\n    return self.model.predict(self.scaler.transform(X))\n                              ~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\utils\\_set_output.py\", line 319, in wrapped\n    data_to_wrap = f(self, X, *args, **kwargs)\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\preprocessing\\_data.py\", line 1062, in transform\n    X = validate_data(\n        self,\n    ...<6 lines>...\n        ensure_all_finite=\"allow-nan\",\n    )\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\utils\\validation.py\", line 2965, in validate_data\n    _check_n_features(_estimator, X, reset=reset)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\utils\\validation.py\", line 2829, in _check_n_features\n    raise ValueError(\n    ...<2 lines>...\n    )\nValueError: X has 7 features, but StandardScaler is expecting 9 features as input.\n"
+  },
+  {
+    "id": 20,
+    "name": "parabolic_sar",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-17T16:29:04",
+    "duration_seconds": 39,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "TestRun: RuntimeError: Cannot convert non-finite values (NA or inf) to integer"
+  },
+  {
+    "id": 21,
+    "name": "aroon",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-17T16:29:43",
+    "duration_seconds": 46,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: unterminated string literal (detected at line 47) (<unknown>, line 47)"
+  },
+  {
+    "id": 22,
+    "name": "stochastic_rsi",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "PIPELINE_FAILED",
+    "timestamp": "2026-03-17T16:30:30",
+    "duration_seconds": 224,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\stochastic_rsi.py",
+    "config_override": {
+      "tv_indicators": {
+        "stochastic_rsi": {
+          "enabled": true,
+          "rsi_length": 14,
+          "stoch_length": 14,
+          "k_smooth": 3,
+          "d_smooth": 3
+        }
+      }
+    },
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": "ERROR",
+    "is_best": false,
+    "error": "Traceback (most recent call last):\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\tv_research_loop.py\", line 646, in main\n    )\n    \n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\tv_research_loop.py\", line 342, in _run_pipeline\n            \"Volume\": np.ones(n) * 5000,\n    ...<6 lines>...\n    \n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\run_pipeline.py\", line 276, in run_pipeline\n    train_labels, train_bull, train_bear, train_sideways, X_train_reg, idx_train_reg = _get_regime(train_reg_feat)\n                                                                                       ~~~~~~~~~~~^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\run_pipeline.py\", line 273, in _get_regime\n    return (hmm.regime_labels(X), hmm.bull_probability(X), hmm.bear_probability(X),\n            ~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\models\\hmm.py\", line 109, in regime_labels\n    states  = self.predict(X)\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\models\\hmm.py\", line 99, in predict\n    return self.model.predict(self.scaler.transform(X))\n                              ~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\utils\\_set_output.py\", line 319, in wrapped\n    data_to_wrap = f(self, X, *args, **kwargs)\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\preprocessing\\_data.py\", line 1062, in transform\n    X = validate_data(\n        self,\n    ...<6 lines>...\n        ensure_all_finite=\"allow-nan\",\n    )\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\utils\\validation.py\", line 2965, in validate_data\n    _check_n_features(_estimator, X, reset=reset)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\utils\\validation.py\", line 2829, in _check_n_features\n    raise ValueError(\n    ...<2 lines>...\n    )\nValueError: X has 7 features, but StandardScaler is expecting 9 features as input.\n"
+  },
+  {
+    "id": 23,
+    "name": "fisher_transform",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T16:34:15",
+    "duration_seconds": 47,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 24,
+    "name": "vortex",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "feature",
+    "status": "PIPELINE_FAILED",
+    "timestamp": "2026-03-17T16:35:03",
+    "duration_seconds": 189,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\vortex.py",
+    "config_override": {
+      "tv_indicators": {
+        "vortex": {
+          "enabled": true,
+          "period": 14
+        }
+      }
+    },
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": "ERROR",
+    "is_best": false,
+    "error": "Traceback (most recent call last):\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\tv_research_loop.py\", line 646, in main\n    )\n    \n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\tv_research_loop.py\", line 342, in _run_pipeline\n            \"Volume\": np.ones(n) * 5000,\n    ...<6 lines>...\n    \n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\run_pipeline.py\", line 276, in run_pipeline\n    train_labels, train_bull, train_bear, train_sideways, X_train_reg, idx_train_reg = _get_regime(train_reg_feat)\n                                                                                       ~~~~~~~~~~~^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\app\\run_pipeline.py\", line 273, in _get_regime\n    return (hmm.regime_labels(X), hmm.bull_probability(X), hmm.bear_probability(X),\n            ~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\models\\hmm.py\", line 109, in regime_labels\n    states  = self.predict(X)\n  File \"C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\src\\trade2\\models\\hmm.py\", line 99, in predict\n    return self.model.predict(self.scaler.transform(X))\n                              ~~~~~~~~~~~~~~~~~~~~~^^^\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\utils\\_set_output.py\", line 319, in wrapped\n    data_to_wrap = f(self, X, *args, **kwargs)\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\preprocessing\\_data.py\", line 1062, in transform\n    X = validate_data(\n        self,\n    ...<6 lines>...\n        ensure_all_finite=\"allow-nan\",\n    )\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\utils\\validation.py\", line 2965, in validate_data\n    _check_n_features(_estimator, X, reset=reset)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\LENOVO\\anaconda3\\Lib\\site-packages\\sklearn\\utils\\validation.py\", line 2829, in _check_n_features\n    raise ValueError(\n    ...<2 lines>...\n    )\nValueError: X has 7 features, but StandardScaler is expecting 9 features as input.\n"
+  },
+  {
+    "id": 25,
+    "name": "supertrend",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-17T16:41:26",
+    "duration_seconds": 47,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "TestRun: Function must return a DataFrame"
+  },
+  {
+    "id": 26,
+    "name": "squeeze_momentum",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T16:42:14",
+    "duration_seconds": 46,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 27,
+    "name": "ichimoku",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T16:43:00",
+    "duration_seconds": 46,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 28,
+    "name": "donchian_width",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-17T16:43:47",
+    "duration_seconds": 47,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: unterminated triple-quoted string literal (detected at line 12) (<unknown>, line 8)"
+  },
+  {
+    "id": 29,
+    "name": "keltner_channel",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-17T16:44:35",
+    "duration_seconds": 47,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: unterminated triple-quoted string literal (detected at line 16) (<unknown>, line 8)"
+  },
+  {
+    "id": 30,
+    "name": "parabolic_sar",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-17T16:45:23",
+    "duration_seconds": 528,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\parabolic_sar.py",
+    "config_override": {
+      "tv_indicators": {
+        "parabolic_sar": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "acceleration": 0.02,
+          "maximum": 0.2,
+          "filter_column_bull": "parabolic_sar_bull",
+          "filter_column_bear": "parabolic_sar_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.2594,
+      "total_return": 0.2605,
+      "annualized_volatility": 0.2341,
+      "sharpe_ratio": 0.9314,
+      "sortino_ratio": 0.7386,
+      "max_drawdown": -0.1633,
+      "calmar_ratio": 1.5886,
+      "n_years": 1.0,
+      "total_trades": 86,
+      "win_rate": 0.4767,
+      "profit_factor": 1.4343,
+      "avg_win_loss_ratio": 1.5743,
+      "avg_trade_pnl": 302.9207,
+      "avg_trade_duration_bars": 371.4,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.6504,
+      "information_ratio": -2.6097,
+      "exit_reasons": {
+        "signal": 59,
+        "timeout": 19,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8114,
+        "random_median_return": 0.3312,
+        "random_p95_sharpe": 3.4142,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 0.8172,
+        "annualized_return": 0.2262,
+        "max_drawdown": -0.1643
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.177,
+      "sharpe_delta": -0.9329000000000001,
+      "dd_delta": -0.061799999999999994
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": 0.2594,
+          "total_return": 0.2605,
+          "annualized_volatility": 0.2341,
+          "sharpe_ratio": 0.9314,
+          "sortino_ratio": 0.7386,
+          "max_drawdown": -0.1633,
+          "calmar_ratio": 1.5886,
+          "n_years": 1.0,
+          "total_trades": 86,
+          "win_rate": 0.4767,
+          "profit_factor": 1.4343,
+          "avg_win_loss_ratio": 1.5743,
+          "avg_trade_pnl": 302.9207,
+          "avg_trade_duration_bars": 371.4,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.6504,
+          "information_ratio": -2.6097,
+          "exit_reasons": {
+            "signal": 59,
+            "timeout": 19,
+            "sl": 7,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.8114,
+            "random_median_return": 0.3312,
+            "random_p95_sharpe": 3.4142,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.8172,
+            "annualized_return": 0.2262,
+            "max_drawdown": -0.1643
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "parabolic_sar": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "acceleration": 0.02,
+              "maximum": 0.2,
+              "filter_column_bull": "parabolic_sar_bull",
+              "filter_column_bear": "parabolic_sar_bear"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 12 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": 0.2222,
+          "total_return": 0.2231,
+          "annualized_volatility": 0.2369,
+          "sharpe_ratio": 0.7965,
+          "sortino_ratio": 0.6078,
+          "max_drawdown": -0.1881,
+          "calmar_ratio": 1.1811,
+          "n_years": 1.0,
+          "total_trades": 86,
+          "win_rate": 0.4767,
+          "profit_factor": 1.3523,
+          "avg_win_loss_ratio": 1.4842,
+          "avg_trade_pnl": 259.4422,
+          "avg_trade_duration_bars": 373.21,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.6877,
+          "information_ratio": -2.759,
+          "exit_reasons": {
+            "signal": 59,
+            "timeout": 19,
+            "sl": 7,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.8114,
+            "random_median_return": 0.3312,
+            "random_p95_sharpe": 3.4142,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.6837,
+            "annualized_return": 0.19,
+            "max_drawdown": -0.1891
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "parabolic_sar": {
+              "enabled": true,
+              "integration_mode": "both",
+              "acceleration": 0.02,
+              "maximum": 0.2,
+              "filter_column_bull": "parabolic_sar_bull",
+              "filter_column_bear": "parabolic_sar_bear"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 31,
+    "name": "aroon",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-17T16:54:12",
+    "duration_seconds": 581,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\aroon.py",
+    "config_override": {
+      "tv_indicators": {
+        "aroon": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "period": 25,
+          "filter_column_bull": "aroon_osc",
+          "filter_column_bear": "aroon_osc"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.2727,
+      "total_return": 0.2739,
+      "annualized_volatility": 0.264,
+      "sharpe_ratio": 0.8937,
+      "sortino_ratio": 0.8177,
+      "max_drawdown": -0.1753,
+      "calmar_ratio": 1.5551,
+      "n_years": 1.0,
+      "total_trades": 88,
+      "win_rate": 0.5455,
+      "profit_factor": 1.3633,
+      "avg_win_loss_ratio": 1.1361,
+      "avg_trade_pnl": 311.2384,
+      "avg_trade_duration_bars": 491.74,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.6371,
+      "information_ratio": -2.5563,
+      "exit_reasons": {
+        "timeout": 61,
+        "sl": 19,
+        "signal": 8
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9224,
+        "random_median_return": 0.3499,
+        "random_p95_sharpe": 3.4263,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 0.7906,
+        "annualized_return": 0.2386,
+        "max_drawdown": -0.1818
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.1637,
+      "sharpe_delta": -0.9706,
+      "dd_delta": -0.0738
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": 0.2727,
+          "total_return": 0.2739,
+          "annualized_volatility": 0.264,
+          "sharpe_ratio": 0.8937,
+          "sortino_ratio": 0.8177,
+          "max_drawdown": -0.1753,
+          "calmar_ratio": 1.5551,
+          "n_years": 1.0,
+          "total_trades": 88,
+          "win_rate": 0.5455,
+          "profit_factor": 1.3633,
+          "avg_win_loss_ratio": 1.1361,
+          "avg_trade_pnl": 311.2384,
+          "avg_trade_duration_bars": 491.74,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.6371,
+          "information_ratio": -2.5563,
+          "exit_reasons": {
+            "timeout": 61,
+            "sl": 19,
+            "signal": 8
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.9224,
+            "random_median_return": 0.3499,
+            "random_p95_sharpe": 3.4263,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.7906,
+            "annualized_return": 0.2386,
+            "max_drawdown": -0.1818
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "aroon": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 25,
+              "filter_column_bull": "aroon_osc",
+              "filter_column_bear": "aroon_osc"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 23 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": 0.2727,
+          "total_return": 0.2739,
+          "annualized_volatility": 0.264,
+          "sharpe_ratio": 0.8937,
+          "sortino_ratio": 0.8177,
+          "max_drawdown": -0.1753,
+          "calmar_ratio": 1.5551,
+          "n_years": 1.0,
+          "total_trades": 88,
+          "win_rate": 0.5455,
+          "profit_factor": 1.3633,
+          "avg_win_loss_ratio": 1.1361,
+          "avg_trade_pnl": 311.2384,
+          "avg_trade_duration_bars": 491.74,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.6371,
+          "information_ratio": -2.5563,
+          "exit_reasons": {
+            "timeout": 61,
+            "sl": 19,
+            "signal": 8
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.9224,
+            "random_median_return": 0.3499,
+            "random_p95_sharpe": 3.4263,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.7906,
+            "annualized_return": 0.2386,
+            "max_drawdown": -0.1818
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "aroon": {
+              "enabled": true,
+              "integration_mode": "both",
+              "period": 25,
+              "filter_column_bull": "aroon_osc",
+              "filter_column_bear": "aroon_osc"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 32,
+    "name": "stochastic_rsi",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T17:03:53",
+    "duration_seconds": 49,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 33,
+    "name": "fisher_transform",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-17T17:04:42",
+    "duration_seconds": 47,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "TestRun: Function must return a DataFrame"
+  },
+  {
+    "id": 34,
+    "name": "vortex",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T17:05:29",
+    "duration_seconds": 46,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 35,
+    "name": "trix",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-17T17:06:16",
+    "duration_seconds": 45,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: unterminated string literal (detected at line 18) (<unknown>, line 18)"
+  },
+  {
+    "id": 36,
+    "name": "elder_ray",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-17T17:07:02",
+    "duration_seconds": 728,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\elder_ray.py",
+    "config_override": {
+      "tv_indicators": {
+        "elder_ray": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "period": 13,
+          "filter_column_bull": "elder_ray_bull_power",
+          "filter_column_bear": "elder_ray_bear_power"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.1889,
+      "total_return": -0.1896,
+      "annualized_volatility": 0.1786,
+      "sharpe_ratio": -1.3072,
+      "sortino_ratio": -0.7447,
+      "max_drawdown": -0.2672,
+      "calmar_ratio": -0.7072,
+      "n_years": 1.0,
+      "total_trades": 46,
+      "win_rate": 0.3478,
+      "profit_factor": 0.4939,
+      "avg_win_loss_ratio": 0.9261,
+      "avg_trade_pnl": -412.1915,
+      "avg_trade_duration_bars": 340.54,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.0988,
+      "information_ratio": -4.4085,
+      "exit_reasons": {
+        "signal": 26,
+        "timeout": 16,
+        "sl": 3,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.7854,
+        "random_median_return": 0.3264,
+        "random_p95_sharpe": 3.4899,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -1.387,
+        "annualized_return": -0.2005,
+        "max_drawdown": -0.2747
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.6253,
+      "sharpe_delta": -3.1715,
+      "dd_delta": -0.1657
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.1889,
+          "total_return": -0.1896,
+          "annualized_volatility": 0.1786,
+          "sharpe_ratio": -1.3072,
+          "sortino_ratio": -0.7447,
+          "max_drawdown": -0.2672,
+          "calmar_ratio": -0.7072,
+          "n_years": 1.0,
+          "total_trades": 46,
+          "win_rate": 0.3478,
+          "profit_factor": 0.4939,
+          "avg_win_loss_ratio": 0.9261,
+          "avg_trade_pnl": -412.1915,
+          "avg_trade_duration_bars": 340.54,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -1.0988,
+          "information_ratio": -4.4085,
+          "exit_reasons": {
+            "signal": 26,
+            "timeout": 16,
+            "sl": 3,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.7854,
+            "random_median_return": 0.3264,
+            "random_p95_sharpe": 3.4899,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -1.387,
+            "annualized_return": -0.2005,
+            "max_drawdown": -0.2747
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "elder_ray": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 13,
+              "filter_column_bull": "elder_ray_bull_power",
+              "filter_column_bear": "elder_ray_bear_power"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 12 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": -0.1889,
+          "total_return": -0.1896,
+          "annualized_volatility": 0.1786,
+          "sharpe_ratio": -1.3072,
+          "sortino_ratio": -0.7447,
+          "max_drawdown": -0.2672,
+          "calmar_ratio": -0.7072,
+          "n_years": 1.0,
+          "total_trades": 46,
+          "win_rate": 0.3478,
+          "profit_factor": 0.4939,
+          "avg_win_loss_ratio": 0.9261,
+          "avg_trade_pnl": -412.1915,
+          "avg_trade_duration_bars": 340.54,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -1.0988,
+          "information_ratio": -4.4085,
+          "exit_reasons": {
+            "signal": 26,
+            "timeout": 16,
+            "sl": 3,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.7854,
+            "random_median_return": 0.3264,
+            "random_p95_sharpe": 3.4899,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -1.387,
+            "annualized_return": -0.2005,
+            "max_drawdown": -0.2747
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "elder_ray": {
+              "enabled": true,
+              "integration_mode": "both",
+              "period": 13,
+              "filter_column_bull": "elder_ray_bull_power",
+              "filter_column_bear": "elder_ray_bear_power"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 37,
+    "name": "mass_index",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T17:19:10",
+    "duration_seconds": 53,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 38,
+    "name": "schaff_trend_cycle",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T17:20:03",
+    "duration_seconds": 49,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 39,
+    "name": "connors_rsi",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T17:20:52",
+    "duration_seconds": 46,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 40,
+    "name": "chande_momentum",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-17T17:21:39",
+    "duration_seconds": 44,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "TestRun: Function must return a DataFrame"
+  },
+  {
+    "id": 41,
+    "name": "coppock_curve",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-17T17:22:24",
+    "duration_seconds": 45,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: unterminated triple-quoted string literal (detected at line 18) (<unknown>, line 14)"
+  },
+  {
+    "id": 42,
+    "name": "dpo",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-17T17:23:09",
+    "duration_seconds": 45,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "TestRun: RuntimeError: float() argument must be a string or a real number, not 'module'"
+  },
+  {
+    "id": 43,
+    "name": "williams_alligator",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T17:23:55",
+    "duration_seconds": 46,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 44,
+    "name": "ehlers_filter",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-17T17:24:41",
+    "duration_seconds": 570,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\ehlers_filter.py",
+    "config_override": {
+      "tv_indicators": {
+        "ehlers_filter": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "period": 20,
+          "filter_column_bull": "ehlers_filter_slope",
+          "filter_column_bear": "ehlers_filter_slope"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.4364,
+      "total_return": 0.5743,
+      "annualized_volatility": 0.1816,
+      "sharpe_ratio": 1.8643,
+      "sortino_ratio": 1.8575,
+      "max_drawdown": -0.1015,
+      "calmar_ratio": 4.2999,
+      "n_years": 1.25,
+      "total_trades": 89,
+      "win_rate": 0.5955,
+      "profit_factor": 1.8222,
+      "avg_win_loss_ratio": 1.2377,
+      "avg_trade_pnl": 645.3131,
+      "avg_trade_duration_bars": 408.08,
+      "benchmark_return": 0.4579,
+      "alpha_vs_benchmark": -0.0215,
+      "information_ratio": -0.1282,
+      "exit_reasons": {
+        "timeout": 41,
+        "signal": 28,
+        "tp": 12,
+        "sl": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4549,
+        "random_median_return": 0.1629,
+        "random_p95_sharpe": 2.4275,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.6986,
+        "annualized_return": 0.394,
+        "max_drawdown": -0.1019
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": 0.0695,
+      "sharpe_delta": -0.2249000000000001,
+      "dd_delta": -0.03669999999999998
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": true,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": 0.5059,
+          "total_return": 0.5083,
+          "annualized_volatility": 0.2434,
+          "sharpe_ratio": 1.6394,
+          "sortino_ratio": 1.6217,
+          "max_drawdown": -0.1382,
+          "calmar_ratio": 3.6594,
+          "n_years": 1.0,
+          "total_trades": 93,
+          "win_rate": 0.5484,
+          "profit_factor": 1.8259,
+          "avg_win_loss_ratio": 1.5037,
+          "avg_trade_pnl": 546.5542,
+          "avg_trade_duration_bars": 385.76,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.4039,
+          "information_ratio": -1.6207,
+          "exit_reasons": {
+            "signal": 51,
+            "timeout": 33,
+            "sl": 8,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.9645,
+            "random_median_return": 0.354,
+            "random_p95_sharpe": 3.2058,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 1.5202,
+            "annualized_return": 0.463,
+            "max_drawdown": -0.1391
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "ehlers_filter": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 20,
+              "filter_column_bull": "ehlers_filter_slope",
+              "filter_column_bear": "ehlers_filter_slope"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 10 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": 0.4901,
+          "total_return": 0.4924,
+          "annualized_volatility": 0.2433,
+          "sharpe_ratio": 1.5966,
+          "sortino_ratio": 1.5641,
+          "max_drawdown": -0.1382,
+          "calmar_ratio": 3.5452,
+          "n_years": 1.0,
+          "total_trades": 93,
+          "win_rate": 0.5376,
+          "profit_factor": 1.8032,
+          "avg_win_loss_ratio": 1.5508,
+          "avg_trade_pnl": 529.4898,
+          "avg_trade_duration_bars": 383.9,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.4197,
+          "information_ratio": -1.684,
+          "exit_reasons": {
+            "signal": 52,
+            "timeout": 32,
+            "sl": 8,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.9645,
+            "random_median_return": 0.354,
+            "random_p95_sharpe": 3.2058,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 1.4773,
+            "annualized_return": 0.4476,
+            "max_drawdown": -0.1391
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "ehlers_filter": {
+              "enabled": true,
+              "integration_mode": "both",
+              "period": 20,
+              "filter_column_bull": "ehlers_filter_slope",
+              "filter_column_bear": "ehlers_filter_slope"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 45,
+    "name": "cci",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:16",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 46,
+    "name": "williams_r",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:17",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 47,
+    "name": "tsi",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:17",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 48,
+    "name": "awesome_oscillator",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:17",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 49,
+    "name": "ultimate_oscillator",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:18",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 50,
+    "name": "ppo",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:18",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 51,
+    "name": "roc",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:18",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 52,
+    "name": "momentum",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:18",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 53,
+    "name": "stochastic",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:18",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 54,
+    "name": "detrended_rsi",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:18",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 55,
+    "name": "obv",
+    "category": "volume",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:18",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 56,
+    "name": "cmf",
+    "category": "volume",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:19",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 57,
+    "name": "mfi",
+    "category": "volume",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:19",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 58,
+    "name": "accumulation_distribution",
+    "category": "volume",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:19",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 59,
+    "name": "force_index",
+    "category": "volume",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:19",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 60,
+    "name": "ease_of_movement",
+    "category": "volume",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:19",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 61,
+    "name": "klinger_oscillator",
+    "category": "volume",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:20",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 62,
+    "name": "chaikin_oscillator",
+    "category": "volume",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:20",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 63,
+    "name": "atr_zscore",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:20",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 64,
+    "name": "normalized_atr",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:20",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 65,
+    "name": "bollinger_percent_b",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:20",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 66,
+    "name": "bollinger_bandwidth",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:20",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 67,
+    "name": "chaikin_volatility",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:20",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 68,
+    "name": "historical_volatility",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:21",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 69,
+    "name": "volatility_ratio",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:21",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 70,
+    "name": "vwap_proxy",
+    "category": "volume",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:21",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 71,
+    "name": "vwap_bands",
+    "category": "volume",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:22",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 72,
+    "name": "hull_slope",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:22",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 73,
+    "name": "kama",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:22",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 74,
+    "name": "tema",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:22",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 75,
+    "name": "dema",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:22",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 76,
+    "name": "vidya",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:23",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 77,
+    "name": "zigzag",
+    "category": "structure",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:23",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 78,
+    "name": "pivot_points",
+    "category": "structure",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:23",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 79,
+    "name": "linear_regression_slope",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:23",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 80,
+    "name": "linear_regression_r2",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:23",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 81,
+    "name": "regression_channel",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:23",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 82,
+    "name": "price_volume_trend",
+    "category": "volume",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:24",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 83,
+    "name": "relative_vigor_index",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:24",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 84,
+    "name": "qstick",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:24",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 85,
+    "name": "center_of_gravity",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:24",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 86,
+    "name": "rainbow_moving_average",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-17T22:47:24",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  }
+]

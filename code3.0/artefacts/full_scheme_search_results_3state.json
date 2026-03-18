@@ -1,0 +1,6457 @@
+[
+  {
+    "name": "idea_3s_01_4h_base_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": false
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_052843",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.303384819330745,
+      "hmm_min_prob": 0.6355560148961885,
+      "hmm_states": 3,
+      "regime_persistence_bars": 5,
+      "atr_stop_mult": 3.426029596234981,
+      "atr_tp_mult": 4.919515264929601,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4150495235200791,
+      "transition_cooldown_bars": 0
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1546,
+      "total_return": 0.9378,
+      "annualized_volatility": 0.1691,
+      "sharpe_ratio": 0.6983,
+      "sortino_ratio": 0.5019,
+      "max_drawdown": -0.2422,
+      "calmar_ratio": 0.6382,
+      "n_years": 4.6,
+      "total_trades": 130,
+      "win_rate": 0.5538,
+      "profit_factor": 1.5022,
+      "avg_win_loss_ratio": 1.2101,
+      "avg_trade_pnl": 721.3886,
+      "avg_trade_duration_bars": 893.89,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0456,
+      "information_ratio": 0.2848,
+      "exit_reasons": {
+        "signal": 67,
+        "tp": 36,
+        "sl": 26,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.528,
+        "random_median_return": 0.0504,
+        "random_p95_sharpe": 1.098,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.15,
+      "total_return": 0.118,
+      "annualized_volatility": 0.1305,
+      "sharpe_ratio": 0.8295,
+      "sortino_ratio": 0.6187,
+      "max_drawdown": -0.0791,
+      "calmar_ratio": 1.8959,
+      "n_years": 0.8,
+      "total_trades": 27,
+      "win_rate": 0.5556,
+      "profit_factor": 1.5586,
+      "avg_win_loss_ratio": 1.2469,
+      "avg_trade_pnl": 437.0765,
+      "avg_trade_duration_bars": 597.22,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2,
+      "information_ratio": -1.2716,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 3,
+        "sl": 2,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3456,
+        "random_median_return": 0.1399,
+        "random_p95_sharpe": 2.8303,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.1785,
+      "total_return": -0.1791,
+      "annualized_volatility": 0.323,
+      "sharpe_ratio": -0.5713,
+      "sortino_ratio": -0.5073,
+      "max_drawdown": -0.3496,
+      "calmar_ratio": -0.5106,
+      "n_years": 1.0,
+      "total_trades": 23,
+      "win_rate": 0.3913,
+      "profit_factor": 0.4755,
+      "avg_win_loss_ratio": 0.7397,
+      "avg_trade_pnl": -778.889,
+      "avg_trade_duration_bars": 1042.65,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.0883,
+      "information_ratio": -4.3667,
+      "exit_reasons": {
+        "signal": 17,
+        "sl": 4,
+        "tp": 1,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8642,
+        "random_median_return": 0.3311,
+        "random_p95_sharpe": 3.2347,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.6008,
+        "annualized_return": -0.1863,
+        "max_drawdown": -0.3537
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_01_4h_base_opt_val_sharpe",
+    "idea_name": "idea_3s_01_4h_base",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      }
+    }
+  },
+  {
+    "name": "idea_3s_01_4h_base_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_053109",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.59051134512365,
+      "hmm_min_prob": 0.5913766468514992,
+      "hmm_states": 3,
+      "regime_persistence_bars": 2,
+      "atr_stop_mult": 3.3269419449272464,
+      "atr_tp_mult": 4.425989786366941,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4672860642101985,
+      "transition_cooldown_bars": 1
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1416,
+      "total_return": 0.8396,
+      "annualized_volatility": 0.166,
+      "sharpe_ratio": 0.6401,
+      "sortino_ratio": 0.4463,
+      "max_drawdown": -0.2509,
+      "calmar_ratio": 0.5646,
+      "n_years": 4.6,
+      "total_trades": 138,
+      "win_rate": 0.5652,
+      "profit_factor": 1.4389,
+      "avg_win_loss_ratio": 1.1068,
+      "avg_trade_pnl": 608.4008,
+      "avg_trade_duration_bars": 823.18,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0326,
+      "information_ratio": 0.2038,
+      "exit_reasons": {
+        "signal": 65,
+        "tp": 41,
+        "sl": 31,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5072,
+        "random_median_return": 0.048,
+        "random_p95_sharpe": 0.9906,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1239,
+      "total_return": 0.0977,
+      "annualized_volatility": 0.1292,
+      "sharpe_ratio": 0.6588,
+      "sortino_ratio": 0.4774,
+      "max_drawdown": -0.0783,
+      "calmar_ratio": 1.5808,
+      "n_years": 0.8,
+      "total_trades": 30,
+      "win_rate": 0.5667,
+      "profit_factor": 1.4232,
+      "avg_win_loss_ratio": 1.0883,
+      "avg_trade_pnl": 325.6277,
+      "avg_trade_duration_bars": 536.83,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2262,
+      "information_ratio": -1.4377,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 6,
+        "sl": 3
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3945,
+        "random_median_return": 0.1457,
+        "random_p95_sharpe": 2.6738,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.0609,
+      "total_return": -0.0611,
+      "annualized_volatility": 0.3189,
+      "sharpe_ratio": -0.1632,
+      "sortino_ratio": -0.2304,
+      "max_drawdown": -0.298,
+      "calmar_ratio": -0.2043,
+      "n_years": 1.0,
+      "total_trades": 28,
+      "win_rate": 0.4286,
+      "profit_factor": 0.8554,
+      "avg_win_loss_ratio": 1.1405,
+      "avg_trade_pnl": -218.2346,
+      "avg_trade_duration_bars": 813.79,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9707,
+      "information_ratio": -3.8947,
+      "exit_reasons": {
+        "signal": 18,
+        "sl": 5,
+        "tp": 4,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.892,
+        "random_median_return": 0.3439,
+        "random_p95_sharpe": 3.3205,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.1984,
+        "annualized_return": -0.0714,
+        "max_drawdown": -0.3024
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_01_4h_base_opt_val_return",
+    "idea_name": "idea_3s_01_4h_base",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      }
+    }
+  },
+  {
+    "name": "idea_3s_02_4h_long_only_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": true,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_053327",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 20.171656868371528,
+      "hmm_min_prob": 0.5148387767745796,
+      "hmm_states": 3,
+      "regime_persistence_bars": 2,
+      "atr_stop_mult": 2.4216699900178194,
+      "atr_tp_mult": 4.160982924351338,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.6273398149133755,
+      "transition_cooldown_bars": 1
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1277,
+      "total_return": 0.7386,
+      "annualized_volatility": 0.1023,
+      "sharpe_ratio": 0.8349,
+      "sortino_ratio": 0.5675,
+      "max_drawdown": -0.0947,
+      "calmar_ratio": 1.3482,
+      "n_years": 4.6,
+      "total_trades": 116,
+      "win_rate": 0.5517,
+      "profit_factor": 1.7403,
+      "avg_win_loss_ratio": 1.414,
+      "avg_trade_pnl": 636.6814,
+      "avg_trade_duration_bars": 723.77,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0187,
+      "information_ratio": 0.1169,
+      "exit_reasons": {
+        "sl": 43,
+        "tp": 36,
+        "signal": 36,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5585,
+        "random_median_return": 0.0532,
+        "random_p95_sharpe": 1.0387,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1604,
+      "total_return": 0.1261,
+      "annualized_volatility": 0.0943,
+      "sharpe_ratio": 1.2007,
+      "sortino_ratio": 0.7421,
+      "max_drawdown": -0.0532,
+      "calmar_ratio": 3.0178,
+      "n_years": 0.8,
+      "total_trades": 22,
+      "win_rate": 0.6818,
+      "profit_factor": 1.8791,
+      "avg_win_loss_ratio": 0.8769,
+      "avg_trade_pnl": 573.1951,
+      "avg_trade_duration_bars": 463.05,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.1896,
+      "information_ratio": -1.2053,
+      "exit_reasons": {
+        "signal": 10,
+        "tp": 6,
+        "sl": 6
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.361,
+        "random_median_return": 0.1383,
+        "random_p95_sharpe": 2.8054,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": 0.0359,
+      "total_return": 0.036,
+      "annualized_volatility": 0.0518,
+      "sharpe_ratio": -0.0655,
+      "sortino_ratio": -0.0257,
+      "max_drawdown": -0.0803,
+      "calmar_ratio": 0.4472,
+      "n_years": 1.0,
+      "total_trades": 15,
+      "win_rate": 0.6,
+      "profit_factor": 1.3977,
+      "avg_win_loss_ratio": 0.9318,
+      "avg_trade_pnl": 240.2606,
+      "avg_trade_duration_bars": 221.27,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8739,
+      "information_ratio": -3.5064,
+      "exit_reasons": {
+        "signal": 9,
+        "sl": 4,
+        "tp": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8611,
+        "random_median_return": 0.3297,
+        "random_p95_sharpe": 3.2127,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.1793,
+        "annualized_return": 0.0298,
+        "max_drawdown": -0.0821
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_02_4h_long_only_opt_val_sharpe",
+    "idea_name": "idea_3s_02_4h_long_only",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H",
+        "long_only": true
+      }
+    }
+  },
+  {
+    "name": "idea_3s_02_4h_long_only_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": false
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": true,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": false,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "cost_sensitive": "Sharpe drops 174% under 2x costs (0.056 -> -0.041)",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_053537",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 17.370256564263627,
+      "hmm_min_prob": 0.6282101111027529,
+      "hmm_states": 3,
+      "regime_persistence_bars": 4,
+      "atr_stop_mult": 2.4413701170901527,
+      "atr_tp_mult": 7.539386109185247,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.6039653155410245,
+      "transition_cooldown_bars": 4
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1294,
+      "total_return": 0.7506,
+      "annualized_volatility": 0.1074,
+      "sharpe_ratio": 0.8144,
+      "sortino_ratio": 0.5774,
+      "max_drawdown": -0.1186,
+      "calmar_ratio": 1.0913,
+      "n_years": 4.6,
+      "total_trades": 95,
+      "win_rate": 0.5158,
+      "profit_factor": 1.8008,
+      "avg_win_loss_ratio": 1.6906,
+      "avg_trade_pnl": 790.156,
+      "avg_trade_duration_bars": 932.33,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0204,
+      "information_ratio": 0.1275,
+      "exit_reasons": {
+        "signal": 43,
+        "sl": 36,
+        "tp": 15,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.544,
+        "random_median_return": 0.0524,
+        "random_p95_sharpe": 1.11,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1432,
+      "total_return": 0.1128,
+      "annualized_volatility": 0.0994,
+      "sharpe_ratio": 0.9941,
+      "sortino_ratio": 0.5803,
+      "max_drawdown": -0.0588,
+      "calmar_ratio": 2.4354,
+      "n_years": 0.8,
+      "total_trades": 18,
+      "win_rate": 0.6111,
+      "profit_factor": 1.7342,
+      "avg_win_loss_ratio": 1.1036,
+      "avg_trade_pnl": 626.5281,
+      "avg_trade_duration_bars": 556.89,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2068,
+      "information_ratio": -1.3145,
+      "exit_reasons": {
+        "signal": 10,
+        "sl": 7,
+        "tp": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.5203,
+        "random_median_return": 0.158,
+        "random_p95_sharpe": 2.8389,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": 0.0424,
+      "total_return": 0.0426,
+      "annualized_volatility": 0.0532,
+      "sharpe_ratio": 0.0559,
+      "sortino_ratio": 0.0152,
+      "max_drawdown": -0.0819,
+      "calmar_ratio": 0.5181,
+      "n_years": 1.0,
+      "total_trades": 13,
+      "win_rate": 0.6154,
+      "profit_factor": 1.4804,
+      "avg_win_loss_ratio": 0.9252,
+      "avg_trade_pnl": 327.7562,
+      "avg_trade_duration_bars": 263.31,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8674,
+      "information_ratio": -3.4801,
+      "exit_reasons": {
+        "signal": 8,
+        "sl": 4,
+        "tp": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8941,
+        "random_median_return": 0.3288,
+        "random_p95_sharpe": 3.1264,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.0412,
+        "annualized_return": 0.0371,
+        "max_drawdown": -0.0838
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_02_4h_long_only_opt_val_return",
+    "idea_name": "idea_3s_02_4h_long_only",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H",
+        "long_only": true
+      }
+    }
+  },
+  {
+    "name": "idea_3s_03_4h_dd_filter_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": false
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_053808",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.303384819330745,
+      "hmm_min_prob": 0.6355560148961885,
+      "hmm_states": 3,
+      "regime_persistence_bars": 5,
+      "atr_stop_mult": 3.426029596234981,
+      "atr_tp_mult": 4.919515264929601,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4150495235200791,
+      "transition_cooldown_bars": 0
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1546,
+      "total_return": 0.9378,
+      "annualized_volatility": 0.1691,
+      "sharpe_ratio": 0.6983,
+      "sortino_ratio": 0.5019,
+      "max_drawdown": -0.2422,
+      "calmar_ratio": 0.6382,
+      "n_years": 4.6,
+      "total_trades": 130,
+      "win_rate": 0.5538,
+      "profit_factor": 1.5022,
+      "avg_win_loss_ratio": 1.2101,
+      "avg_trade_pnl": 721.3886,
+      "avg_trade_duration_bars": 893.89,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0456,
+      "information_ratio": 0.2848,
+      "exit_reasons": {
+        "signal": 67,
+        "tp": 36,
+        "sl": 26,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.528,
+        "random_median_return": 0.0504,
+        "random_p95_sharpe": 1.098,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.15,
+      "total_return": 0.118,
+      "annualized_volatility": 0.1305,
+      "sharpe_ratio": 0.8295,
+      "sortino_ratio": 0.6187,
+      "max_drawdown": -0.0791,
+      "calmar_ratio": 1.8959,
+      "n_years": 0.8,
+      "total_trades": 27,
+      "win_rate": 0.5556,
+      "profit_factor": 1.5586,
+      "avg_win_loss_ratio": 1.2469,
+      "avg_trade_pnl": 437.0765,
+      "avg_trade_duration_bars": 597.22,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2,
+      "information_ratio": -1.2716,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 3,
+        "sl": 2,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3456,
+        "random_median_return": 0.1399,
+        "random_p95_sharpe": 2.8303,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.1785,
+      "total_return": -0.1791,
+      "annualized_volatility": 0.323,
+      "sharpe_ratio": -0.5713,
+      "sortino_ratio": -0.5073,
+      "max_drawdown": -0.3496,
+      "calmar_ratio": -0.5106,
+      "n_years": 1.0,
+      "total_trades": 23,
+      "win_rate": 0.3913,
+      "profit_factor": 0.4755,
+      "avg_win_loss_ratio": 0.7397,
+      "avg_trade_pnl": -778.889,
+      "avg_trade_duration_bars": 1042.65,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.0883,
+      "information_ratio": -4.3667,
+      "exit_reasons": {
+        "signal": 17,
+        "sl": 4,
+        "tp": 1,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8642,
+        "random_median_return": 0.3311,
+        "random_p95_sharpe": 3.2347,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.6008,
+        "annualized_return": -0.1863,
+        "max_drawdown": -0.3537
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_03_4h_dd_filter_opt_val_sharpe",
+    "idea_name": "idea_3s_03_4h_dd_filter",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      },
+      "drawdown_filter": {
+        "enabled": true,
+        "lookback_bars": 120,
+        "suppress_long_dd": -0.05,
+        "suppress_short_rally": 0.05
+      }
+    }
+  },
+  {
+    "name": "idea_3s_03_4h_dd_filter_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_054015",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.59051134512365,
+      "hmm_min_prob": 0.5913766468514992,
+      "hmm_states": 3,
+      "regime_persistence_bars": 2,
+      "atr_stop_mult": 3.3269419449272464,
+      "atr_tp_mult": 4.425989786366941,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4672860642101985,
+      "transition_cooldown_bars": 1
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1416,
+      "total_return": 0.8396,
+      "annualized_volatility": 0.166,
+      "sharpe_ratio": 0.6401,
+      "sortino_ratio": 0.4463,
+      "max_drawdown": -0.2509,
+      "calmar_ratio": 0.5646,
+      "n_years": 4.6,
+      "total_trades": 138,
+      "win_rate": 0.5652,
+      "profit_factor": 1.4389,
+      "avg_win_loss_ratio": 1.1068,
+      "avg_trade_pnl": 608.4008,
+      "avg_trade_duration_bars": 823.18,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0326,
+      "information_ratio": 0.2038,
+      "exit_reasons": {
+        "signal": 65,
+        "tp": 41,
+        "sl": 31,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5072,
+        "random_median_return": 0.048,
+        "random_p95_sharpe": 0.9906,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1239,
+      "total_return": 0.0977,
+      "annualized_volatility": 0.1292,
+      "sharpe_ratio": 0.6588,
+      "sortino_ratio": 0.4774,
+      "max_drawdown": -0.0783,
+      "calmar_ratio": 1.5808,
+      "n_years": 0.8,
+      "total_trades": 30,
+      "win_rate": 0.5667,
+      "profit_factor": 1.4232,
+      "avg_win_loss_ratio": 1.0883,
+      "avg_trade_pnl": 325.6277,
+      "avg_trade_duration_bars": 536.83,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2262,
+      "information_ratio": -1.4377,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 6,
+        "sl": 3
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3945,
+        "random_median_return": 0.1457,
+        "random_p95_sharpe": 2.6738,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.0609,
+      "total_return": -0.0611,
+      "annualized_volatility": 0.3189,
+      "sharpe_ratio": -0.1632,
+      "sortino_ratio": -0.2304,
+      "max_drawdown": -0.298,
+      "calmar_ratio": -0.2043,
+      "n_years": 1.0,
+      "total_trades": 28,
+      "win_rate": 0.4286,
+      "profit_factor": 0.8554,
+      "avg_win_loss_ratio": 1.1405,
+      "avg_trade_pnl": -218.2346,
+      "avg_trade_duration_bars": 813.79,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9707,
+      "information_ratio": -3.8947,
+      "exit_reasons": {
+        "signal": 18,
+        "sl": 5,
+        "tp": 4,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.892,
+        "random_median_return": 0.3439,
+        "random_p95_sharpe": 3.3205,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.1984,
+        "annualized_return": -0.0714,
+        "max_drawdown": -0.3024
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_03_4h_dd_filter_opt_val_return",
+    "idea_name": "idea_3s_03_4h_dd_filter",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      },
+      "drawdown_filter": {
+        "enabled": true,
+        "lookback_bars": 120,
+        "suppress_long_dd": -0.05,
+        "suppress_short_rally": 0.05
+      }
+    }
+  },
+  {
+    "name": "idea_3s_04_4h_long_only_dd_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": true,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_054231",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 20.171656868371528,
+      "hmm_min_prob": 0.5148387767745796,
+      "hmm_states": 3,
+      "regime_persistence_bars": 2,
+      "atr_stop_mult": 2.4216699900178194,
+      "atr_tp_mult": 4.160982924351338,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.6273398149133755,
+      "transition_cooldown_bars": 1
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1277,
+      "total_return": 0.7386,
+      "annualized_volatility": 0.1023,
+      "sharpe_ratio": 0.8349,
+      "sortino_ratio": 0.5675,
+      "max_drawdown": -0.0947,
+      "calmar_ratio": 1.3482,
+      "n_years": 4.6,
+      "total_trades": 116,
+      "win_rate": 0.5517,
+      "profit_factor": 1.7403,
+      "avg_win_loss_ratio": 1.414,
+      "avg_trade_pnl": 636.6814,
+      "avg_trade_duration_bars": 723.77,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0187,
+      "information_ratio": 0.1169,
+      "exit_reasons": {
+        "sl": 43,
+        "tp": 36,
+        "signal": 36,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5585,
+        "random_median_return": 0.0532,
+        "random_p95_sharpe": 1.0387,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1604,
+      "total_return": 0.1261,
+      "annualized_volatility": 0.0943,
+      "sharpe_ratio": 1.2007,
+      "sortino_ratio": 0.7421,
+      "max_drawdown": -0.0532,
+      "calmar_ratio": 3.0178,
+      "n_years": 0.8,
+      "total_trades": 22,
+      "win_rate": 0.6818,
+      "profit_factor": 1.8791,
+      "avg_win_loss_ratio": 0.8769,
+      "avg_trade_pnl": 573.1951,
+      "avg_trade_duration_bars": 463.05,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.1896,
+      "information_ratio": -1.2053,
+      "exit_reasons": {
+        "signal": 10,
+        "tp": 6,
+        "sl": 6
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.361,
+        "random_median_return": 0.1383,
+        "random_p95_sharpe": 2.8054,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": 0.0359,
+      "total_return": 0.036,
+      "annualized_volatility": 0.0518,
+      "sharpe_ratio": -0.0655,
+      "sortino_ratio": -0.0257,
+      "max_drawdown": -0.0803,
+      "calmar_ratio": 0.4472,
+      "n_years": 1.0,
+      "total_trades": 15,
+      "win_rate": 0.6,
+      "profit_factor": 1.3977,
+      "avg_win_loss_ratio": 0.9318,
+      "avg_trade_pnl": 240.2606,
+      "avg_trade_duration_bars": 221.27,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8739,
+      "information_ratio": -3.5064,
+      "exit_reasons": {
+        "signal": 9,
+        "sl": 4,
+        "tp": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8611,
+        "random_median_return": 0.3297,
+        "random_p95_sharpe": 3.2127,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.1793,
+        "annualized_return": 0.0298,
+        "max_drawdown": -0.0821
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_04_4h_long_only_dd_opt_val_sharpe",
+    "idea_name": "idea_3s_04_4h_long_only_dd",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H",
+        "long_only": true
+      },
+      "drawdown_filter": {
+        "enabled": true,
+        "lookback_bars": 120,
+        "suppress_long_dd": -0.05,
+        "suppress_short_rally": 0.05
+      }
+    }
+  },
+  {
+    "name": "idea_3s_04_4h_long_only_dd_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": false
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": true,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": false,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "cost_sensitive": "Sharpe drops 174% under 2x costs (0.056 -> -0.041)",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_054454",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 17.370256564263627,
+      "hmm_min_prob": 0.6282101111027529,
+      "hmm_states": 3,
+      "regime_persistence_bars": 4,
+      "atr_stop_mult": 2.4413701170901527,
+      "atr_tp_mult": 7.539386109185247,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.6039653155410245,
+      "transition_cooldown_bars": 4
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1294,
+      "total_return": 0.7506,
+      "annualized_volatility": 0.1074,
+      "sharpe_ratio": 0.8144,
+      "sortino_ratio": 0.5774,
+      "max_drawdown": -0.1186,
+      "calmar_ratio": 1.0913,
+      "n_years": 4.6,
+      "total_trades": 95,
+      "win_rate": 0.5158,
+      "profit_factor": 1.8008,
+      "avg_win_loss_ratio": 1.6906,
+      "avg_trade_pnl": 790.156,
+      "avg_trade_duration_bars": 932.33,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0204,
+      "information_ratio": 0.1275,
+      "exit_reasons": {
+        "signal": 43,
+        "sl": 36,
+        "tp": 15,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.544,
+        "random_median_return": 0.0524,
+        "random_p95_sharpe": 1.11,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1432,
+      "total_return": 0.1128,
+      "annualized_volatility": 0.0994,
+      "sharpe_ratio": 0.9941,
+      "sortino_ratio": 0.5803,
+      "max_drawdown": -0.0588,
+      "calmar_ratio": 2.4354,
+      "n_years": 0.8,
+      "total_trades": 18,
+      "win_rate": 0.6111,
+      "profit_factor": 1.7342,
+      "avg_win_loss_ratio": 1.1036,
+      "avg_trade_pnl": 626.5281,
+      "avg_trade_duration_bars": 556.89,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2068,
+      "information_ratio": -1.3145,
+      "exit_reasons": {
+        "signal": 10,
+        "sl": 7,
+        "tp": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.5203,
+        "random_median_return": 0.158,
+        "random_p95_sharpe": 2.8389,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": 0.0424,
+      "total_return": 0.0426,
+      "annualized_volatility": 0.0532,
+      "sharpe_ratio": 0.0559,
+      "sortino_ratio": 0.0152,
+      "max_drawdown": -0.0819,
+      "calmar_ratio": 0.5181,
+      "n_years": 1.0,
+      "total_trades": 13,
+      "win_rate": 0.6154,
+      "profit_factor": 1.4804,
+      "avg_win_loss_ratio": 0.9252,
+      "avg_trade_pnl": 327.7562,
+      "avg_trade_duration_bars": 263.31,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8674,
+      "information_ratio": -3.4801,
+      "exit_reasons": {
+        "signal": 8,
+        "sl": 4,
+        "tp": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8941,
+        "random_median_return": 0.3288,
+        "random_p95_sharpe": 3.1264,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.0412,
+        "annualized_return": 0.0371,
+        "max_drawdown": -0.0838
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_04_4h_long_only_dd_opt_val_return",
+    "idea_name": "idea_3s_04_4h_long_only_dd",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H",
+        "long_only": true
+      },
+      "drawdown_filter": {
+        "enabled": true,
+        "lookback_bars": 120,
+        "suppress_long_dd": -0.05,
+        "suppress_short_rally": 0.05
+      }
+    }
+  },
+  {
+    "name": "idea_3s_05_4h_high_conf_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": false
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_054714",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 15.009635050997964,
+      "hmm_min_prob": 0.40159593463911697,
+      "hmm_states": 3,
+      "regime_persistence_bars": 4,
+      "atr_stop_mult": 3.467244214559105,
+      "atr_tp_mult": 10.326831393869725,
+      "require_smc_confluence": true,
+      "require_pin_bar": false,
+      "hmm_min_confidence": 0.44403745474246104,
+      "transition_cooldown_bars": 3
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1264,
+      "total_return": 0.729,
+      "annualized_volatility": 0.1693,
+      "sharpe_ratio": 0.5511,
+      "sortino_ratio": 0.3903,
+      "max_drawdown": -0.2443,
+      "calmar_ratio": 0.5172,
+      "n_years": 4.6,
+      "total_trades": 102,
+      "win_rate": 0.5196,
+      "profit_factor": 1.4997,
+      "avg_win_loss_ratio": 1.3865,
+      "avg_trade_pnl": 714.7024,
+      "avg_trade_duration_bars": 1206.32,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0174,
+      "information_ratio": 0.1084,
+      "exit_reasons": {
+        "signal": 73,
+        "sl": 21,
+        "tp": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5315,
+        "random_median_return": 0.0496,
+        "random_p95_sharpe": 1.0094,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1499,
+      "total_return": 0.118,
+      "annualized_volatility": 0.1317,
+      "sharpe_ratio": 0.8228,
+      "sortino_ratio": 0.6133,
+      "max_drawdown": -0.0794,
+      "calmar_ratio": 1.8875,
+      "n_years": 0.8,
+      "total_trades": 26,
+      "win_rate": 0.5385,
+      "profit_factor": 1.5956,
+      "avg_win_loss_ratio": 1.3676,
+      "avg_trade_pnl": 453.6799,
+      "avg_trade_duration_bars": 626.81,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2001,
+      "information_ratio": -1.2721,
+      "exit_reasons": {
+        "signal": 22,
+        "sl": 2,
+        "tp": 1,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.1841,
+        "random_median_return": 0.1263,
+        "random_p95_sharpe": 2.8497,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.1549,
+      "total_return": -0.1555,
+      "annualized_volatility": 0.325,
+      "sharpe_ratio": -0.4788,
+      "sortino_ratio": -0.4532,
+      "max_drawdown": -0.34,
+      "calmar_ratio": -0.4556,
+      "n_years": 1.0,
+      "total_trades": 23,
+      "win_rate": 0.3913,
+      "profit_factor": 0.5396,
+      "avg_win_loss_ratio": 0.8394,
+      "avg_trade_pnl": -675.8993,
+      "avg_trade_duration_bars": 1059.57,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.0647,
+      "information_ratio": -4.2719,
+      "exit_reasons": {
+        "signal": 18,
+        "sl": 4,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8642,
+        "random_median_return": 0.3311,
+        "random_p95_sharpe": 3.2347,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.5078,
+        "annualized_return": -0.1628,
+        "max_drawdown": -0.344
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_05_4h_high_conf_opt_val_sharpe",
+    "idea_name": "idea_3s_05_4h_high_conf",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.7,
+        "min_prob_hard_short": 0.7,
+        "min_prob_entry": 0.72,
+        "min_prob_exit": 0.5,
+        "min_confidence": 0.55,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      }
+    }
+  },
+  {
+    "name": "idea_3s_05_4h_high_conf_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": false
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_054937",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 17.920411823355305,
+      "hmm_min_prob": 0.4277977966572642,
+      "hmm_states": 3,
+      "regime_persistence_bars": 4,
+      "atr_stop_mult": 3.337708798756611,
+      "atr_tp_mult": 10.956182137343628,
+      "require_smc_confluence": true,
+      "require_pin_bar": false,
+      "hmm_min_confidence": 0.39300955330282433,
+      "transition_cooldown_bars": 4
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1176,
+      "total_return": 0.668,
+      "annualized_volatility": 0.1611,
+      "sharpe_ratio": 0.5223,
+      "sortino_ratio": 0.3656,
+      "max_drawdown": -0.241,
+      "calmar_ratio": 0.4879,
+      "n_years": 4.6,
+      "total_trades": 99,
+      "win_rate": 0.4949,
+      "profit_factor": 1.462,
+      "avg_win_loss_ratio": 1.4919,
+      "avg_trade_pnl": 674.7054,
+      "avg_trade_duration_bars": 1217.09,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0086,
+      "information_ratio": 0.0537,
+      "exit_reasons": {
+        "signal": 72,
+        "sl": 21,
+        "tp": 5,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.4655,
+        "random_median_return": 0.0445,
+        "random_p95_sharpe": 1.1263,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1219,
+      "total_return": 0.0962,
+      "annualized_volatility": 0.1317,
+      "sharpe_ratio": 0.6356,
+      "sortino_ratio": 0.4516,
+      "max_drawdown": -0.0784,
+      "calmar_ratio": 1.5544,
+      "n_years": 0.8,
+      "total_trades": 26,
+      "win_rate": 0.5385,
+      "profit_factor": 1.4235,
+      "avg_win_loss_ratio": 1.2201,
+      "avg_trade_pnl": 369.9001,
+      "avg_trade_duration_bars": 609.73,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2281,
+      "information_ratio": -1.45,
+      "exit_reasons": {
+        "signal": 21,
+        "sl": 4,
+        "tp": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.1841,
+        "random_median_return": 0.1263,
+        "random_p95_sharpe": 2.8497,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.1573,
+      "total_return": -0.1579,
+      "annualized_volatility": 0.3248,
+      "sharpe_ratio": -0.488,
+      "sortino_ratio": -0.4578,
+      "max_drawdown": -0.3425,
+      "calmar_ratio": -0.4593,
+      "n_years": 1.0,
+      "total_trades": 23,
+      "win_rate": 0.3913,
+      "profit_factor": 0.526,
+      "avg_win_loss_ratio": 0.8183,
+      "avg_trade_pnl": -686.3972,
+      "avg_trade_duration_bars": 1052.74,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.0671,
+      "information_ratio": -4.2816,
+      "exit_reasons": {
+        "signal": 18,
+        "sl": 4,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8642,
+        "random_median_return": 0.3311,
+        "random_p95_sharpe": 3.2347,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.517,
+        "annualized_return": -0.1652,
+        "max_drawdown": -0.3466
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_05_4h_high_conf_opt_val_return",
+    "idea_name": "idea_3s_05_4h_high_conf",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.7,
+        "min_prob_hard_short": 0.7,
+        "min_prob_entry": 0.72,
+        "min_prob_exit": 0.5,
+        "min_confidence": 0.55,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      }
+    }
+  },
+  {
+    "name": "idea_3s_06_4h_low_conf_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": true,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_055202",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.535989417932356,
+      "hmm_min_prob": 0.4509343880397766,
+      "hmm_states": 3,
+      "regime_persistence_bars": 3,
+      "atr_stop_mult": 2.6729499173246576,
+      "atr_tp_mult": 4.628445663936688,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.5444607750528292,
+      "transition_cooldown_bars": 1
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1255,
+      "total_return": 0.723,
+      "annualized_volatility": 0.1613,
+      "sharpe_ratio": 0.5657,
+      "sortino_ratio": 0.3738,
+      "max_drawdown": -0.2078,
+      "calmar_ratio": 0.6039,
+      "n_years": 4.6,
+      "total_trades": 144,
+      "win_rate": 0.5208,
+      "profit_factor": 1.3584,
+      "avg_win_loss_ratio": 1.2497,
+      "avg_trade_pnl": 502.0573,
+      "avg_trade_duration_bars": 742.42,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0165,
+      "information_ratio": 0.1031,
+      "exit_reasons": {
+        "signal": 56,
+        "sl": 47,
+        "tp": 40,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5099,
+        "random_median_return": 0.0494,
+        "random_p95_sharpe": 1.1293,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1026,
+      "total_return": 0.0811,
+      "annualized_volatility": 0.1293,
+      "sharpe_ratio": 0.5102,
+      "sortino_ratio": 0.3499,
+      "max_drawdown": -0.0904,
+      "calmar_ratio": 1.1349,
+      "n_years": 0.8,
+      "total_trades": 32,
+      "win_rate": 0.5312,
+      "profit_factor": 1.2973,
+      "avg_win_loss_ratio": 1.1447,
+      "avg_trade_pnl": 253.2937,
+      "avg_trade_duration_bars": 481.12,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2474,
+      "information_ratio": -1.5731,
+      "exit_reasons": {
+        "signal": 20,
+        "tp": 6,
+        "sl": 6
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.2101,
+        "random_median_return": 0.1301,
+        "random_p95_sharpe": 2.7202,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.21,
+      "total_return": -0.2107,
+      "annualized_volatility": 0.2948,
+      "sharpe_ratio": -0.7879,
+      "sortino_ratio": -0.5816,
+      "max_drawdown": -0.3228,
+      "calmar_ratio": -0.6503,
+      "n_years": 1.0,
+      "total_trades": 32,
+      "win_rate": 0.4375,
+      "profit_factor": 0.6291,
+      "avg_win_loss_ratio": 0.8089,
+      "avg_trade_pnl": -658.3949,
+      "avg_trade_duration_bars": 658.44,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.1198,
+      "information_ratio": -4.4928,
+      "exit_reasons": {
+        "signal": 16,
+        "sl": 11,
+        "tp": 4,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8083,
+        "random_median_return": 0.3253,
+        "random_p95_sharpe": 3.3432,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.8313,
+        "annualized_return": -0.2201,
+        "max_drawdown": -0.3287
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_06_4h_low_conf_opt_val_sharpe",
+    "idea_name": "idea_3s_06_4h_low_conf",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.5,
+        "min_prob_hard_short": 0.5,
+        "min_prob_entry": 0.55,
+        "min_prob_exit": 0.4,
+        "min_confidence": 0.35,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      }
+    }
+  },
+  {
+    "name": "idea_3s_06_4h_low_conf_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_055424",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.59051134512365,
+      "hmm_min_prob": 0.5913766468514992,
+      "hmm_states": 3,
+      "regime_persistence_bars": 2,
+      "atr_stop_mult": 3.3269419449272464,
+      "atr_tp_mult": 4.425989786366941,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4672860642101985,
+      "transition_cooldown_bars": 1
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1443,
+      "total_return": 0.8598,
+      "annualized_volatility": 0.1662,
+      "sharpe_ratio": 0.6537,
+      "sortino_ratio": 0.4579,
+      "max_drawdown": -0.2509,
+      "calmar_ratio": 0.5754,
+      "n_years": 4.6,
+      "total_trades": 138,
+      "win_rate": 0.5725,
+      "profit_factor": 1.4485,
+      "avg_win_loss_ratio": 1.0818,
+      "avg_trade_pnl": 623.0097,
+      "avg_trade_duration_bars": 823.88,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0354,
+      "information_ratio": 0.2207,
+      "exit_reasons": {
+        "signal": 65,
+        "tp": 41,
+        "sl": 31,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5072,
+        "random_median_return": 0.048,
+        "random_p95_sharpe": 0.9906,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1221,
+      "total_return": 0.0963,
+      "annualized_volatility": 0.1303,
+      "sharpe_ratio": 0.6424,
+      "sortino_ratio": 0.4657,
+      "max_drawdown": -0.082,
+      "calmar_ratio": 1.4887,
+      "n_years": 0.8,
+      "total_trades": 30,
+      "win_rate": 0.5667,
+      "profit_factor": 1.4069,
+      "avg_win_loss_ratio": 1.0759,
+      "avg_trade_pnl": 321.1058,
+      "avg_trade_duration_bars": 538.43,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2279,
+      "information_ratio": -1.4488,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 6,
+        "sl": 3
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3945,
+        "random_median_return": 0.1457,
+        "random_p95_sharpe": 2.6738,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.0605,
+      "total_return": -0.0607,
+      "annualized_volatility": 0.319,
+      "sharpe_ratio": -0.1618,
+      "sortino_ratio": -0.2296,
+      "max_drawdown": -0.2975,
+      "calmar_ratio": -0.2033,
+      "n_years": 1.0,
+      "total_trades": 28,
+      "win_rate": 0.4286,
+      "profit_factor": 0.8564,
+      "avg_win_loss_ratio": 1.1419,
+      "avg_trade_pnl": -216.843,
+      "avg_trade_duration_bars": 815.5,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9703,
+      "information_ratio": -3.8931,
+      "exit_reasons": {
+        "signal": 18,
+        "sl": 5,
+        "tp": 4,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.892,
+        "random_median_return": 0.3439,
+        "random_p95_sharpe": 3.3205,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.1973,
+        "annualized_return": -0.0711,
+        "max_drawdown": -0.3018
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_06_4h_low_conf_opt_val_return",
+    "idea_name": "idea_3s_06_4h_low_conf",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.5,
+        "min_prob_hard_short": 0.5,
+        "min_prob_entry": 0.55,
+        "min_prob_exit": 0.4,
+        "min_confidence": 0.35,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      }
+    }
+  },
+  {
+    "name": "idea_3s_07_4h_freshness_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": false
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_055653",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.303384819330745,
+      "hmm_min_prob": 0.6355560148961885,
+      "hmm_states": 3,
+      "regime_persistence_bars": 5,
+      "atr_stop_mult": 3.426029596234981,
+      "atr_tp_mult": 4.919515264929601,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4150495235200791,
+      "transition_cooldown_bars": 0
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1546,
+      "total_return": 0.9378,
+      "annualized_volatility": 0.1691,
+      "sharpe_ratio": 0.6983,
+      "sortino_ratio": 0.5019,
+      "max_drawdown": -0.2422,
+      "calmar_ratio": 0.6382,
+      "n_years": 4.6,
+      "total_trades": 130,
+      "win_rate": 0.5538,
+      "profit_factor": 1.5022,
+      "avg_win_loss_ratio": 1.2101,
+      "avg_trade_pnl": 721.3886,
+      "avg_trade_duration_bars": 893.89,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0456,
+      "information_ratio": 0.2848,
+      "exit_reasons": {
+        "signal": 67,
+        "tp": 36,
+        "sl": 26,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.528,
+        "random_median_return": 0.0504,
+        "random_p95_sharpe": 1.098,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.15,
+      "total_return": 0.118,
+      "annualized_volatility": 0.1305,
+      "sharpe_ratio": 0.8295,
+      "sortino_ratio": 0.6187,
+      "max_drawdown": -0.0791,
+      "calmar_ratio": 1.8959,
+      "n_years": 0.8,
+      "total_trades": 27,
+      "win_rate": 0.5556,
+      "profit_factor": 1.5586,
+      "avg_win_loss_ratio": 1.2469,
+      "avg_trade_pnl": 437.0765,
+      "avg_trade_duration_bars": 597.22,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2,
+      "information_ratio": -1.2716,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 3,
+        "sl": 2,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3456,
+        "random_median_return": 0.1399,
+        "random_p95_sharpe": 2.8303,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.1785,
+      "total_return": -0.1791,
+      "annualized_volatility": 0.323,
+      "sharpe_ratio": -0.5713,
+      "sortino_ratio": -0.5073,
+      "max_drawdown": -0.3496,
+      "calmar_ratio": -0.5106,
+      "n_years": 1.0,
+      "total_trades": 23,
+      "win_rate": 0.3913,
+      "profit_factor": 0.4755,
+      "avg_win_loss_ratio": 0.7397,
+      "avg_trade_pnl": -778.889,
+      "avg_trade_duration_bars": 1042.65,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.0883,
+      "information_ratio": -4.3667,
+      "exit_reasons": {
+        "signal": 17,
+        "sl": 4,
+        "tp": 1,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8642,
+        "random_median_return": 0.3311,
+        "random_p95_sharpe": 3.2347,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.6008,
+        "annualized_return": -0.1863,
+        "max_drawdown": -0.3537
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_07_4h_freshness_opt_val_sharpe",
+    "idea_name": "idea_3s_07_4h_freshness",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      },
+      "regime": {
+        "max_regime_freshness": 2.0,
+        "freshness_decay_start": 1.0
+      }
+    }
+  },
+  {
+    "name": "idea_3s_07_4h_freshness_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_055924",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.59051134512365,
+      "hmm_min_prob": 0.5913766468514992,
+      "hmm_states": 3,
+      "regime_persistence_bars": 2,
+      "atr_stop_mult": 3.3269419449272464,
+      "atr_tp_mult": 4.425989786366941,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4672860642101985,
+      "transition_cooldown_bars": 1
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1416,
+      "total_return": 0.8396,
+      "annualized_volatility": 0.166,
+      "sharpe_ratio": 0.6401,
+      "sortino_ratio": 0.4463,
+      "max_drawdown": -0.2509,
+      "calmar_ratio": 0.5646,
+      "n_years": 4.6,
+      "total_trades": 138,
+      "win_rate": 0.5652,
+      "profit_factor": 1.4389,
+      "avg_win_loss_ratio": 1.1068,
+      "avg_trade_pnl": 608.4008,
+      "avg_trade_duration_bars": 823.18,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0326,
+      "information_ratio": 0.2038,
+      "exit_reasons": {
+        "signal": 65,
+        "tp": 41,
+        "sl": 31,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5072,
+        "random_median_return": 0.048,
+        "random_p95_sharpe": 0.9906,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1239,
+      "total_return": 0.0977,
+      "annualized_volatility": 0.1292,
+      "sharpe_ratio": 0.6588,
+      "sortino_ratio": 0.4774,
+      "max_drawdown": -0.0783,
+      "calmar_ratio": 1.5808,
+      "n_years": 0.8,
+      "total_trades": 30,
+      "win_rate": 0.5667,
+      "profit_factor": 1.4232,
+      "avg_win_loss_ratio": 1.0883,
+      "avg_trade_pnl": 325.6277,
+      "avg_trade_duration_bars": 536.83,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2262,
+      "information_ratio": -1.4377,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 6,
+        "sl": 3
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3945,
+        "random_median_return": 0.1457,
+        "random_p95_sharpe": 2.6738,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.0609,
+      "total_return": -0.0611,
+      "annualized_volatility": 0.3189,
+      "sharpe_ratio": -0.1632,
+      "sortino_ratio": -0.2304,
+      "max_drawdown": -0.298,
+      "calmar_ratio": -0.2043,
+      "n_years": 1.0,
+      "total_trades": 28,
+      "win_rate": 0.4286,
+      "profit_factor": 0.8554,
+      "avg_win_loss_ratio": 1.1405,
+      "avg_trade_pnl": -218.2346,
+      "avg_trade_duration_bars": 813.79,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9707,
+      "information_ratio": -3.8947,
+      "exit_reasons": {
+        "signal": 18,
+        "sl": 5,
+        "tp": 4,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.892,
+        "random_median_return": 0.3439,
+        "random_p95_sharpe": 3.3205,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.1984,
+        "annualized_return": -0.0714,
+        "max_drawdown": -0.3024
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_07_4h_freshness_opt_val_return",
+    "idea_name": "idea_3s_07_4h_freshness",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      },
+      "regime": {
+        "max_regime_freshness": 2.0,
+        "freshness_decay_start": 1.0
+      }
+    }
+  },
+  {
+    "name": "idea_3s_08_4h_trailing_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": false
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_060133",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.303384819330745,
+      "hmm_min_prob": 0.6355560148961885,
+      "hmm_states": 3,
+      "regime_persistence_bars": 5,
+      "atr_stop_mult": 3.426029596234981,
+      "atr_tp_mult": 4.919515264929601,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4150495235200791,
+      "transition_cooldown_bars": 0
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1546,
+      "total_return": 0.9378,
+      "annualized_volatility": 0.1691,
+      "sharpe_ratio": 0.6983,
+      "sortino_ratio": 0.5019,
+      "max_drawdown": -0.2422,
+      "calmar_ratio": 0.6382,
+      "n_years": 4.6,
+      "total_trades": 130,
+      "win_rate": 0.5538,
+      "profit_factor": 1.5022,
+      "avg_win_loss_ratio": 1.2101,
+      "avg_trade_pnl": 721.3886,
+      "avg_trade_duration_bars": 893.89,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0456,
+      "information_ratio": 0.2848,
+      "exit_reasons": {
+        "signal": 67,
+        "tp": 36,
+        "sl": 26,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.528,
+        "random_median_return": 0.0504,
+        "random_p95_sharpe": 1.098,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.15,
+      "total_return": 0.118,
+      "annualized_volatility": 0.1305,
+      "sharpe_ratio": 0.8295,
+      "sortino_ratio": 0.6187,
+      "max_drawdown": -0.0791,
+      "calmar_ratio": 1.8959,
+      "n_years": 0.8,
+      "total_trades": 27,
+      "win_rate": 0.5556,
+      "profit_factor": 1.5586,
+      "avg_win_loss_ratio": 1.2469,
+      "avg_trade_pnl": 437.0765,
+      "avg_trade_duration_bars": 597.22,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2,
+      "information_ratio": -1.2716,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 3,
+        "sl": 2,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3456,
+        "random_median_return": 0.1399,
+        "random_p95_sharpe": 2.8303,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.1785,
+      "total_return": -0.1791,
+      "annualized_volatility": 0.323,
+      "sharpe_ratio": -0.5713,
+      "sortino_ratio": -0.5073,
+      "max_drawdown": -0.3496,
+      "calmar_ratio": -0.5106,
+      "n_years": 1.0,
+      "total_trades": 23,
+      "win_rate": 0.3913,
+      "profit_factor": 0.4755,
+      "avg_win_loss_ratio": 0.7397,
+      "avg_trade_pnl": -778.889,
+      "avg_trade_duration_bars": 1042.65,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.0883,
+      "information_ratio": -4.3667,
+      "exit_reasons": {
+        "signal": 17,
+        "sl": 4,
+        "tp": 1,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8642,
+        "random_median_return": 0.3311,
+        "random_p95_sharpe": 3.2347,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.6008,
+        "annualized_return": -0.1863,
+        "max_drawdown": -0.3537
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_08_4h_trailing_opt_val_sharpe",
+    "idea_name": "idea_3s_08_4h_trailing",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      },
+      "strategies": {
+        "trend": {
+          "trailing_enabled": true,
+          "trailing_atr_mult": 1.5,
+          "atr_tp_mult": 0.0
+        }
+      }
+    }
+  },
+  {
+    "name": "idea_3s_08_4h_trailing_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_060405",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.59051134512365,
+      "hmm_min_prob": 0.5913766468514992,
+      "hmm_states": 3,
+      "regime_persistence_bars": 2,
+      "atr_stop_mult": 3.3269419449272464,
+      "atr_tp_mult": 4.425989786366941,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4672860642101985,
+      "transition_cooldown_bars": 1
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1416,
+      "total_return": 0.8396,
+      "annualized_volatility": 0.166,
+      "sharpe_ratio": 0.6401,
+      "sortino_ratio": 0.4463,
+      "max_drawdown": -0.2509,
+      "calmar_ratio": 0.5646,
+      "n_years": 4.6,
+      "total_trades": 138,
+      "win_rate": 0.5652,
+      "profit_factor": 1.4389,
+      "avg_win_loss_ratio": 1.1068,
+      "avg_trade_pnl": 608.4008,
+      "avg_trade_duration_bars": 823.18,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0326,
+      "information_ratio": 0.2038,
+      "exit_reasons": {
+        "signal": 65,
+        "tp": 41,
+        "sl": 31,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5072,
+        "random_median_return": 0.048,
+        "random_p95_sharpe": 0.9906,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1239,
+      "total_return": 0.0977,
+      "annualized_volatility": 0.1292,
+      "sharpe_ratio": 0.6588,
+      "sortino_ratio": 0.4774,
+      "max_drawdown": -0.0783,
+      "calmar_ratio": 1.5808,
+      "n_years": 0.8,
+      "total_trades": 30,
+      "win_rate": 0.5667,
+      "profit_factor": 1.4232,
+      "avg_win_loss_ratio": 1.0883,
+      "avg_trade_pnl": 325.6277,
+      "avg_trade_duration_bars": 536.83,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2262,
+      "information_ratio": -1.4377,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 6,
+        "sl": 3
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3945,
+        "random_median_return": 0.1457,
+        "random_p95_sharpe": 2.6738,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.0609,
+      "total_return": -0.0611,
+      "annualized_volatility": 0.3189,
+      "sharpe_ratio": -0.1632,
+      "sortino_ratio": -0.2304,
+      "max_drawdown": -0.298,
+      "calmar_ratio": -0.2043,
+      "n_years": 1.0,
+      "total_trades": 28,
+      "win_rate": 0.4286,
+      "profit_factor": 0.8554,
+      "avg_win_loss_ratio": 1.1405,
+      "avg_trade_pnl": -218.2346,
+      "avg_trade_duration_bars": 813.79,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9707,
+      "information_ratio": -3.8947,
+      "exit_reasons": {
+        "signal": 18,
+        "sl": 5,
+        "tp": 4,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.892,
+        "random_median_return": 0.3439,
+        "random_p95_sharpe": 3.3205,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.1984,
+        "annualized_return": -0.0714,
+        "max_drawdown": -0.3024
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_08_4h_trailing_opt_val_return",
+    "idea_name": "idea_3s_08_4h_trailing",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      },
+      "strategies": {
+        "trend": {
+          "trailing_enabled": true,
+          "trailing_atr_mult": 1.5,
+          "atr_tp_mult": 0.0
+        }
+      }
+    }
+  },
+  {
+    "name": "idea_3s_09_4h_high_persist_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": false
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_060620",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.303384819330745,
+      "hmm_min_prob": 0.6355560148961885,
+      "hmm_states": 3,
+      "regime_persistence_bars": 5,
+      "atr_stop_mult": 3.426029596234981,
+      "atr_tp_mult": 4.919515264929601,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4150495235200791,
+      "transition_cooldown_bars": 0
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1546,
+      "total_return": 0.9378,
+      "annualized_volatility": 0.1691,
+      "sharpe_ratio": 0.6983,
+      "sortino_ratio": 0.5019,
+      "max_drawdown": -0.2422,
+      "calmar_ratio": 0.6382,
+      "n_years": 4.6,
+      "total_trades": 130,
+      "win_rate": 0.5538,
+      "profit_factor": 1.5022,
+      "avg_win_loss_ratio": 1.2101,
+      "avg_trade_pnl": 721.3886,
+      "avg_trade_duration_bars": 893.89,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0456,
+      "information_ratio": 0.2848,
+      "exit_reasons": {
+        "signal": 67,
+        "tp": 36,
+        "sl": 26,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.528,
+        "random_median_return": 0.0504,
+        "random_p95_sharpe": 1.098,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.15,
+      "total_return": 0.118,
+      "annualized_volatility": 0.1305,
+      "sharpe_ratio": 0.8295,
+      "sortino_ratio": 0.6187,
+      "max_drawdown": -0.0791,
+      "calmar_ratio": 1.8959,
+      "n_years": 0.8,
+      "total_trades": 27,
+      "win_rate": 0.5556,
+      "profit_factor": 1.5586,
+      "avg_win_loss_ratio": 1.2469,
+      "avg_trade_pnl": 437.0765,
+      "avg_trade_duration_bars": 597.22,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2,
+      "information_ratio": -1.2716,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 3,
+        "sl": 2,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3456,
+        "random_median_return": 0.1399,
+        "random_p95_sharpe": 2.8303,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.1785,
+      "total_return": -0.1791,
+      "annualized_volatility": 0.323,
+      "sharpe_ratio": -0.5713,
+      "sortino_ratio": -0.5073,
+      "max_drawdown": -0.3496,
+      "calmar_ratio": -0.5106,
+      "n_years": 1.0,
+      "total_trades": 23,
+      "win_rate": 0.3913,
+      "profit_factor": 0.4755,
+      "avg_win_loss_ratio": 0.7397,
+      "avg_trade_pnl": -778.889,
+      "avg_trade_duration_bars": 1042.65,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.0883,
+      "information_ratio": -4.3667,
+      "exit_reasons": {
+        "signal": 17,
+        "sl": 4,
+        "tp": 1,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8642,
+        "random_median_return": 0.3311,
+        "random_p95_sharpe": 3.2347,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.6008,
+        "annualized_return": -0.1863,
+        "max_drawdown": -0.3537
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_09_4h_high_persist_opt_val_sharpe",
+    "idea_name": "idea_3s_09_4h_high_persist",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      },
+      "regime": {
+        "persistence_bars": 5,
+        "persistence_bars_short": 6
+      },
+      "strategies": {
+        "trend": {
+          "persistence_bars": 5
+        }
+      }
+    }
+  },
+  {
+    "name": "idea_3s_09_4h_high_persist_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_060829",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 15.503924603611681,
+      "hmm_min_prob": 0.4063408502089062,
+      "hmm_states": 3,
+      "regime_persistence_bars": 4,
+      "atr_stop_mult": 3.253026602591991,
+      "atr_tp_mult": 10.460100276539315,
+      "require_smc_confluence": true,
+      "require_pin_bar": false,
+      "hmm_min_confidence": 0.45796019531946275,
+      "transition_cooldown_bars": 4
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1116,
+      "total_return": 0.6272,
+      "annualized_volatility": 0.1686,
+      "sharpe_ratio": 0.4745,
+      "sortino_ratio": 0.3225,
+      "max_drawdown": -0.2381,
+      "calmar_ratio": 0.4687,
+      "n_years": 4.6,
+      "total_trades": 104,
+      "win_rate": 0.4904,
+      "profit_factor": 1.4204,
+      "avg_win_loss_ratio": 1.4761,
+      "avg_trade_pnl": 603.0546,
+      "avg_trade_duration_bars": 1170.19,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0026,
+      "information_ratio": 0.0163,
+      "exit_reasons": {
+        "signal": 72,
+        "sl": 24,
+        "tp": 7,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.4649,
+        "random_median_return": 0.0449,
+        "random_p95_sharpe": 0.9817,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1228,
+      "total_return": 0.0968,
+      "annualized_volatility": 0.1314,
+      "sharpe_ratio": 0.6426,
+      "sortino_ratio": 0.4595,
+      "max_drawdown": -0.0778,
+      "calmar_ratio": 1.5785,
+      "n_years": 0.8,
+      "total_trades": 26,
+      "win_rate": 0.5385,
+      "profit_factor": 1.4303,
+      "avg_win_loss_ratio": 1.226,
+      "avg_trade_pnl": 372.482,
+      "avg_trade_duration_bars": 619.92,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2272,
+      "information_ratio": -1.4446,
+      "exit_reasons": {
+        "signal": 21,
+        "sl": 4,
+        "tp": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.1841,
+        "random_median_return": 0.1263,
+        "random_p95_sharpe": 2.8497,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.1436,
+      "total_return": -0.1441,
+      "annualized_volatility": 0.3249,
+      "sharpe_ratio": -0.4382,
+      "sortino_ratio": -0.4269,
+      "max_drawdown": -0.332,
+      "calmar_ratio": -0.4326,
+      "n_years": 1.0,
+      "total_trades": 24,
+      "win_rate": 0.4167,
+      "profit_factor": 0.5626,
+      "avg_win_loss_ratio": 0.7877,
+      "avg_trade_pnl": -600.5092,
+      "avg_trade_duration_bars": 1016.04,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.0534,
+      "information_ratio": -4.2266,
+      "exit_reasons": {
+        "signal": 19,
+        "sl": 4,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8441,
+        "random_median_return": 0.331,
+        "random_p95_sharpe": 3.4007,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.4681,
+        "annualized_return": -0.1519,
+        "max_drawdown": -0.3363
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_09_4h_high_persist_opt_val_return",
+    "idea_name": "idea_3s_09_4h_high_persist",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      },
+      "regime": {
+        "persistence_bars": 5,
+        "persistence_bars_short": 6
+      },
+      "strategies": {
+        "trend": {
+          "persistence_bars": 5
+        }
+      }
+    }
+  },
+  {
+    "name": "idea_3s_10_4h_trend_only_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": false
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_061028",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.303384819330745,
+      "hmm_min_prob": 0.6355560148961885,
+      "hmm_states": 3,
+      "regime_persistence_bars": 5,
+      "atr_stop_mult": 3.426029596234981,
+      "atr_tp_mult": 4.919515264929601,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4150495235200791,
+      "transition_cooldown_bars": 0
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1546,
+      "total_return": 0.9378,
+      "annualized_volatility": 0.1691,
+      "sharpe_ratio": 0.6983,
+      "sortino_ratio": 0.5019,
+      "max_drawdown": -0.2422,
+      "calmar_ratio": 0.6382,
+      "n_years": 4.6,
+      "total_trades": 130,
+      "win_rate": 0.5538,
+      "profit_factor": 1.5022,
+      "avg_win_loss_ratio": 1.2101,
+      "avg_trade_pnl": 721.3886,
+      "avg_trade_duration_bars": 893.89,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0456,
+      "information_ratio": 0.2848,
+      "exit_reasons": {
+        "signal": 67,
+        "tp": 36,
+        "sl": 26,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.528,
+        "random_median_return": 0.0504,
+        "random_p95_sharpe": 1.098,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.15,
+      "total_return": 0.118,
+      "annualized_volatility": 0.1305,
+      "sharpe_ratio": 0.8295,
+      "sortino_ratio": 0.6187,
+      "max_drawdown": -0.0791,
+      "calmar_ratio": 1.8959,
+      "n_years": 0.8,
+      "total_trades": 27,
+      "win_rate": 0.5556,
+      "profit_factor": 1.5586,
+      "avg_win_loss_ratio": 1.2469,
+      "avg_trade_pnl": 437.0765,
+      "avg_trade_duration_bars": 597.22,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2,
+      "information_ratio": -1.2716,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 3,
+        "sl": 2,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3456,
+        "random_median_return": 0.1399,
+        "random_p95_sharpe": 2.8303,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.1785,
+      "total_return": -0.1791,
+      "annualized_volatility": 0.323,
+      "sharpe_ratio": -0.5713,
+      "sortino_ratio": -0.5073,
+      "max_drawdown": -0.3496,
+      "calmar_ratio": -0.5106,
+      "n_years": 1.0,
+      "total_trades": 23,
+      "win_rate": 0.3913,
+      "profit_factor": 0.4755,
+      "avg_win_loss_ratio": 0.7397,
+      "avg_trade_pnl": -778.889,
+      "avg_trade_duration_bars": 1042.65,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.0883,
+      "information_ratio": -4.3667,
+      "exit_reasons": {
+        "signal": 17,
+        "sl": 4,
+        "tp": 1,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8642,
+        "random_median_return": 0.3311,
+        "random_p95_sharpe": 3.2347,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.6008,
+        "annualized_return": -0.1863,
+        "max_drawdown": -0.3537
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_10_4h_trend_only_opt_val_sharpe",
+    "idea_name": "idea_3s_10_4h_trend_only",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      },
+      "strategies": {
+        "range": {
+          "enabled": false
+        },
+        "volatile": {
+          "enabled": false
+        }
+      }
+    }
+  },
+  {
+    "name": "idea_3s_10_4h_trend_only_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_061234",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.59051134512365,
+      "hmm_min_prob": 0.5913766468514992,
+      "hmm_states": 3,
+      "regime_persistence_bars": 2,
+      "atr_stop_mult": 3.3269419449272464,
+      "atr_tp_mult": 4.425989786366941,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4672860642101985,
+      "transition_cooldown_bars": 1
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1416,
+      "total_return": 0.8396,
+      "annualized_volatility": 0.166,
+      "sharpe_ratio": 0.6401,
+      "sortino_ratio": 0.4463,
+      "max_drawdown": -0.2509,
+      "calmar_ratio": 0.5646,
+      "n_years": 4.6,
+      "total_trades": 138,
+      "win_rate": 0.5652,
+      "profit_factor": 1.4389,
+      "avg_win_loss_ratio": 1.1068,
+      "avg_trade_pnl": 608.4008,
+      "avg_trade_duration_bars": 823.18,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0326,
+      "information_ratio": 0.2038,
+      "exit_reasons": {
+        "signal": 65,
+        "tp": 41,
+        "sl": 31,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5072,
+        "random_median_return": 0.048,
+        "random_p95_sharpe": 0.9906,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1239,
+      "total_return": 0.0977,
+      "annualized_volatility": 0.1292,
+      "sharpe_ratio": 0.6588,
+      "sortino_ratio": 0.4774,
+      "max_drawdown": -0.0783,
+      "calmar_ratio": 1.5808,
+      "n_years": 0.8,
+      "total_trades": 30,
+      "win_rate": 0.5667,
+      "profit_factor": 1.4232,
+      "avg_win_loss_ratio": 1.0883,
+      "avg_trade_pnl": 325.6277,
+      "avg_trade_duration_bars": 536.83,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2262,
+      "information_ratio": -1.4377,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 6,
+        "sl": 3
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3945,
+        "random_median_return": 0.1457,
+        "random_p95_sharpe": 2.6738,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.0609,
+      "total_return": -0.0611,
+      "annualized_volatility": 0.3189,
+      "sharpe_ratio": -0.1632,
+      "sortino_ratio": -0.2304,
+      "max_drawdown": -0.298,
+      "calmar_ratio": -0.2043,
+      "n_years": 1.0,
+      "total_trades": 28,
+      "win_rate": 0.4286,
+      "profit_factor": 0.8554,
+      "avg_win_loss_ratio": 1.1405,
+      "avg_trade_pnl": -218.2346,
+      "avg_trade_duration_bars": 813.79,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9707,
+      "information_ratio": -3.8947,
+      "exit_reasons": {
+        "signal": 18,
+        "sl": 5,
+        "tp": 4,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.892,
+        "random_median_return": 0.3439,
+        "random_p95_sharpe": 3.3205,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.1984,
+        "annualized_return": -0.0714,
+        "max_drawdown": -0.3024
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_10_4h_trend_only_opt_val_return",
+    "idea_name": "idea_3s_10_4h_trend_only",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      },
+      "strategies": {
+        "range": {
+          "enabled": false
+        },
+        "volatile": {
+          "enabled": false
+        }
+      }
+    }
+  },
+  {
+    "name": "idea_3s_11_1h_regime_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": true,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bear' drifted 21.4pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_061453",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 17.20563670786497,
+      "hmm_min_prob": 0.42440171837296137,
+      "hmm_states": 3,
+      "regime_persistence_bars": 1,
+      "atr_stop_mult": 2.404275502235113,
+      "atr_tp_mult": 3.262698177841603,
+      "require_smc_confluence": true,
+      "require_pin_bar": false,
+      "hmm_min_confidence": 0.5603160066970909,
+      "transition_cooldown_bars": 4
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 43751,
+      "actual_bars": 30672,
+      "missing_bars": 13079,
+      "missing_pct": 29.89,
+      "max_consecutive_gap": 76,
+      "expected_from_config": 41688,
+      "config_mismatch": true
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4145,
+        "bear": 0.3888,
+        "sideways": 0.1968
+      },
+      "test": {
+        "sideways": 0.5209,
+        "bull": 0.3042,
+        "bear": 0.1749
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.2356,
+      "total_return": 1.6478,
+      "annualized_volatility": 0.1338,
+      "sharpe_ratio": 1.3494,
+      "sortino_ratio": 1.1293,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 1.7046,
+      "n_years": 4.6,
+      "total_trades": 824,
+      "win_rate": 0.5,
+      "profit_factor": 1.2871,
+      "avg_win_loss_ratio": 1.2871,
+      "avg_trade_pnl": 199.9716,
+      "avg_trade_duration_bars": 136.3,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.1267,
+      "information_ratio": 0.7907,
+      "exit_reasons": {
+        "tp": 302,
+        "signal": 301,
+        "sl": 220,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.4957,
+        "random_median_return": 0.0483,
+        "random_p95_sharpe": 1.0555,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": true
+    },
+    "val_metrics": {
+      "annualized_return": 0.2663,
+      "total_return": 0.2074,
+      "annualized_volatility": 0.1361,
+      "sharpe_ratio": 1.5086,
+      "sortino_ratio": 1.2534,
+      "max_drawdown": -0.0773,
+      "calmar_ratio": 3.4445,
+      "n_years": 0.8,
+      "total_trades": 142,
+      "win_rate": 0.493,
+      "profit_factor": 1.3551,
+      "avg_win_loss_ratio": 1.3938,
+      "avg_trade_pnl": 146.0315,
+      "avg_trade_duration_bars": 132.45,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.0837,
+      "information_ratio": -0.5324,
+      "exit_reasons": {
+        "tp": 51,
+        "signal": 50,
+        "sl": 40,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.4068,
+        "random_median_return": 0.1561,
+        "random_p95_sharpe": 2.7165,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": 0.0012,
+      "total_return": 0.0012,
+      "annualized_volatility": 0.1087,
+      "sharpe_ratio": -0.3024,
+      "sortino_ratio": -0.1945,
+      "max_drawdown": -0.1052,
+      "calmar_ratio": 0.0115,
+      "n_years": 1.0,
+      "total_trades": 114,
+      "win_rate": 0.4123,
+      "profit_factor": 1.0023,
+      "avg_win_loss_ratio": 1.4288,
+      "avg_trade_pnl": 1.0636,
+      "avg_trade_duration_bars": 111.77,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9086,
+      "information_ratio": -3.6456,
+      "exit_reasons": {
+        "signal": 51,
+        "sl": 32,
+        "tp": 31
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.7779,
+        "random_median_return": 0.3154,
+        "random_p95_sharpe": 3.2599,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.7269,
+        "annualized_return": -0.0443,
+        "max_drawdown": -0.1234
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_11_1h_regime_opt_val_sharpe",
+    "idea_name": "idea_3s_11_1h_regime",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "1H"
+      }
+    }
+  },
+  {
+    "name": "idea_3s_11_1h_regime_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": true,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bear' drifted 21.4pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_061713",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 18.015319700051347,
+      "hmm_min_prob": 0.7396620497250711,
+      "hmm_states": 3,
+      "regime_persistence_bars": 2,
+      "atr_stop_mult": 2.4283044954716013,
+      "atr_tp_mult": 3.262698177841603,
+      "require_smc_confluence": true,
+      "require_pin_bar": false,
+      "hmm_min_confidence": 0.6471733262475965,
+      "transition_cooldown_bars": 2
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 43751,
+      "actual_bars": 30672,
+      "missing_bars": 13079,
+      "missing_pct": 29.89,
+      "max_consecutive_gap": 76,
+      "expected_from_config": 41688,
+      "config_mismatch": true
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4145,
+        "bear": 0.3888,
+        "sideways": 0.1968
+      },
+      "test": {
+        "sideways": 0.5209,
+        "bull": 0.3042,
+        "bear": 0.1749
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.2359,
+      "total_return": 1.6504,
+      "annualized_volatility": 0.1299,
+      "sharpe_ratio": 1.388,
+      "sortino_ratio": 1.1383,
+      "max_drawdown": -0.1328,
+      "calmar_ratio": 1.7767,
+      "n_years": 4.6,
+      "total_trades": 779,
+      "win_rate": 0.5045,
+      "profit_factor": 1.3217,
+      "avg_win_loss_ratio": 1.2981,
+      "avg_trade_pnl": 211.8648,
+      "avg_trade_duration_bars": 136.05,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.1269,
+      "information_ratio": 0.7924,
+      "exit_reasons": {
+        "signal": 299,
+        "tp": 282,
+        "sl": 197,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.471,
+        "random_median_return": 0.0455,
+        "random_p95_sharpe": 1.1519,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": true
+    },
+    "val_metrics": {
+      "annualized_return": 0.3248,
+      "total_return": 0.2517,
+      "annualized_volatility": 0.1305,
+      "sharpe_ratio": 1.9145,
+      "sortino_ratio": 1.6262,
+      "max_drawdown": -0.0578,
+      "calmar_ratio": 5.6151,
+      "n_years": 0.8,
+      "total_trades": 128,
+      "win_rate": 0.5078,
+      "profit_factor": 1.5251,
+      "avg_win_loss_ratio": 1.4782,
+      "avg_trade_pnl": 196.641,
+      "avg_trade_duration_bars": 137.98,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.0252,
+      "information_ratio": -0.1604,
+      "exit_reasons": {
+        "signal": 53,
+        "tp": 46,
+        "sl": 28,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.1483,
+        "random_median_return": 0.1241,
+        "random_p95_sharpe": 2.7391,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": 0.0311,
+      "total_return": 0.0312,
+      "annualized_volatility": 0.1049,
+      "sharpe_ratio": -0.037,
+      "sortino_ratio": -0.0451,
+      "max_drawdown": -0.1117,
+      "calmar_ratio": 0.2784,
+      "n_years": 1.0,
+      "total_trades": 112,
+      "win_rate": 0.4196,
+      "profit_factor": 1.0625,
+      "avg_win_loss_ratio": 1.4695,
+      "avg_trade_pnl": 27.8679,
+      "avg_trade_duration_bars": 105.88,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8787,
+      "information_ratio": -3.5257,
+      "exit_reasons": {
+        "signal": 55,
+        "tp": 31,
+        "sl": 26
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9054,
+        "random_median_return": 0.3497,
+        "random_p95_sharpe": 3.1743,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.4705,
+        "annualized_return": -0.0149,
+        "max_drawdown": -0.1225
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_11_1h_regime_opt_val_return",
+    "idea_name": "idea_3s_11_1h_regime",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "1H"
+      }
+    }
+  },
+  {
+    "name": "idea_3s_12_1h_long_only_dd_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": true,
+        "drawdown": true,
+        "profit_factor": true,
+        "trade_count": true,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bear' drifted 21.4pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_061930",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 28.614446933882252,
+      "hmm_min_prob": 0.5950737014004824,
+      "hmm_states": 3,
+      "regime_persistence_bars": 1,
+      "atr_stop_mult": 2.4372119031087704,
+      "atr_tp_mult": 10.57490778947539,
+      "require_smc_confluence": true,
+      "require_pin_bar": false,
+      "hmm_min_confidence": 0.37746275327654055,
+      "transition_cooldown_bars": 0
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 43751,
+      "actual_bars": 30672,
+      "missing_bars": 13079,
+      "missing_pct": 29.89,
+      "max_consecutive_gap": 76,
+      "expected_from_config": 41688,
+      "config_mismatch": true
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4145,
+        "bear": 0.3888,
+        "sideways": 0.1968
+      },
+      "test": {
+        "sideways": 0.5209,
+        "bull": 0.3042,
+        "bear": 0.1749
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1332,
+      "total_return": 0.7779,
+      "annualized_volatility": 0.096,
+      "sharpe_ratio": 0.934,
+      "sortino_ratio": 0.5345,
+      "max_drawdown": -0.1154,
+      "calmar_ratio": 1.1541,
+      "n_years": 4.6,
+      "total_trades": 261,
+      "win_rate": 0.4444,
+      "profit_factor": 1.4903,
+      "avg_win_loss_ratio": 1.8629,
+      "avg_trade_pnl": 298.049,
+      "avg_trade_duration_bars": 213.76,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0242,
+      "information_ratio": 0.1512,
+      "exit_reasons": {
+        "signal": 158,
+        "sl": 87,
+        "tp": 16
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5116,
+        "random_median_return": 0.049,
+        "random_p95_sharpe": 0.992,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1674,
+      "total_return": 0.1315,
+      "annualized_volatility": 0.1113,
+      "sharpe_ratio": 1.0866,
+      "sortino_ratio": 0.6188,
+      "max_drawdown": -0.0639,
+      "calmar_ratio": 2.6216,
+      "n_years": 0.8,
+      "total_trades": 51,
+      "win_rate": 0.451,
+      "profit_factor": 1.6276,
+      "avg_win_loss_ratio": 1.9814,
+      "avg_trade_pnl": 257.8497,
+      "avg_trade_duration_bars": 217.41,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.1826,
+      "information_ratio": -1.1609,
+      "exit_reasons": {
+        "signal": 33,
+        "sl": 16,
+        "tp": 1,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.2753,
+        "random_median_return": 0.1332,
+        "random_p95_sharpe": 2.7612,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": 0.1907,
+      "total_return": 0.1915,
+      "annualized_volatility": 0.0926,
+      "sharpe_ratio": 1.4992,
+      "sortino_ratio": 0.7626,
+      "max_drawdown": -0.0465,
+      "calmar_ratio": 4.0973,
+      "n_years": 1.0,
+      "total_trades": 49,
+      "win_rate": 0.449,
+      "profit_factor": 1.7807,
+      "avg_win_loss_ratio": 2.1855,
+      "avg_trade_pnl": 390.7519,
+      "avg_trade_duration_bars": 190.49,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7192,
+      "information_ratio": -2.8855,
+      "exit_reasons": {
+        "signal": 32,
+        "sl": 14,
+        "tp": 3
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8528,
+        "random_median_return": 0.3513,
+        "random_p95_sharpe": 3.3153,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.2811,
+        "annualized_return": 0.1672,
+        "max_drawdown": -0.0485
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_12_1h_long_only_dd_opt_val_sharpe",
+    "idea_name": "idea_3s_12_1h_long_only_dd",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "1H",
+        "long_only": true
+      },
+      "drawdown_filter": {
+        "enabled": true,
+        "lookback_bars": 120,
+        "suppress_long_dd": -0.05
+      }
+    }
+  },
+  {
+    "name": "idea_3s_12_1h_long_only_dd_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": true,
+        "sharpe": true,
+        "drawdown": true,
+        "profit_factor": true,
+        "trade_count": true,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": true,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bear' drifted 21.4pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_062820",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 26.26169534219034,
+      "hmm_min_prob": 0.4484094951075037,
+      "hmm_states": 3,
+      "regime_persistence_bars": 1,
+      "atr_stop_mult": 3.4985869541675445,
+      "atr_tp_mult": 10.569066141607225,
+      "require_smc_confluence": true,
+      "require_pin_bar": false,
+      "hmm_min_confidence": 0.5345952858769178,
+      "transition_cooldown_bars": 0
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 43751,
+      "actual_bars": 30672,
+      "missing_bars": 13079,
+      "missing_pct": 29.89,
+      "max_consecutive_gap": 76,
+      "expected_from_config": 41688,
+      "config_mismatch": true
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4145,
+        "bear": 0.3888,
+        "sideways": 0.1968
+      },
+      "test": {
+        "sideways": 0.5209,
+        "bull": 0.3042,
+        "bear": 0.1749
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1814,
+      "total_return": 1.1533,
+      "annualized_volatility": 0.1027,
+      "sharpe_ratio": 1.285,
+      "sortino_ratio": 0.7998,
+      "max_drawdown": -0.1122,
+      "calmar_ratio": 1.6161,
+      "n_years": 4.6,
+      "total_trades": 267,
+      "win_rate": 0.4869,
+      "profit_factor": 1.6307,
+      "avg_win_loss_ratio": 1.7185,
+      "avg_trade_pnl": 431.9307,
+      "avg_trade_duration_bars": 236.54,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0724,
+      "information_ratio": 0.4519,
+      "exit_reasons": {
+        "signal": 214,
+        "sl": 36,
+        "tp": 17
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5293,
+        "random_median_return": 0.0516,
+        "random_p95_sharpe": 1.0605,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": true
+    },
+    "val_metrics": {
+      "annualized_return": 0.2624,
+      "total_return": 0.2044,
+      "annualized_volatility": 0.1213,
+      "sharpe_ratio": 1.6517,
+      "sortino_ratio": 1.1116,
+      "max_drawdown": -0.0493,
+      "calmar_ratio": 5.3164,
+      "n_years": 0.8,
+      "total_trades": 56,
+      "win_rate": 0.4643,
+      "profit_factor": 1.8352,
+      "avg_win_loss_ratio": 2.1175,
+      "avg_trade_pnl": 364.9899,
+      "avg_trade_duration_bars": 248.14,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.0877,
+      "information_ratio": -0.5572,
+      "exit_reasons": {
+        "signal": 43,
+        "sl": 9,
+        "tp": 3,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.2453,
+        "random_median_return": 0.1272,
+        "random_p95_sharpe": 2.4262,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": 0.2504,
+      "total_return": 0.2515,
+      "annualized_volatility": 0.0975,
+      "sharpe_ratio": 1.9311,
+      "sortino_ratio": 1.0653,
+      "max_drawdown": -0.0457,
+      "calmar_ratio": 5.484,
+      "n_years": 1.0,
+      "total_trades": 45,
+      "win_rate": 0.5111,
+      "profit_factor": 2.1716,
+      "avg_win_loss_ratio": 2.0772,
+      "avg_trade_pnl": 558.8552,
+      "avg_trade_duration_bars": 229.91,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.6594,
+      "information_ratio": -2.6458,
+      "exit_reasons": {
+        "signal": 36,
+        "sl": 5,
+        "tp": 4
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.7651,
+        "random_median_return": 0.3185,
+        "random_p95_sharpe": 3.3128,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.7407,
+        "annualized_return": 0.2278,
+        "max_drawdown": -0.0468
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_12_1h_long_only_dd_opt_val_return",
+    "idea_name": "idea_3s_12_1h_long_only_dd",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "1H",
+        "long_only": true
+      },
+      "drawdown_filter": {
+        "enabled": true,
+        "lookback_bars": 120,
+        "suppress_long_dd": -0.05
+      }
+    }
+  },
+  {
+    "name": "idea_3s_13_4h_self_tp_gate_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": false
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_063036",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.303384819330745,
+      "hmm_min_prob": 0.6355560148961885,
+      "hmm_states": 3,
+      "regime_persistence_bars": 5,
+      "atr_stop_mult": 3.426029596234981,
+      "atr_tp_mult": 4.919515264929601,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4150495235200791,
+      "transition_cooldown_bars": 0
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1546,
+      "total_return": 0.9378,
+      "annualized_volatility": 0.1691,
+      "sharpe_ratio": 0.6983,
+      "sortino_ratio": 0.5019,
+      "max_drawdown": -0.2422,
+      "calmar_ratio": 0.6382,
+      "n_years": 4.6,
+      "total_trades": 130,
+      "win_rate": 0.5538,
+      "profit_factor": 1.5022,
+      "avg_win_loss_ratio": 1.2101,
+      "avg_trade_pnl": 721.3886,
+      "avg_trade_duration_bars": 893.89,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0456,
+      "information_ratio": 0.2848,
+      "exit_reasons": {
+        "signal": 67,
+        "tp": 36,
+        "sl": 26,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.528,
+        "random_median_return": 0.0504,
+        "random_p95_sharpe": 1.098,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.15,
+      "total_return": 0.118,
+      "annualized_volatility": 0.1305,
+      "sharpe_ratio": 0.8295,
+      "sortino_ratio": 0.6187,
+      "max_drawdown": -0.0791,
+      "calmar_ratio": 1.8959,
+      "n_years": 0.8,
+      "total_trades": 27,
+      "win_rate": 0.5556,
+      "profit_factor": 1.5586,
+      "avg_win_loss_ratio": 1.2469,
+      "avg_trade_pnl": 437.0765,
+      "avg_trade_duration_bars": 597.22,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2,
+      "information_ratio": -1.2716,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 3,
+        "sl": 2,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3456,
+        "random_median_return": 0.1399,
+        "random_p95_sharpe": 2.8303,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.1785,
+      "total_return": -0.1791,
+      "annualized_volatility": 0.323,
+      "sharpe_ratio": -0.5713,
+      "sortino_ratio": -0.5073,
+      "max_drawdown": -0.3496,
+      "calmar_ratio": -0.5106,
+      "n_years": 1.0,
+      "total_trades": 23,
+      "win_rate": 0.3913,
+      "profit_factor": 0.4755,
+      "avg_win_loss_ratio": 0.7397,
+      "avg_trade_pnl": -778.889,
+      "avg_trade_duration_bars": 1042.65,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.0883,
+      "information_ratio": -4.3667,
+      "exit_reasons": {
+        "signal": 17,
+        "sl": 4,
+        "tp": 1,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8642,
+        "random_median_return": 0.3311,
+        "random_p95_sharpe": 3.2347,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.6008,
+        "annualized_return": -0.1863,
+        "max_drawdown": -0.3537
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_13_4h_self_tp_gate_opt_val_sharpe",
+    "idea_name": "idea_3s_13_4h_self_tp_gate",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0,
+        "min_self_transition_prob": 0.85,
+        "log_transition_matrix": true
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      }
+    }
+  },
+  {
+    "name": "idea_3s_13_4h_self_tp_gate_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_063309",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.59051134512365,
+      "hmm_min_prob": 0.5913766468514992,
+      "hmm_states": 3,
+      "regime_persistence_bars": 2,
+      "atr_stop_mult": 3.3269419449272464,
+      "atr_tp_mult": 4.425989786366941,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4672860642101985,
+      "transition_cooldown_bars": 1
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1416,
+      "total_return": 0.8396,
+      "annualized_volatility": 0.166,
+      "sharpe_ratio": 0.6401,
+      "sortino_ratio": 0.4463,
+      "max_drawdown": -0.2509,
+      "calmar_ratio": 0.5646,
+      "n_years": 4.6,
+      "total_trades": 138,
+      "win_rate": 0.5652,
+      "profit_factor": 1.4389,
+      "avg_win_loss_ratio": 1.1068,
+      "avg_trade_pnl": 608.4008,
+      "avg_trade_duration_bars": 823.18,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0326,
+      "information_ratio": 0.2038,
+      "exit_reasons": {
+        "signal": 65,
+        "tp": 41,
+        "sl": 31,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5072,
+        "random_median_return": 0.048,
+        "random_p95_sharpe": 0.9906,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1239,
+      "total_return": 0.0977,
+      "annualized_volatility": 0.1292,
+      "sharpe_ratio": 0.6588,
+      "sortino_ratio": 0.4774,
+      "max_drawdown": -0.0783,
+      "calmar_ratio": 1.5808,
+      "n_years": 0.8,
+      "total_trades": 30,
+      "win_rate": 0.5667,
+      "profit_factor": 1.4232,
+      "avg_win_loss_ratio": 1.0883,
+      "avg_trade_pnl": 325.6277,
+      "avg_trade_duration_bars": 536.83,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2262,
+      "information_ratio": -1.4377,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 6,
+        "sl": 3
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3945,
+        "random_median_return": 0.1457,
+        "random_p95_sharpe": 2.6738,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.0609,
+      "total_return": -0.0611,
+      "annualized_volatility": 0.3189,
+      "sharpe_ratio": -0.1632,
+      "sortino_ratio": -0.2304,
+      "max_drawdown": -0.298,
+      "calmar_ratio": -0.2043,
+      "n_years": 1.0,
+      "total_trades": 28,
+      "win_rate": 0.4286,
+      "profit_factor": 0.8554,
+      "avg_win_loss_ratio": 1.1405,
+      "avg_trade_pnl": -218.2346,
+      "avg_trade_duration_bars": 813.79,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9707,
+      "information_ratio": -3.8947,
+      "exit_reasons": {
+        "signal": 18,
+        "sl": 5,
+        "tp": 4,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.892,
+        "random_median_return": 0.3439,
+        "random_p95_sharpe": 3.3205,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.1984,
+        "annualized_return": -0.0714,
+        "max_drawdown": -0.3024
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_13_4h_self_tp_gate_opt_val_return",
+    "idea_name": "idea_3s_13_4h_self_tp_gate",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0,
+        "min_self_transition_prob": 0.85,
+        "log_transition_matrix": true
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      }
+    }
+  },
+  {
+    "name": "idea_3s_14_4h_bos_confirm_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": false
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_063537",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.303384819330745,
+      "hmm_min_prob": 0.6355560148961885,
+      "hmm_states": 3,
+      "regime_persistence_bars": 5,
+      "atr_stop_mult": 3.426029596234981,
+      "atr_tp_mult": 4.919515264929601,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4150495235200791,
+      "transition_cooldown_bars": 0
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1546,
+      "total_return": 0.9378,
+      "annualized_volatility": 0.1691,
+      "sharpe_ratio": 0.6983,
+      "sortino_ratio": 0.5019,
+      "max_drawdown": -0.2422,
+      "calmar_ratio": 0.6382,
+      "n_years": 4.6,
+      "total_trades": 130,
+      "win_rate": 0.5538,
+      "profit_factor": 1.5022,
+      "avg_win_loss_ratio": 1.2101,
+      "avg_trade_pnl": 721.3886,
+      "avg_trade_duration_bars": 893.89,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0456,
+      "information_ratio": 0.2848,
+      "exit_reasons": {
+        "signal": 67,
+        "tp": 36,
+        "sl": 26,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.528,
+        "random_median_return": 0.0504,
+        "random_p95_sharpe": 1.098,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.15,
+      "total_return": 0.118,
+      "annualized_volatility": 0.1305,
+      "sharpe_ratio": 0.8295,
+      "sortino_ratio": 0.6187,
+      "max_drawdown": -0.0791,
+      "calmar_ratio": 1.8959,
+      "n_years": 0.8,
+      "total_trades": 27,
+      "win_rate": 0.5556,
+      "profit_factor": 1.5586,
+      "avg_win_loss_ratio": 1.2469,
+      "avg_trade_pnl": 437.0765,
+      "avg_trade_duration_bars": 597.22,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2,
+      "information_ratio": -1.2716,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 3,
+        "sl": 2,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3456,
+        "random_median_return": 0.1399,
+        "random_p95_sharpe": 2.8303,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.1785,
+      "total_return": -0.1791,
+      "annualized_volatility": 0.323,
+      "sharpe_ratio": -0.5713,
+      "sortino_ratio": -0.5073,
+      "max_drawdown": -0.3496,
+      "calmar_ratio": -0.5106,
+      "n_years": 1.0,
+      "total_trades": 23,
+      "win_rate": 0.3913,
+      "profit_factor": 0.4755,
+      "avg_win_loss_ratio": 0.7397,
+      "avg_trade_pnl": -778.889,
+      "avg_trade_duration_bars": 1042.65,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -1.0883,
+      "information_ratio": -4.3667,
+      "exit_reasons": {
+        "signal": 17,
+        "sl": 4,
+        "tp": 1,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8642,
+        "random_median_return": 0.3311,
+        "random_p95_sharpe": 3.2347,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.6008,
+        "annualized_return": -0.1863,
+        "max_drawdown": -0.3537
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_14_4h_bos_confirm_opt_val_sharpe",
+    "idea_name": "idea_3s_14_4h_bos_confirm",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      },
+      "strategies": {
+        "trend": {
+          "require_bos_confirm": true,
+          "require_dc_breakout": false
+        }
+      }
+    }
+  },
+  {
+    "name": "idea_3s_14_4h_bos_confirm_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": false,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_063809",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 16.59051134512365,
+      "hmm_min_prob": 0.5913766468514992,
+      "hmm_states": 3,
+      "regime_persistence_bars": 2,
+      "atr_stop_mult": 3.3269419449272464,
+      "atr_tp_mult": 4.425989786366941,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.4672860642101985,
+      "transition_cooldown_bars": 1
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1416,
+      "total_return": 0.8396,
+      "annualized_volatility": 0.166,
+      "sharpe_ratio": 0.6401,
+      "sortino_ratio": 0.4463,
+      "max_drawdown": -0.2509,
+      "calmar_ratio": 0.5646,
+      "n_years": 4.6,
+      "total_trades": 138,
+      "win_rate": 0.5652,
+      "profit_factor": 1.4389,
+      "avg_win_loss_ratio": 1.1068,
+      "avg_trade_pnl": 608.4008,
+      "avg_trade_duration_bars": 823.18,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0326,
+      "information_ratio": 0.2038,
+      "exit_reasons": {
+        "signal": 65,
+        "tp": 41,
+        "sl": 31,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5072,
+        "random_median_return": 0.048,
+        "random_p95_sharpe": 0.9906,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1239,
+      "total_return": 0.0977,
+      "annualized_volatility": 0.1292,
+      "sharpe_ratio": 0.6588,
+      "sortino_ratio": 0.4774,
+      "max_drawdown": -0.0783,
+      "calmar_ratio": 1.5808,
+      "n_years": 0.8,
+      "total_trades": 30,
+      "win_rate": 0.5667,
+      "profit_factor": 1.4232,
+      "avg_win_loss_ratio": 1.0883,
+      "avg_trade_pnl": 325.6277,
+      "avg_trade_duration_bars": 536.83,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2262,
+      "information_ratio": -1.4377,
+      "exit_reasons": {
+        "signal": 21,
+        "tp": 6,
+        "sl": 3
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3945,
+        "random_median_return": 0.1457,
+        "random_p95_sharpe": 2.6738,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": -0.0609,
+      "total_return": -0.0611,
+      "annualized_volatility": 0.3189,
+      "sharpe_ratio": -0.1632,
+      "sortino_ratio": -0.2304,
+      "max_drawdown": -0.298,
+      "calmar_ratio": -0.2043,
+      "n_years": 1.0,
+      "total_trades": 28,
+      "win_rate": 0.4286,
+      "profit_factor": 0.8554,
+      "avg_win_loss_ratio": 1.1405,
+      "avg_trade_pnl": -218.2346,
+      "avg_trade_duration_bars": 813.79,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9707,
+      "information_ratio": -3.8947,
+      "exit_reasons": {
+        "signal": 18,
+        "sl": 5,
+        "tp": 4,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.892,
+        "random_median_return": 0.3439,
+        "random_p95_sharpe": 3.3205,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.1984,
+        "annualized_return": -0.0714,
+        "max_drawdown": -0.3024
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_14_4h_bos_confirm_opt_val_return",
+    "idea_name": "idea_3s_14_4h_bos_confirm",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H"
+      },
+      "strategies": {
+        "trend": {
+          "require_bos_confirm": true,
+          "require_dc_breakout": false
+        }
+      }
+    }
+  },
+  {
+    "name": "idea_3s_15_4h_full_combo_opt_val_sharpe",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": true,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": true,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_064031",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 20.171656868371528,
+      "hmm_min_prob": 0.5148387767745796,
+      "hmm_states": 3,
+      "regime_persistence_bars": 2,
+      "atr_stop_mult": 2.4216699900178194,
+      "atr_tp_mult": 4.160982924351338,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.6273398149133755,
+      "transition_cooldown_bars": 1
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1277,
+      "total_return": 0.7386,
+      "annualized_volatility": 0.1023,
+      "sharpe_ratio": 0.8349,
+      "sortino_ratio": 0.5675,
+      "max_drawdown": -0.0947,
+      "calmar_ratio": 1.3482,
+      "n_years": 4.6,
+      "total_trades": 116,
+      "win_rate": 0.5517,
+      "profit_factor": 1.7403,
+      "avg_win_loss_ratio": 1.414,
+      "avg_trade_pnl": 636.6814,
+      "avg_trade_duration_bars": 723.77,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0187,
+      "information_ratio": 0.1169,
+      "exit_reasons": {
+        "sl": 43,
+        "tp": 36,
+        "signal": 36,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.5585,
+        "random_median_return": 0.0532,
+        "random_p95_sharpe": 1.0387,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1604,
+      "total_return": 0.1261,
+      "annualized_volatility": 0.0943,
+      "sharpe_ratio": 1.2007,
+      "sortino_ratio": 0.7421,
+      "max_drawdown": -0.0532,
+      "calmar_ratio": 3.0178,
+      "n_years": 0.8,
+      "total_trades": 22,
+      "win_rate": 0.6818,
+      "profit_factor": 1.8791,
+      "avg_win_loss_ratio": 0.8769,
+      "avg_trade_pnl": 573.1951,
+      "avg_trade_duration_bars": 463.05,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.1896,
+      "information_ratio": -1.2053,
+      "exit_reasons": {
+        "signal": 10,
+        "tp": 6,
+        "sl": 6
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.361,
+        "random_median_return": 0.1383,
+        "random_p95_sharpe": 2.8054,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": 0.0359,
+      "total_return": 0.036,
+      "annualized_volatility": 0.0518,
+      "sharpe_ratio": -0.0655,
+      "sortino_ratio": -0.0257,
+      "max_drawdown": -0.0803,
+      "calmar_ratio": 0.4472,
+      "n_years": 1.0,
+      "total_trades": 15,
+      "win_rate": 0.6,
+      "profit_factor": 1.3977,
+      "avg_win_loss_ratio": 0.9318,
+      "avg_trade_pnl": 240.2606,
+      "avg_trade_duration_bars": 221.27,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8739,
+      "information_ratio": -3.5064,
+      "exit_reasons": {
+        "signal": 9,
+        "sl": 4,
+        "tp": 2
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8611,
+        "random_median_return": 0.3297,
+        "random_p95_sharpe": 3.2127,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.1793,
+        "annualized_return": 0.0298,
+        "max_drawdown": -0.0821
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_15_4h_full_combo_opt_val_sharpe",
+    "idea_name": "idea_3s_15_4h_full_combo",
+    "optuna_target": "val_sharpe",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H",
+        "long_only": true
+      },
+      "drawdown_filter": {
+        "enabled": true,
+        "lookback_bars": 120,
+        "suppress_long_dd": -0.05
+      },
+      "regime": {
+        "max_regime_freshness": 2.0,
+        "freshness_decay_start": 1.0
+      },
+      "strategies": {
+        "trend": {
+          "trailing_enabled": true,
+          "trailing_atr_mult": 1.5,
+          "atr_tp_mult": 0.0
+        }
+      }
+    }
+  },
+  {
+    "name": "idea_3s_15_4h_full_combo_opt_val_return",
+    "strategy_name": "xauusd_mtf_hmm1h_smc5m",
+    "verdict": "HARD_REJECTED",
+    "verdict_detail": {
+      "verdict": "HARD_REJECTED",
+      "train_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": true
+      },
+      "val_pass": {
+        "sharpe": true,
+        "profit_factor": true,
+        "trade_count": false
+      },
+      "test_pass": {
+        "return": false,
+        "sharpe": false,
+        "drawdown": true,
+        "profit_factor": true,
+        "trade_count": false,
+        "win_rate": true
+      },
+      "wf_pass": {},
+      "train_ok": true,
+      "val_ok": false,
+      "test_ok": false,
+      "wf_ok": false,
+      "hard_checks": {
+        "hard_rejected": true,
+        "rejections": {
+          "regime_drift": "Regime 'bull' drifted 32.9pp between train and test",
+          "cost_sensitive": "Sharpe drops 174% under 2x costs (0.056 -> -0.041)",
+          "wf_not_run": "Walk-forward validation not run - robustness unverified"
+        }
+      },
+      "flags": {
+        "test_without_train": false,
+        "test_without_val": false,
+        "wf_not_run": true,
+        "hard_rejected": true
+      }
+    },
+    "date": "2026-03-17",
+    "experiment_id": "20260317_064246",
+    "params": {
+      "hma_period": 55,
+      "ema_period": 21,
+      "atr_period": 14,
+      "rsi_period": 14,
+      "adx_period": 14,
+      "dc_period": 40,
+      "adx_threshold": 17.370256564263627,
+      "hmm_min_prob": 0.6282101111027529,
+      "hmm_states": 3,
+      "regime_persistence_bars": 4,
+      "atr_stop_mult": 2.4413701170901527,
+      "atr_tp_mult": 7.539386109185247,
+      "require_smc_confluence": true,
+      "require_pin_bar": true,
+      "hmm_min_confidence": 0.6039653155410245,
+      "transition_cooldown_bars": 4
+    },
+    "dataset": {
+      "file": "XAUUSD_1H_2019_2026.csv",
+      "sha256": "88f4429ca0656bb112cdb94d607c8485558c10f013f8fd5ada01cac63a086b94",
+      "size_bytes": 2732719,
+      "mtime": 1773666238.3949003
+    },
+    "gap_audit": {
+      "expected_bars": 10939,
+      "actual_bars": 7995,
+      "missing_bars": 2944,
+      "missing_pct": 26.91,
+      "max_consecutive_gap": 18
+    },
+    "regime_distributions": {
+      "train": {
+        "bull": 0.4641,
+        "sideways": 0.391,
+        "bear": 0.1449
+      },
+      "test": {
+        "bear": 0.4778,
+        "sideways": 0.3872,
+        "bull": 0.135
+      }
+    },
+    "train_metrics": {
+      "annualized_return": 0.1294,
+      "total_return": 0.7506,
+      "annualized_volatility": 0.1074,
+      "sharpe_ratio": 0.8144,
+      "sortino_ratio": 0.5774,
+      "max_drawdown": -0.1186,
+      "calmar_ratio": 1.0913,
+      "n_years": 4.6,
+      "total_trades": 95,
+      "win_rate": 0.5158,
+      "profit_factor": 1.8008,
+      "avg_win_loss_ratio": 1.6906,
+      "avg_trade_pnl": 790.156,
+      "avg_trade_duration_bars": 932.33,
+      "benchmark_return": 0.109,
+      "alpha_vs_benchmark": 0.0204,
+      "information_ratio": 0.1275,
+      "exit_reasons": {
+        "signal": 43,
+        "sl": 36,
+        "tp": 15,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.544,
+        "random_median_return": 0.0524,
+        "random_p95_sharpe": 1.11,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "val_metrics": {
+      "annualized_return": 0.1432,
+      "total_return": 0.1128,
+      "annualized_volatility": 0.0994,
+      "sharpe_ratio": 0.9941,
+      "sortino_ratio": 0.5803,
+      "max_drawdown": -0.0588,
+      "calmar_ratio": 2.4354,
+      "n_years": 0.8,
+      "total_trades": 18,
+      "win_rate": 0.6111,
+      "profit_factor": 1.7342,
+      "avg_win_loss_ratio": 1.1036,
+      "avg_trade_pnl": 626.5281,
+      "avg_trade_duration_bars": 556.89,
+      "benchmark_return": 0.35,
+      "alpha_vs_benchmark": -0.2068,
+      "information_ratio": -1.3145,
+      "exit_reasons": {
+        "signal": 10,
+        "sl": 7,
+        "tp": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.5203,
+        "random_median_return": 0.158,
+        "random_p95_sharpe": 2.8389,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false
+    },
+    "test_metrics": {
+      "annualized_return": 0.0424,
+      "total_return": 0.0426,
+      "annualized_volatility": 0.0532,
+      "sharpe_ratio": 0.0559,
+      "sortino_ratio": 0.0152,
+      "max_drawdown": -0.0819,
+      "calmar_ratio": 0.5181,
+      "n_years": 1.0,
+      "total_trades": 13,
+      "win_rate": 0.6154,
+      "profit_factor": 1.4804,
+      "avg_win_loss_ratio": 0.9252,
+      "avg_trade_pnl": 327.7562,
+      "avg_trade_duration_bars": 263.31,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8674,
+      "information_ratio": -3.4801,
+      "exit_reasons": {
+        "signal": 8,
+        "sl": 4,
+        "tp": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8941,
+        "random_median_return": 0.3288,
+        "random_p95_sharpe": 3.1264,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.0412,
+        "annualized_return": 0.0371,
+        "max_drawdown": -0.0838
+      }
+    },
+    "walk_forward": null,
+    "run_name": "idea_3s_15_4h_full_combo_opt_val_return",
+    "idea_name": "idea_3s_15_4h_full_combo",
+    "optuna_target": "val_return",
+    "config_override": {
+      "hmm": {
+        "n_states": 3,
+        "min_prob_hard": 0.6,
+        "min_prob_hard_short": 0.6,
+        "min_prob_entry": 0.65,
+        "min_prob_exit": 0.45,
+        "min_confidence": 0.45,
+        "sizing_max": 2.0
+      },
+      "risk": {
+        "base_allocation_frac": 0.9
+      },
+      "strategy": {
+        "regime_timeframe": "4H",
+        "long_only": true
+      },
+      "drawdown_filter": {
+        "enabled": true,
+        "lookback_bars": 120,
+        "suppress_long_dd": -0.05
+      },
+      "regime": {
+        "max_regime_freshness": 2.0,
+        "freshness_decay_start": 1.0
+      },
+      "strategies": {
+        "trend": {
+          "trailing_enabled": true,
+          "trailing_atr_mult": 1.5,
+          "atr_tp_mult": 0.0
+        }
+      }
+    }
+  }
+]

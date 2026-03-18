@@ -43,11 +43,17 @@ Thumbs.db
 *.feather
 
 # Artefacts (generated outputs - not source)
+# code3.0/artefacts/ is now tracked (results, approved strategies, models)
 artefacts/
+!code3.0/artefacts/
+!code3.0/artefacts/**
 
-# Models (generated)
+# Models (generated) — allow inside code3.0/artefacts
 *.pkl
-models/
+!code3.0/artefacts/**/*.pkl
+
+# Allow CSVs inside code3.0/artefacts (trade logs, backtest results)
+!code3.0/artefacts/**/*.csv
 
 # Backtest and report outputs (legacy locations)
 backtests/

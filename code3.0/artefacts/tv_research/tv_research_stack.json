@@ -1,0 +1,63 @@
+{
+  "active_set": {
+    "ehlers_filter": {
+      "enabled": true,
+      "integration_mode": "hmm",
+      "period": 20,
+      "filter_column_bull": "ehlers_filter_slope",
+      "filter_column_bear": "ehlers_filter_slope"
+    },
+    "supertrend": {
+      "enabled": true,
+      "integration_mode": "hmm"
+    },
+    "ichimoku": {
+      "enabled": true,
+      "integration_mode": "hmm"
+    },
+    "elder_ray": {
+      "enabled": true,
+      "integration_mode": "hmm",
+      "period": 13,
+      "filter_column_bull": "elder_ray_bull_power",
+      "filter_column_bear": "elder_ray_bear_power"
+    }
+  },
+  "final_metrics": {
+    "annualized_return": 0.8933,
+    "total_return": 0.898,
+    "annualized_volatility": 0.1486,
+    "sharpe_ratio": 4.0997,
+    "sortino_ratio": 4.5236,
+    "max_drawdown": -0.0753,
+    "calmar_ratio": 11.8591,
+    "n_years": 1.0,
+    "total_trades": 128,
+    "win_rate": 0.5781,
+    "profit_factor": 3.2904,
+    "avg_win_loss_ratio": 2.4011,
+    "avg_trade_pnl": 701.6001,
+    "avg_trade_duration_bars": 196.03,
+    "benchmark_return": 0.9098,
+    "alpha_vs_benchmark": -0.0165,
+    "information_ratio": -0.0662,
+    "exit_reasons": {
+      "signal": 110,
+      "sl": 17,
+      "end_of_data": 1
+    },
+    "random_baseline": {
+      "random_median_sharpe": 1.7971,
+      "random_median_return": 0.3326,
+      "random_p95_sharpe": 3.4616,
+      "n_simulations": 200
+    },
+    "beats_random_baseline": true,
+    "cost_sensitivity_2x": {
+      "sharpe_ratio": 3.9096,
+      "annualized_return": 0.8415,
+      "max_drawdown": -0.077
+    }
+  },
+  "n_indicators": 4
+}

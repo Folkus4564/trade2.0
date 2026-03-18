@@ -1,0 +1,191 @@
+[
+  {
+    "name": "idea_ai_01_4h_2state_no_session",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "session": {"enabled": false}
+    },
+    "rationale": "idea_16 base (best performer 43.6%) but remove session filter to get more trades and more WF coverage across all hours"
+  },
+  {
+    "name": "idea_ai_02_4h_2state_trailing",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"trailing_enabled": true, "trailing_atr_mult": 1.5, "atr_tp_mult": 0.0}
+      }
+    },
+    "rationale": "idea_16 base + trailing stop on trend to lock in gains during the strong 4H bear/bull runs instead of relying purely on regime flip exit"
+  },
+  {
+    "name": "idea_ai_03_4h_2state_trend_only",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "range":    {"enabled": false},
+        "volatile": {"enabled": false}
+      }
+    },
+    "rationale": "idea_16 base but disable range and volatile sub-strategies; focus only on trend entries which are the cleanest signal in a 2-state regime"
+  },
+  {
+    "name": "idea_ai_04_4h_2state_high_conf",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0, "min_confidence": 0.60, "min_prob_hard": 0.82},
+      "risk": {"base_allocation_frac": 0.90}
+    },
+    "rationale": "idea_16 base + tighter confidence gate to only enter on very clear regime signals; trades fewer but potentially higher quality across WF windows"
+  },
+  {
+    "name": "idea_ai_05_4h_2state_tight_trail",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"trailing_enabled": true, "trailing_atr_mult": 0.8, "atr_tp_mult": 0.0},
+        "range": {"enabled": false},
+        "volatile": {"enabled": false}
+      }
+    },
+    "rationale": "Tight trailing on trend-only, 4H 2-state: capture the move fast then protect with tight trail; no range/volatile noise"
+  },
+  {
+    "name": "idea_ai_06_4h_2state_london_only",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "session": {"enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]},
+      "strategies": {
+        "trend":    {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]},
+        "range":    {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]},
+        "volatile": {"session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]}
+      }
+    },
+    "rationale": "idea_16 base restricted to London session (7-16 UTC) where XAUUSD has highest liquidity and trend continuation; gold is most directional during EU hours"
+  },
+  {
+    "name": "idea_ai_07_4h_2state_cdc",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "cdc": {"enabled": true}
+      }
+    },
+    "rationale": "idea_16 base + enable CDC Action Zone sub-strategy to add EMA-crossover-based entries on top of the 4H regime; diversifies signal source"
+  },
+  {
+    "name": "idea_ai_08_4h_2state_low_persist",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "regime": {"persistence_bars": 1, "persistence_bars_short": 2, "transition_cooldown_bars": 0}
+    },
+    "rationale": "idea_16 base with faster regime reaction (persistence=1); the 4H 2-state model is already selective, so less persistence means more trades and better WF coverage in ranging periods"
+  },
+  {
+    "name": "idea_ai_09_4h_2state_wider_stops",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90, "atr_stop_mult": 3.5, "atr_tp_mult": 20.0}
+    },
+    "rationale": "idea_16 base with wider stops and larger TP multiple to survive larger intrabar swings on 4H-regime trades; ride the macro move further"
+  },
+  {
+    "name": "idea_ai_10_4h_2state_moderate_sizing",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 1.8},
+      "risk": {"base_allocation_frac": 0.80}
+    },
+    "rationale": "idea_16 with slightly reduced sizing (1.8x max vs 2.0x, 80% alloc vs 90%) to improve WF robustness; the base is overfit to big sizing on the test period"
+  },
+  {
+    "name": "idea_ai_11_4h_2state_trail_no_session",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "session": {"enabled": false},
+      "strategies": {
+        "trend": {"trailing_enabled": true, "trailing_atr_mult": 1.5, "atr_tp_mult": 0.0}
+      }
+    },
+    "rationale": "Combine idea_ai_01 (no session) + idea_ai_02 (trailing): maximum trades, protected by trailing stop on trend sub-strategy"
+  },
+  {
+    "name": "idea_ai_12_4h_2state_trend_trail_london",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "session": {"enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]},
+      "strategies": {
+        "trend": {
+          "trailing_enabled": true, "trailing_atr_mult": 1.5, "atr_tp_mult": 0.0,
+          "session_enabled": true, "allowed_hours_utc": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+        },
+        "range":    {"enabled": false},
+        "volatile": {"enabled": false}
+      }
+    },
+    "rationale": "Best combo: 4H 2-state + trend-only + London session + trailing; high-quality entries only with downside protection"
+  },
+  {
+    "name": "idea_ai_13_4h_2state_no_sess_trend_only",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "session": {"enabled": false},
+      "strategies": {
+        "range":    {"enabled": false},
+        "volatile": {"enabled": false}
+      }
+    },
+    "rationale": "idea_16 + trend-only + no session: maximum trend trades 24h, no noise from range/volatile sub-strategies"
+  },
+  {
+    "name": "idea_ai_14_4h_2state_conf55_trend_trail",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0, "min_confidence": 0.55},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {"trailing_enabled": true, "trailing_atr_mult": 1.2, "atr_tp_mult": 0.0},
+        "range":    {"enabled": false},
+        "volatile": {"enabled": false}
+      }
+    },
+    "rationale": "Moderate confidence gate (0.55) + trend-only + soft trailing: balance between trade quality and quantity, protect winners"
+  },
+  {
+    "name": "idea_ai_15_4h_2state_bos_wide_trail",
+    "override": {
+      "strategy": {"regime_timeframe": "4H"},
+      "hmm": {"n_states": 2, "sizing_max": 2.0},
+      "risk": {"base_allocation_frac": 0.90},
+      "strategies": {
+        "trend": {
+          "require_bos_confirm": true,
+          "trailing_enabled": true, "trailing_atr_mult": 2.0, "atr_tp_mult": 0.0
+        },
+        "range":    {"enabled": false},
+        "volatile": {"enabled": false}
+      }
+    },
+    "rationale": "BOS/CHoCH confirmation on trend entries (LuxAlgo) + wide trailing: only enter after structural break, then ride with a loose trail; highest quality, fewer trades"
+  }
+]
