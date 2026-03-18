@@ -590,12 +590,14 @@ def run_pipeline(
 
     # ---- 11. Export if approved + flag set ----
     if export_approved and final_verdict == "APPROVED":
+        _test_csv = dirs["backtests"] / f"{strategy_name}_test_trades.csv"
         export_dir = export_approved_strategy(
             results       = results,
             config        = config,
             artefacts_dir = dirs["root"],
             model_path    = model_path,
             strategy_name = strategy_name,
+            trades_csv    = _test_csv,
         )
         results["exported_to"] = str(export_dir)
         print(f"\n[pipeline] Strategy APPROVED and EXPORTED to {export_dir}")

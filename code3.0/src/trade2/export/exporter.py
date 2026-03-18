@@ -17,6 +17,7 @@ def export_approved_strategy(
     artefacts_dir: Path,
     model_path:    Optional[Path] = None,
     strategy_name: str = "xauusd_mtf_hmm_smc",
+    trades_csv:    Optional[Path] = None,
 ) -> Path:
     """
     Export approved strategy to artefacts/approved_strategies/<name>_<date>/.
@@ -63,6 +64,10 @@ def export_approved_strategy(
     # model.pkl copy
     if model_path and Path(model_path).exists():
         shutil.copy(model_path, export_dir / "model.pkl")
+
+    # trades_test.csv copy
+    if trades_csv and Path(trades_csv).exists():
+        shutil.copy(trades_csv, export_dir / "trades_test.csv")
 
     # training_summary.md
     _write_summary(export_dir, results)

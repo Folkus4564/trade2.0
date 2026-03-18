@@ -162,3 +162,339 @@ indicators:
     integration_mode: both
     filter_column_bull: "ehlers_filter_slope"
     filter_column_bear: "ehlers_filter_slope"
+
+  - name: cci
+    category: momentum
+    description: "Commodity Channel Index: price deviation from statistical mean; trend and reversal context"
+    default_params: { period: 20 }
+    integration_mode: both
+    filter_column_bull: "cci_val"
+    filter_column_bear: "cci_val"
+
+  - name: williams_r
+    category: momentum
+    description: "Williams %R oscillator: close location within recent range; overbought and oversold timing"
+    default_params: { period: 14 }
+    integration_mode: both
+    filter_column_bull: "williams_r_val"
+    filter_column_bear: "williams_r_val"
+
+  - name: tsi
+    category: momentum
+    description: "True Strength Index: double-smoothed momentum oscillator with signal line"
+    default_params: { long_period: 25, short_period: 13, signal: 7 }
+    integration_mode: both
+    filter_column_bull: "tsi_hist"
+    filter_column_bear: "tsi_hist"
+
+  - name: awesome_oscillator
+    category: momentum
+    description: "Awesome Oscillator: median price momentum using fast and slow SMA spread"
+    default_params: { fast: 5, slow: 34 }
+    integration_mode: both
+    filter_column_bull: "awesome_oscillator_val"
+    filter_column_bear: "awesome_oscillator_val"
+
+  - name: ultimate_oscillator
+    category: momentum
+    description: "Ultimate Oscillator: multi-period buying pressure oscillator across short, medium, and long windows"
+    default_params: { short: 7, medium: 14, long: 28 }
+    integration_mode: both
+    filter_column_bull: "ultimate_oscillator_val"
+    filter_column_bear: "ultimate_oscillator_val"
+
+  - name: ppo
+    category: momentum
+    description: "Percentage Price Oscillator: MACD expressed in percentage terms for scale normalization"
+    default_params: { fast: 12, slow: 26, signal: 9 }
+    integration_mode: both
+    filter_column_bull: "ppo_hist"
+    filter_column_bear: "ppo_hist"
+
+  - name: roc
+    category: momentum
+    description: "Rate of Change: percentage momentum over lookback period"
+    default_params: { period: 12 }
+    integration_mode: both
+    filter_column_bull: "roc_val"
+    filter_column_bear: "roc_val"
+
+  - name: momentum
+    category: momentum
+    description: "Classic momentum indicator: price difference from N bars ago"
+    default_params: { period: 10 }
+    integration_mode: both
+    filter_column_bull: "momentum_val"
+    filter_column_bear: "momentum_val"
+
+  - name: stochastic
+    category: momentum
+    description: "Stochastic oscillator with K and D lines for range location and turns"
+    default_params: { period: 14, k_smooth: 3, d_smooth: 3 }
+    integration_mode: both
+    filter_column_bull: "stochastic_k"
+    filter_column_bear: "stochastic_k"
+
+  - name: detrended_rsi
+    category: momentum
+    description: "RSI centered around neutral level to capture directional acceleration and mean reversion"
+    default_params: { period: 14 }
+    integration_mode: both
+    filter_column_bull: "detrended_rsi_val"
+    filter_column_bear: "detrended_rsi_val"
+
+  - name: obv
+    category: volume
+    description: "On-Balance Volume: cumulative volume flow aligned with price direction"
+    default_params: { smooth_period: 10 }
+    integration_mode: both
+    filter_column_bull: "obv_slope"
+    filter_column_bear: "obv_slope"
+
+  - name: cmf
+    category: volume
+    description: "Chaikin Money Flow: volume-weighted accumulation and distribution pressure"
+    default_params: { period: 20 }
+    integration_mode: both
+    filter_column_bull: "cmf_val"
+    filter_column_bear: "cmf_val"
+
+  - name: mfi
+    category: volume
+    description: "Money Flow Index: RSI-style oscillator using price and volume together"
+    default_params: { period: 14 }
+    integration_mode: both
+    filter_column_bull: "mfi_val"
+    filter_column_bear: "mfi_val"
+
+  - name: accumulation_distribution
+    category: volume
+    description: "Accumulation Distribution Line: cumulative money flow based on close position in range"
+    default_params: { smooth_period: 10 }
+    integration_mode: both
+    filter_column_bull: "accumulation_distribution_slope"
+    filter_column_bear: "accumulation_distribution_slope"
+
+  - name: force_index
+    category: volume
+    description: "Force Index: blends price change and volume to estimate directional force"
+    default_params: { period: 13 }
+    integration_mode: both
+    filter_column_bull: "force_index_val"
+    filter_column_bear: "force_index_val"
+
+  - name: ease_of_movement
+    category: volume
+    description: "Ease of Movement: measures how easily price moves given volume and range"
+    default_params: { period: 14 }
+    integration_mode: both
+    filter_column_bull: "ease_of_movement_val"
+    filter_column_bear: "ease_of_movement_val"
+
+  - name: klinger_oscillator
+    category: volume
+    description: "Klinger Oscillator: long-short volume force trend oscillator with signal line"
+    default_params: { fast: 34, slow: 55, signal: 13 }
+    integration_mode: both
+    filter_column_bull: "klinger_hist"
+    filter_column_bear: "klinger_hist"
+
+  - name: chaikin_oscillator
+    category: volume
+    description: "Chaikin Oscillator: EMA spread of Accumulation Distribution Line"
+    default_params: { fast: 3, slow: 10 }
+    integration_mode: both
+    filter_column_bull: "chaikin_oscillator_val"
+    filter_column_bear: "chaikin_oscillator_val"
+
+  - name: atr_zscore
+    category: volatility
+    description: "ATR normalized as rolling z-score to detect volatility expansion and compression regimes"
+    default_params: { period: 14, z_period: 50 }
+    integration_mode: hmm
+    filter_column_bull: ""
+    filter_column_bear: ""
+
+  - name: normalized_atr
+    category: volatility
+    description: "Average True Range normalized by close price to compare volatility across levels"
+    default_params: { period: 14 }
+    integration_mode: hmm
+    filter_column_bull: ""
+    filter_column_bear: ""
+
+  - name: bollinger_percent_b
+    category: volatility
+    description: "Percent B: close position within Bollinger Bands for trend continuation and mean reversion"
+    default_params: { period: 20, std: 2.0 }
+    integration_mode: both
+    filter_column_bull: "bollinger_percent_b"
+    filter_column_bear: "bollinger_percent_b"
+
+  - name: bollinger_bandwidth
+    category: volatility
+    description: "Bollinger Band width normalized by midline; detects compression and expansion"
+    default_params: { period: 20, std: 2.0 }
+    integration_mode: hmm
+    filter_column_bull: ""
+    filter_column_bear: ""
+
+  - name: chaikin_volatility
+    category: volatility
+    description: "Chaikin Volatility: rate of change of EMA-smoothed high-low range"
+    default_params: { ema_period: 10, roc_period: 10 }
+    integration_mode: both
+    filter_column_bull: "chaikin_volatility_val"
+    filter_column_bear: "chaikin_volatility_val"
+
+  - name: historical_volatility
+    category: volatility
+    description: "Annualized rolling volatility of log returns for regime classification"
+    default_params: { period: 20 }
+    integration_mode: hmm
+    filter_column_bull: ""
+    filter_column_bear: ""
+
+  - name: volatility_ratio
+    category: volatility
+    description: "Short-term ATR divided by long-term ATR to identify volatility shocks"
+    default_params: { short_period: 14, long_period: 50 }
+    integration_mode: both
+    filter_column_bull: "volatility_ratio_val"
+    filter_column_bear: "volatility_ratio_val"
+
+  - name: vwap_proxy
+    category: volume
+    description: "Rolling VWAP-style proxy using price and tick volume for intraday value anchoring"
+    default_params: { period: 20 }
+    integration_mode: both
+    filter_column_bull: "vwap_proxy_diff"
+    filter_column_bear: "vwap_proxy_diff"
+
+  - name: vwap_bands
+    category: volume
+    description: "VWAP proxy with rolling standard deviation bands for stretched vs fair-value conditions"
+    default_params: { period: 20, band_std: 2.0 }
+    integration_mode: both
+    filter_column_bull: "vwap_bands_pos"
+    filter_column_bear: "vwap_bands_pos"
+
+  - name: hull_slope
+    category: trend
+    description: "Hull Moving Average slope and direction; low-lag trend persistence filter"
+    default_params: { period: 21 }
+    integration_mode: both
+    filter_column_bull: "hull_slope_val"
+    filter_column_bear: "hull_slope_val"
+
+  - name: kama
+    category: trend
+    description: "Kaufman Adaptive Moving Average: volatility-adjusted trend smoother"
+    default_params: { er_period: 10, fast: 2, slow: 30 }
+    integration_mode: both
+    filter_column_bull: "kama_slope"
+    filter_column_bear: "kama_slope"
+
+  - name: tema
+    category: trend
+    description: "Triple Exponential Moving Average: reduced-lag moving average trend filter"
+    default_params: { period: 20 }
+    integration_mode: both
+    filter_column_bull: "tema_slope"
+    filter_column_bear: "tema_slope"
+
+  - name: dema
+    category: trend
+    description: "Double Exponential Moving Average: faster moving average with reduced lag"
+    default_params: { period: 20 }
+    integration_mode: both
+    filter_column_bull: "dema_slope"
+    filter_column_bear: "dema_slope"
+
+  - name: vidya
+    category: trend
+    description: "Variable Index Dynamic Average: adaptive moving average using volatility efficiency"
+    default_params: { period: 14, volatility_period: 9 }
+    integration_mode: both
+    filter_column_bull: "vidya_slope"
+    filter_column_bear: "vidya_slope"
+
+  - name: zigzag
+    category: structure
+    description: "ZigZag swing structure filter that highlights directional leg persistence"
+    default_params: { deviation_pct: 1.0, depth: 12 }
+    integration_mode: both
+    filter_column_bull: "zigzag_trend"
+    filter_column_bear: "zigzag_trend"
+
+  - name: pivot_points
+    category: structure
+    description: "Classic pivot points with support and resistance context relative to current price"
+    default_params: { period: 1 }
+    integration_mode: both
+    filter_column_bull: "pivot_points_pos"
+    filter_column_bear: "pivot_points_pos"
+
+  - name: linear_regression_slope
+    category: trend
+    description: "Linear regression slope of price as direct estimate of local trend strength"
+    default_params: { period: 20 }
+    integration_mode: both
+    filter_column_bull: "linear_regression_slope_val"
+    filter_column_bear: "linear_regression_slope_val"
+
+  - name: linear_regression_r2
+    category: trend
+    description: "Coefficient of determination for rolling price regression; trend quality and smoothness"
+    default_params: { period: 20 }
+    integration_mode: hmm
+    filter_column_bull: ""
+    filter_column_bear: ""
+
+  - name: regression_channel
+    category: trend
+    description: "Rolling linear regression channel with price position inside channel"
+    default_params: { period: 50, band_std: 2.0 }
+    integration_mode: both
+    filter_column_bull: "regression_channel_pos"
+    filter_column_bear: "regression_channel_pos"
+
+  - name: price_volume_trend
+    category: volume
+    description: "Price Volume Trend cumulative flow indicator with directional slope filter"
+    default_params: { smooth_period: 10 }
+    integration_mode: both
+    filter_column_bull: "price_volume_trend_slope"
+    filter_column_bear: "price_volume_trend_slope"
+
+  - name: relative_vigor_index
+    category: momentum
+    description: "Relative Vigor Index: compares close-open strength relative to trading range"
+    default_params: { period: 10, signal: 4 }
+    integration_mode: both
+    filter_column_bull: "relative_vigor_index_val"
+    filter_column_bear: "relative_vigor_index_val"
+
+  - name: qstick
+    category: momentum
+    description: "Qstick: moving average of candlestick bodies for directional pressure"
+    default_params: { period: 10 }
+    integration_mode: both
+    filter_column_bull: "qstick_val"
+    filter_column_bear: "qstick_val"
+
+  - name: center_of_gravity
+    category: momentum
+    description: "Ehlers Center of Gravity oscillator for cycle turns and phase shifts"
+    default_params: { period: 10 }
+    integration_mode: both
+    filter_column_bull: "center_of_gravity_val"
+    filter_column_bear: "center_of_gravity_val"
+
+  - name: rainbow_moving_average
+    category: trend
+    description: "Stack of layered moving averages collapsed into a composite trend and compression signal"
+    default_params: { period: 2, layers: 10 }
+    integration_mode: both
+    filter_column_bull: "rainbow_moving_average_slope"
+    filter_column_bear: "rainbow_moving_average_slope"

@@ -79,9 +79,11 @@ if "current_run" not in st.session_state:
 
 # ---- Run backtest ----
 if config.get("_ui_run") and hmm is not None:
+    from trade2.backtesting.costs import doubled_costs
+    backtest_config = doubled_costs(config) if config.get("_ui_2x_cost") else config
     with st.spinner("Building features and running backtest..."):
         feat_1h, feat_5m = build_features(df_1h, df_5m, config)
-        run_result = generate_and_backtest(feat_1h, feat_5m, hmm, config, split)
+        run_result = generate_and_backtest(feat_1h, feat_5m, hmm, backtest_config, split)
         st.session_state["current_run"] = run_result
 
 if config.get("_ui_save") and st.session_state["current_run"] is not None:
@@ -107,7 +109,8 @@ with tab_backtest:
         trades = current.get("trades")
 
         # Row 1: Metric cards
-        st.subheader(f"Performance ({split.upper()})")
+        cost_label = " — 2x Cost Sensitivity" if config.get("_ui_2x_cost") else ""
+        st.subheader(f"Performance ({split.upper()}){cost_label}")
         render_metric_cards(metrics, comparison=cmp_metrics)
 
         # Row 2: Charts

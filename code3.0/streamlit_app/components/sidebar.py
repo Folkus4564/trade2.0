@@ -111,8 +111,11 @@ def render_sidebar(config: Dict[str, Any]) -> Dict[str, Any]:
         smc5m["swing_left_bars"]  = st.slider("Swing Left Bars (5M)",  2, 20, int(smc5m.get("swing_left_bars",  10)), 1, key="smc5m_left")
         smc5m["swing_right_bars"] = st.slider("Swing Right Bars (5M)", 2, 20, int(smc5m.get("swing_right_bars", 10)), 1, key="smc5m_right")
 
-    # ---- Action buttons ----
+    # ---- Cost sensitivity ----
     st.sidebar.divider()
+    cfg["_ui_2x_cost"] = st.sidebar.checkbox("2x Cost Sensitivity", value=False)
+
+    # ---- Action buttons ----
     run_clicked  = st.sidebar.button("Run Backtest", type="primary", use_container_width=True)
     save_clicked = st.sidebar.button("Save for Comparison", use_container_width=True)
 

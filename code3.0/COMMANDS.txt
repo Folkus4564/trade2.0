@@ -30,3 +30,8 @@ trade2 --optimize --trials 200 --retrain-model --export-approved                
 trade2 --config configs/xauusd_mtf.yaml                                         # use multi-timeframe override config on top of base.yaml
 
 trade2 --config configs/xauusd_mtf.yaml --retrain-model --skip-walk-forward     # multi-TF config + retrain + skip walk-forward
+
+  cd C:/Users/LENOVO/Desktop/trade2.0/code3.0                                                       
+  trade2 --config artefacts/approved_strategies/xauusd_mtf_hmm1h_smc5m_2026_03_18/config.yaml       
+  --model-path artefacts/models/golden/hmm_1h_3states_2026_03_17_ret89pct_sh4.10.pkl            
+
