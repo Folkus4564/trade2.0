@@ -230,7 +230,7 @@ def run_pipeline(
     # ---- 1. Load data ----
     regime_tf = config.get("strategy", {}).get("regime_timeframe", "1H")
     signal_tf = config.get("strategy", {}).get("signal_timeframe", "5M")
-    _TF_TO_FREQ = {"5M": "5min", "15M": "15min", "30M": "30min", "1H": "1h", "4H": "4h"}
+    _TF_TO_FREQ = {"1M": "1min", "5M": "5min", "15M": "15min", "30M": "30min", "1H": "1h", "4H": "4h"}
 
     print(f"[pipeline] Loading regime TF ({regime_tf}) data...")
     train_reg, val_reg, test_reg = load_split_tf(regime_tf, config)
@@ -238,10 +238,20 @@ def run_pipeline(
     raw_1h_path = DATA_ROOT / config.get("data", {}).get("raw_1h_csv", "data/raw/XAUUSD_1H_2019_2025.csv")
 
     # Resolve raw CSV for regime TF (needed for walk-forward which reloads its own data)
-    _TF_TO_RAW_KEY = {"1H": "raw_1h_csv", "5M": "raw_5m_csv", "4H": "raw_4h_csv"}
-    _TF_DEFAULTS   = {"1H": "data/raw/XAUUSD_1H_2019_2025.csv",
-                      "5M": "data/raw/XAUUSD_5M_2019_2025.csv",
-                      "4H": "data/raw/XAUUSD_4H_2019_2025.csv"}
+    _TF_TO_RAW_KEY = {
+        "1H":  "raw_1h_csv",
+        "5M":  "raw_5m_csv",
+        "4H":  "raw_4h_csv",
+        "1M":  "raw_1m_csv",
+        "15M": "raw_15m_csv",
+    }
+    _TF_DEFAULTS = {
+        "1H":  "data/raw/XAUUSD_1H_2019_2025.csv",
+        "5M":  "data/raw/XAUUSD_5M_2019_2025.csv",
+        "4H":  "data/raw/XAUUSD_4H_2019_2025.csv",
+        "1M":  "code3.0/data/raw/XAUUSD_1M_2019_2026.csv",
+        "15M": "data/raw/XAUUSD_15M_2019_2026.csv",
+    }
     raw_regime_path = DATA_ROOT / config.get("data", {}).get(
         _TF_TO_RAW_KEY.get(regime_tf, "raw_1h_csv"),
         _TF_DEFAULTS.get(regime_tf, "data/raw/XAUUSD_1H_2019_2025.csv"),
@@ -508,12 +518,17 @@ def run_pipeline(
     wf_results = None
     if walk_forward:
         print("\n[pipeline] Running walk-forward validation...")
-        raw_5m_path = DATA_ROOT / config["data"]["raw_5m_csv"] if mode == "multi_tf" else None
+        if mode == "multi_tf":
+            _sig_raw_key = _TF_TO_RAW_KEY.get(signal_tf, "raw_5m_csv")
+            _sig_default = _TF_DEFAULTS.get(signal_tf, "data/raw/XAUUSD_5M_2019_2025.csv")
+            raw_signal_path = DATA_ROOT / config["data"].get(_sig_raw_key, _sig_default)
+        else:
+            raw_signal_path = None
         _wf_freq = _TF_TO_FREQ.get(signal_tf, "5min") if mode == "multi_tf" else _TF_TO_FREQ.get(regime_tf, "1h")
         wf_results = run_walk_forward(
             strategy_name, config, raw_regime_path, dirs["backtests"],
             freq=_wf_freq,
-            raw_signal_path=raw_5m_path,
+            raw_signal_path=raw_signal_path,
         )
         if wf_results.get("available"):
             print(f"[pipeline] Walk-forward: mean_sharpe={wf_results.get('mean_sharpe',0):.3f} | positive={wf_results.get('pct_positive',0)*100:.0f}%")
