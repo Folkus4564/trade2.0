@@ -65,12 +65,16 @@ def load_split_tf(
     raw_dir = project_root / "data" / "raw"
 
     # Allow config to override known paths
-    if timeframe == "1H" and data_cfg.get("raw_1h_csv"):
-        csv_path = project_root / data_cfg["raw_1h_csv"]
-        if not csv_path.exists():
-            csv_path = _find_raw_csv(timeframe, raw_dir)
-    elif timeframe == "5M" and data_cfg.get("raw_5m_csv"):
-        csv_path = project_root / data_cfg["raw_5m_csv"]
+    _tf_key_map = {
+        "1H":  "raw_1h_csv",
+        "5M":  "raw_5m_csv",
+        "4H":  "raw_4h_csv",
+        "1M":  "raw_1m_csv",
+        "15M": "raw_15m_csv",
+    }
+    cfg_key = _tf_key_map.get(timeframe)
+    if cfg_key and data_cfg.get(cfg_key):
+        csv_path = project_root / data_cfg[cfg_key]
         if not csv_path.exists():
             csv_path = _find_raw_csv(timeframe, raw_dir)
     else:
@@ -82,10 +86,13 @@ def load_split_tf(
     policy = data_cfg.get("missing_bar_policy", "none")
     if policy == "forward_fill":
         if timeframe == "1H":
-            df = fill_gaps(df, freq="1h", max_gap_bars=5)
+            df = fill_gaps(df, freq="1h",    max_gap_bars=5)
         elif timeframe == "5M":
-            # Fill only micro-gaps (<=3 bars = <=15 min); weekends stay excluded
-            df = fill_gaps(df, freq="5min", max_gap_bars=3)
+            df = fill_gaps(df, freq="5min",  max_gap_bars=3)
+        elif timeframe == "15M":
+            df = fill_gaps(df, freq="15min", max_gap_bars=3)
+        elif timeframe == "1M":
+            df = fill_gaps(df, freq="1min",  max_gap_bars=2)
 
     train, val, test = split_by_dates(
         df,
