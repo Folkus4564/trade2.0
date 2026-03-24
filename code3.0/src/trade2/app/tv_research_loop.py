@@ -67,7 +67,6 @@ def _llm_complete(
     """Unified LLM call: returns response text for Claude or DeepSeek."""
     if provider == "claude":
         kwargs = dict(model=model, max_tokens=max_tokens,
-                      thinking={"type": "adaptive"},
                       messages=[{"role": "user", "content": user_msg}])
         if system:
             kwargs["system"] = system

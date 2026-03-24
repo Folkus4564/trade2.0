@@ -1,0 +1,279 @@
+[
+  {
+    "id": 1,
+    "name": "donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T15:43:55",
+    "duration_seconds": 4327,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\donchian_breakout_momentum.py",
+    "config_override": {
+      "tv_indicators": {
+        "donchian_breakout_momentum": {
+          "enabled": true,
+          "integration_mode": "hmm_signal_source",
+          "period": 8,
+          "vol_period": 6,
+          "vol_mult": 1.5,
+          "filter_column_bull": "donchian_breakout_momentum_bull",
+          "filter_column_bear": "donchian_breakout_momentum_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0,
+      "sharpe_ratio": 0.0,
+      "max_drawdown": 0.0,
+      "total_trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 0.0,
+        "annualized_return": 0.0,
+        "max_drawdown": 0.0
+      }
+    },
+    "trades_per_day": 0.0,
+    "baseline_metrics": {
+      "annualized_return": 0.091,
+      "total_return": 0.0913,
+      "annualized_volatility": 0.0639,
+      "sharpe_ratio": 0.7687,
+      "sortino_ratio": 0.3076,
+      "max_drawdown": -0.0358,
+      "calmar_ratio": 2.5377,
+      "n_years": 1.0,
+      "total_trades": 209,
+      "win_rate": 0.4833,
+      "profit_factor": 1.2606,
+      "avg_win_loss_ratio": 1.3479,
+      "avg_trade_pnl": 43.7007,
+      "avg_trade_duration_bars": 29.19,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8188,
+      "information_ratio": -3.2855,
+      "exit_reasons": {
+        "sl": 97,
+        "tp": 92,
+        "signal": 20
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9534,
+        "random_median_return": 0.3474,
+        "random_p95_sharpe": 3.2581,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 0.2191,
+        "annualized_return": 0.0533,
+        "max_drawdown": -0.0376
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.091,
+      "sharpe_delta": -0.7687,
+      "dd_delta": 0.0358
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm_signal_source",
+    "mode_results": {
+      "signal_source": {
+        "test_metrics": {
+          "annualized_return": -0.0012,
+          "total_return": -0.079,
+          "annualized_volatility": 0.003,
+          "sharpe_ratio": -13.5826,
+          "sortino_ratio": -4.0742,
+          "max_drawdown": -0.0822,
+          "calmar_ratio": -0.0143,
+          "n_years": 70.22,
+          "total_trades": 476,
+          "win_rate": 0.3992,
+          "profit_factor": 0.7287,
+          "avg_win_loss_ratio": 1.0969,
+          "avg_trade_pnl": -16.6067,
+          "avg_trade_duration_bars": 37.08,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0093,
+          "information_ratio": -0.2959,
+          "exit_reasons": {
+            "sl": 261,
+            "tp": 166,
+            "signal": 49
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.184,
+            "random_median_return": 0.0036,
+            "random_p95_sharpe": 0.3422,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -13.6197,
+            "annualized_return": -0.0023,
+            "max_drawdown": -0.1492
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 1.5740740740740742,
+        "config": {
+          "tv_indicators": {
+            "donchian_breakout_momentum": {
+              "enabled": true,
+              "integration_mode": "signal_source",
+              "period": 8,
+              "vol_period": 6,
+              "vol_mult": 1.5,
+              "filter_column_bull": "donchian_breakout_momentum_bull",
+              "filter_column_bear": "donchian_breakout_momentum_bear"
+            }
+          }
+        }
+      },
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.0007,
+          "total_return": -0.0482,
+          "annualized_volatility": 0.0074,
+          "sharpe_ratio": -5.4752,
+          "sortino_ratio": -1.961,
+          "max_drawdown": -0.1097,
+          "calmar_ratio": -0.0064,
+          "n_years": 70.22,
+          "total_trades": 762,
+          "win_rate": 0.4383,
+          "profit_factor": 0.9283,
+          "avg_win_loss_ratio": 1.1895,
+          "avg_trade_pnl": -6.3243,
+          "avg_trade_duration_bars": 42.47,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0089,
+          "information_ratio": -0.281,
+          "exit_reasons": {
+            "sl": 386,
+            "tp": 270,
+            "signal": 106
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1806,
+            "random_median_return": 0.0035,
+            "random_p95_sharpe": 0.3107,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -5.6868,
+            "annualized_return": -0.0025,
+            "max_drawdown": -0.1982
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 2.51984126984127,
+        "config": {
+          "tv_indicators": {
+            "donchian_breakout_momentum": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 8,
+              "vol_period": 6,
+              "vol_mult": 1.5,
+              "filter_column_bull": "donchian_breakout_momentum_bull",
+              "filter_column_bear": "donchian_breakout_momentum_bear"
+            }
+          }
+        }
+      },
+      "hmm_signal_source": {
+        "test_metrics": {
+          "annualized_return": 0.0,
+          "sharpe_ratio": 0.0,
+          "max_drawdown": 0.0,
+          "total_trades": 0,
+          "win_rate": 0.0,
+          "profit_factor": 0.0,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.0,
+            "annualized_return": 0.0,
+            "max_drawdown": 0.0
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 0.0,
+        "config": {
+          "tv_indicators": {
+            "donchian_breakout_momentum": {
+              "enabled": true,
+              "integration_mode": "hmm_signal_source",
+              "period": 8,
+              "vol_period": 6,
+              "vol_mult": 1.5,
+              "filter_column_bull": "donchian_breakout_momentum_bull",
+              "filter_column_bear": "donchian_breakout_momentum_bear"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 2,
+    "name": "vwap_deviation_bounce",
+    "category": "mean_reversion",
+    "technique": "vwap_pullback",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-24T16:56:03",
+    "duration_seconds": 177,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {
+      "annualized_return": 0.091,
+      "total_return": 0.0913,
+      "annualized_volatility": 0.0639,
+      "sharpe_ratio": 0.7687,
+      "sortino_ratio": 0.3076,
+      "max_drawdown": -0.0358,
+      "calmar_ratio": 2.5377,
+      "n_years": 1.0,
+      "total_trades": 209,
+      "win_rate": 0.4833,
+      "profit_factor": 1.2606,
+      "avg_win_loss_ratio": 1.3479,
+      "avg_trade_pnl": 43.7007,
+      "avg_trade_duration_bars": 29.19,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8188,
+      "information_ratio": -3.2855,
+      "exit_reasons": {
+        "sl": 97,
+        "tp": 92,
+        "signal": 20
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9534,
+        "random_median_return": 0.3474,
+        "random_p95_sharpe": 3.2581,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 0.2191,
+        "annualized_return": 0.0533,
+        "max_drawdown": -0.0376
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: invalid syntax (<unknown>, line 155)"
+  }
+]

@@ -1,0 +1,12 @@
+Live Performance Report — hmm1h_smc5m_89pct
+Generated: 2026-03-19T04:07:19.548694
+=======================================================
+  Trades:             0
+  Total P&L:          $0.00
+  Total Return:       0.00%
+  Ann. Return:        0.00%
+  Sharpe Ratio:       0.00
+  Max Drawdown:       0.00%
+  Win Rate:           0.0%
+  Profit Factor:      0.00
+  Avg P&L/Trade:      $0.00

@@ -16,6 +16,7 @@ import logging
 import os
 import sys
 import time
+from datetime import timedelta
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -34,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 
 def _setup_logging() -> None:
-    """Configure logging once the artefacts directory is confirmed to exist."""
+    """Log to file only — console is reserved for the clean status display."""
     log_dir = _CODE3_DIR / "artefacts" / "live_trades"
     log_dir.mkdir(parents=True, exist_ok=True)
     logging.basicConfig(
@@ -42,7 +43,6 @@ def _setup_logging() -> None:
         format  = "%(asctime)s [%(levelname)s] %(name)s: %(message)s",
         datefmt = "%Y-%m-%d %H:%M:%S",
         handlers=[
-            logging.StreamHandler(sys.stdout),
             logging.FileHandler(log_dir / "live.log", mode="a"),
         ],
     )
@@ -69,7 +69,136 @@ def _require_env(key: str) -> str:
         raise EnvironmentError(
             f"Required env var {key} not set. Add it to code3.0/.env"
         )
+    if val.startswith("YOUR_") or val.upper() in ("YOUR_LOGIN_HERE", "YOUR_PASSWORD_HERE"):
+        raise EnvironmentError(
+            f"{key} still has placeholder value '{val}'. "
+            f"Open code3.0/.env and replace it with your actual Exness MT5 credentials."
+        )
     return val
+
+
+_BANGKOK = timedelta(hours=7)
+
+
+def _sleep_until_next_5m_bar(buffer_sec: float = 2.0) -> None:
+    """
+    Sleep until just after the next 5M bar close boundary (:00, :05, :10, ...).
+
+    Uses UTC for boundary calculation (5M marks are timezone-universal).
+    Logs the wakeup time in Bangkok time (UTC+7) for readability.
+    """
+    from datetime import datetime, timezone
+    now_utc = datetime.now(tz=timezone.utc)
+    total_secs = now_utc.minute * 60 + now_utc.second + now_utc.microsecond / 1_000_000
+    secs_since_boundary = total_secs % 300          # 300s = 5 min
+    secs_to_sleep = 300 - secs_since_boundary + buffer_sec
+
+    now_bkk    = now_utc.astimezone(timezone(_BANGKOK))
+    wakeup_bkk = (now_utc + timedelta(seconds=secs_to_sleep)).astimezone(timezone(_BANGKOK))
+    logger.info(
+        f"[Main] Next 5M bar at Bangkok {wakeup_bkk.strftime('%H:%M:%S')} "
+        f"(sleeping {secs_to_sleep:.1f}s, now {now_bkk.strftime('%H:%M:%S')} BKK)"
+    )
+    time.sleep(secs_to_sleep)
+
+
+def _print_dashboard(df_5m, strategies, live_cfg, replay_trades=None) -> None:
+    """Print clean 3-block dashboard to console after every new bar."""
+    import warnings
+    import pandas as pd
+    warnings.filterwarnings("ignore")
+
+    from datetime import datetime, timezone
+    now_bkk = datetime.now(tz=timezone(_BANGKOK)).strftime("%Y-%m-%d %H:%M:%S BKK")
+
+    pd.set_option("display.float_format", "{:.2f}".format)
+    pd.set_option("display.width", 140)
+
+    print("\033[2J\033[H", end="")   # clear terminal
+
+    # ── 1. Price dataframe (last 10 closed 5M bars) ──────────────────────
+    print(f"{'='*70}")
+    print(f"XAUUSD LIVE  |  {now_bkk}")
+    print(f"{'='*70}")
+    print(df_5m.tail(10).to_string())
+    print()
+
+    # ── 2. Trade history (5-day replay simulation + live trades) ─────────
+    all_rows = []
+
+    # Replay simulation results (passed in from startup)
+    if replay_trades:
+        sim_df = pd.DataFrame(replay_trades)
+        if not sim_df.empty:
+            sim_df["source"]     = "replay"
+            sim_df["entry_time"] = pd.to_datetime(sim_df["entry_time"], utc=True)
+            # Compute confidence-scaled lots + actual pnl
+            def _replay_lots(row):
+                conf = row.get("bear_prob", 0.0) if row.get("direction") == "short" else row.get("bull_prob", 0.0)
+                raw  = 0.01 + 0.01 * conf
+                lot  = round(round(raw, 2) / 0.01) * 0.01
+                return max(0.01, min(0.02, round(lot, 2)))
+            sim_df["lots"] = sim_df.apply(_replay_lots, axis=1)
+            sim_df["pnl"]  = (sim_df["pnl_1lot"] * sim_df["lots"]).round(2)
+            all_rows.append(sim_df)
+
+    # Live trades (from CSV, grows as trades fire)
+    for strat in strategies:
+        csv = _PROJECT_ROOT / live_cfg["reporting"]["trade_log_dir"] / f"live_trades_{strat.name}.csv"
+        if csv.exists():
+            try:
+                df = pd.read_csv(csv)
+                if not df.empty and "entry_time" in df.columns:
+                    df["source"]     = "LIVE"
+                    df["strategy"]   = strat.name.replace("hmm1h_smc5m_", "")
+                    df["entry_time"] = pd.to_datetime(df["entry_time"], utc=True)
+                    all_rows.append(df)
+            except Exception:
+                pass
+
+    print(f"{'='*70}")
+    print("TRADE HISTORY  (5-day replay simulation + live trades)")
+    print(f"{'='*70}")
+    if all_rows:
+        combined = pd.concat(all_rows, ignore_index=True)
+        combined = combined.sort_values("entry_time", ascending=False)
+        combined["entry_time"] = combined["entry_time"].dt.strftime("%m-%d %H:%M")
+        combined["exit_time"]  = pd.to_datetime(
+            combined["exit_time"], utc=True, errors="coerce"
+        ).dt.strftime("%m-%d %H:%M")
+        for col in ["entry_price", "exit_price", "sl", "tp", "pnl_1lot", "pnl"]:
+            if col in combined.columns:
+                combined[col] = pd.to_numeric(combined[col], errors="coerce").map(
+                    lambda x: f"{x:.2f}" if pd.notna(x) else ""
+                )
+        cols = [c for c in ["entry_time", "exit_time", "source", "strategy",
+                             "direction", "entry_price", "sl", "tp",
+                             "exit_price", "exit_reason", "lots", "pnl"] if c in combined.columns]
+        print(combined[cols].to_string(index=False))
+        if "pnl" in combined.columns:
+            total = pd.to_numeric(combined["pnl"], errors="coerce").sum()
+            print(f"\n  Total PnL: ${total:+.2f}")
+    else:
+        print("  No trades found.")
+    print()
+
+    # ── 3. Current regime + open positions ───────────────────────────────
+    print(f"{'='*70}")
+    print("CURRENT REGIME + POSITIONS")
+    print(f"{'='*70}")
+    for strat in strategies:
+        label = strat.name.replace("hmm1h_smc5m_", "")
+        pm    = strat.position_manager
+        # Get last pipeline state stored on strat (we'll read from position_manager)
+        if pm.ticket is not None:
+            pos_str = (f"OPEN {pm.direction.upper()} | entry={pm.entry_price:.2f} "
+                       f"sl={pm.sl:.2f} tp={pm.tp:.2f} | since {pm.entry_time}")
+        else:
+            pos_str = "FLAT"
+        print(f"  [{label}]  regime={getattr(strat, '_last_regime', '?')}  "
+              f"bull={getattr(strat, '_last_bull_prob', 0.0):.2f}  "
+              f"bear={getattr(strat, '_last_bear_prob', 0.0):.2f}  |  {pos_str}")
+    print(f"{'='*70}")
 
 
 def build_connector():
@@ -135,18 +264,30 @@ def main() -> None:
     parser.add_argument("--strategy-a-only", action="store_true", help="Run only the 89% return strategy")
     parser.add_argument("--strategy-b-only", action="store_true", help="Run only the 49% return strategy")
     parser.add_argument("--report",          action="store_true", help="Generate performance report and exit")
-    parser.add_argument("--retrain",         action="store_true", help="Force immediate HMM retrain then continue")
+    parser.add_argument("--retrain",         action="store_true", help="Force immediate HMM retrain (uses mode from config, default=warm)")
+    parser.add_argument("--warm-update",    action="store_true", help="Force immediate warm update (adapt existing model to recent bars)")
+    parser.add_argument("--full-retrain",   action="store_true", help="Force immediate full retrain from scratch, ignoring mode config")
+    parser.add_argument("--status",          action="store_true", help="Print dataframe, last trade, current condition then exit")
     parser.add_argument("--config",          default=None,        help="Path to live.yaml (default: configs/live.yaml)")
     args = parser.parse_args()
+
+    # ------------------------------------------------------------------
+    # Status-only mode (3 clean outputs, no logging noise)
+    # ------------------------------------------------------------------
+    if args.status:
+        from trade2.live.status import run_status
+        run_status()
+        return
 
     # ------------------------------------------------------------------
     # Load env and config
     # ------------------------------------------------------------------
     _load_env()
 
-    from trade2.config.loader import load_config
-    cfg_path  = Path(args.config) if args.config else _PROJECT_ROOT / "configs" / "live.yaml"
-    live_cfg  = load_config(cfg_path)
+    import yaml
+    cfg_path = Path(args.config) if args.config else _PROJECT_ROOT / "configs" / "live.yaml"
+    with open(cfg_path) as f:
+        live_cfg = yaml.safe_load(f)
 
     # Determine which strategies to run
     run_a = not args.strategy_b_only
@@ -213,19 +354,29 @@ def main() -> None:
 
     poll_interval = live_section["poll_interval_sec"]
     report_interval_sec = live_cfg["reporting"]["interval_hours"] * 3600
-    last_report_time    = 0.0
+    last_report_time    = time.monotonic()   # skip immediate report on startup
 
     # ------------------------------------------------------------------
     # Force retrain if requested on CLI
     # ------------------------------------------------------------------
-    if args.retrain:
-        logger.info("[Main] --retrain flag set: forcing retrain before main loop")
+    if args.full_retrain:
+        logger.info("[Main] --full-retrain flag set: forcing full scratch retrain")
+        retrainer.force_retrain(full=True)
+    elif args.warm_update:
+        logger.info("[Main] --warm-update flag set: forcing warm update")
+        retrainer.force_retrain(full=False)
+    elif args.retrain:
+        logger.info("[Main] --retrain flag set: forcing retrain (mode from config)")
         retrainer.force_retrain()
 
     # ------------------------------------------------------------------
     # Main polling loop
     # ------------------------------------------------------------------
     logger.info(f"[Main] Starting main loop | poll={poll_interval}s | strategies={[s.name for s in strategies]}")
+
+    # Show initial dashboard before first bar
+    df_1h_init, df_5m_init = bar_manager.get_windows()
+    _print_dashboard(df_5m_init, strategies, live_cfg)
 
     try:
         while True:
@@ -246,12 +397,14 @@ def main() -> None:
             # Check for scheduled weekly retrain
             retrainer.check_and_retrain_if_due()
 
+            # Sleep until next 5M bar boundary (Bangkok time, :00 :05 :10 ... aligned)
+            _sleep_until_next_5m_bar()
+
             # Poll for new 5M bar
             try:
                 new_bar = bar_manager.poll_new_bar()
             except Exception as e:
                 logger.error(f"[Main] bar_manager.poll_new_bar() error: {e}", exc_info=True)
-                time.sleep(poll_interval)
                 continue
 
             if new_bar:
@@ -271,6 +424,12 @@ def main() -> None:
                     except Exception as e:
                         logger.error(f"[Main] {strat.name} on_bar error: {e}", exc_info=True)
 
+                # Refresh console dashboard
+                try:
+                    _print_dashboard(df_5m, strategies, live_cfg)
+                except Exception as e:
+                    logger.warning(f"[Main] Dashboard error: {e}")
+
             # Periodic performance report
             now = time.monotonic()
             if (now - last_report_time) >= report_interval_sec:
@@ -280,8 +439,6 @@ def main() -> None:
                     except Exception as e:
                         logger.warning(f"[Main] Report error for {strat.name}: {e}")
                 last_report_time = now
-
-            time.sleep(poll_interval)
 
     except KeyboardInterrupt:
         logger.info("[Main] Shutdown requested (KeyboardInterrupt)")

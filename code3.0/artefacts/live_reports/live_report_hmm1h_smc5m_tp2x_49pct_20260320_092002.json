@@ -1,0 +1,47 @@
+{
+  "strategy_name": "hmm1h_smc5m_tp2x_49pct",
+  "report_time": "2026-03-20T09:20:02.818317",
+  "total_trades": 7,
+  "total_pnl": 694.95,
+  "total_return": 0.0454,
+  "annualized_return": 5.4067,
+  "sharpe_ratio": 104.3856,
+  "max_drawdown": 0.0,
+  "win_rate": 1.0,
+  "profit_factor": 694950000000.0,
+  "avg_pnl_per_trade": 99.28,
+  "avg_duration_min": 1240.0,
+  "n_years_live": 0.024,
+  "backtest_comparison": {
+    "annualized_return": {
+      "live": 5.4067,
+      "backtest": 0.49,
+      "delta_pct": 1003.4
+    },
+    "sharpe_ratio": {
+      "live": 104.3856,
+      "backtest": 3.16,
+      "delta_pct": 3203.3
+    },
+    "max_drawdown": {
+      "live": 0.0,
+      "backtest": -0.1,
+      "delta_pct": 100.0
+    },
+    "win_rate": {
+      "live": 1.0,
+      "backtest": 0.5,
+      "delta_pct": 100.0
+    },
+    "profit_factor": {
+      "live": 694950000000.0,
+      "backtest": 2.0,
+      "delta_pct": 34747499999900.0
+    },
+    "total_trades": {
+      "live": 7,
+      "backtest": 50,
+      "delta_pct": -86.0
+    }
+  }
+}

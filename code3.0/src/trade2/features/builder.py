@@ -35,15 +35,16 @@ def add_1h_features(df: pd.DataFrame, config: Dict[str, Any] = None) -> pd.DataF
         dc_period =feat_cfg.get("dc_period",  40),
     )
 
-    df_feat = add_smc_features(
-        df_feat,
-        ob_validity     = smc_cfg.get("ob_validity_bars",    20),
-        fvg_validity    = smc_cfg.get("fvg_validity_bars",   15),
-        swing_lookback  = smc_cfg.get("swing_lookback_bars", 20),
-        ob_impulse_bars = smc_cfg.get("ob_impulse_bars",     3),
-        ob_impulse_mult = smc_cfg.get("ob_impulse_mult",     1.5),
-        atr_period      = feat_cfg.get("atr_period",         14),
-    )
+    if smc_cfg.get("enabled", True):
+        df_feat = add_smc_features(
+            df_feat,
+            ob_validity     = smc_cfg.get("ob_validity_bars",    20),
+            fvg_validity    = smc_cfg.get("fvg_validity_bars",   15),
+            swing_lookback  = smc_cfg.get("swing_lookback_bars", 20),
+            ob_impulse_bars = smc_cfg.get("ob_impulse_bars",     3),
+            ob_impulse_mult = smc_cfg.get("ob_impulse_mult",     1.5),
+            atr_period      = feat_cfg.get("atr_period",         14),
+        )
 
     if (config or {}).get("smc_luxalgo", {}).get("enabled", False):
         from trade2.features.smc_luxalgo import add_luxalgo_smc_features
@@ -116,18 +117,17 @@ def add_5m_features(df: pd.DataFrame, config: Dict[str, Any] = None, dc_period: 
     out["bb_pos"] = (close.values - bb_lower) / (bb_upper - bb_lower + 1e-10)
 
     # SMC features (with 5M-specific validity periods)
-    out = add_smc_features(
-        out,
-        ob_validity     = smc_cfg.get("ob_validity_bars",    60),
-        fvg_validity    = smc_cfg.get("fvg_validity_bars",   36),
-        swing_lookback  = smc_cfg.get("swing_lookback_bars", 60),
-        ob_impulse_bars = smc_cfg.get("ob_impulse_bars",     3),
-        ob_impulse_mult = smc_cfg.get("ob_impulse_mult",     1.5),
-        atr_period      = atr_period,
-    )
-
-    # Pin bar features
-    out = add_pin_bar_features(out)
+    if smc_cfg.get("enabled", True):
+        out = add_smc_features(
+            out,
+            ob_validity     = smc_cfg.get("ob_validity_bars",    60),
+            fvg_validity    = smc_cfg.get("fvg_validity_bars",   36),
+            swing_lookback  = smc_cfg.get("swing_lookback_bars", 60),
+            ob_impulse_bars = smc_cfg.get("ob_impulse_bars",     3),
+            ob_impulse_mult = smc_cfg.get("ob_impulse_mult",     1.5),
+            atr_period      = atr_period,
+        )
+        out = add_pin_bar_features(out)
 
     if (config or {}).get("smc_luxalgo_5m", {}).get("enabled", False):
         from trade2.features.smc_luxalgo import add_luxalgo_smc_features

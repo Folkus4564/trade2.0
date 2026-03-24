@@ -105,15 +105,30 @@ def trend_strategy(
         dc_long  = dc_long  & in_sess
         dc_short = dc_short & in_sess
 
-    # ---- Combine ----
-    sig_long  = (bull_regime & macro_bull & dc_long  & smc_long  & bos_long).astype(int)
-    sig_short = (bear_regime & macro_bear & dc_short & smc_short & bos_short).astype(int)
+    # ---- TV signal_source: OR additional trigger signals from TV indicators ----
+    tv_long  = pd.Series(False, index=out.index)
+    tv_short = pd.Series(False, index=out.index)
+    for tv_name, tv_ind_cfg in (config or {}).get("tv_indicators", {}).items():
+        if not isinstance(tv_ind_cfg, dict) or not tv_ind_cfg.get("enabled", False):
+            continue
+        if tv_ind_cfg.get("integration_mode") not in ("signal_source", "hmm_signal_source"):
+            continue
+        bull_col = f"{tv_name}_bull"
+        bear_col = f"{tv_name}_bear"
+        if bull_col in out.columns:
+            tv_long  = tv_long  | out[bull_col].astype(bool)
+        if bear_col in out.columns:
+            tv_short = tv_short | out[bear_col].astype(bool)
+
+    # ---- Combine: TV OR'd with Donchian as entry trigger ----
+    sig_long  = (bull_regime & macro_bull & (dc_long  | tv_long)  & smc_long  & bos_long).astype(int)
+    sig_short = (bear_regime & macro_bear & (dc_short | tv_short) & smc_short & bos_short).astype(int)
 
     # ---- Exit: regime flip (transition-based) ----
     # Fires ONCE when bull_regime transitions True->False (regime just ended).
     # Transition-based prevents OR-merge in router from exiting on every non-regime bar.
-    exit_long  = (bull_regime.shift(1).fillna(False) & ~bull_regime).astype(int)
-    exit_short = (bear_regime.shift(1).fillna(False) & ~bear_regime).astype(int)
+    exit_long  = (bull_regime.shift(1).infer_objects(copy=False).fillna(False) & ~bull_regime).astype(int)
+    exit_short = (bear_regime.shift(1).infer_objects(copy=False).fillna(False) & ~bear_regime).astype(int)
 
     # ---- Confidence-based sizing ----
     min_prob   = tcfg["min_prob"]

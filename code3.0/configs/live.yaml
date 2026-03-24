@@ -4,7 +4,7 @@
 # ============================================================
 
 live:
-  symbol: "XAUUSD"
+  symbol: "XAUUSDc"
   poll_interval_sec: 10
   bar_warmup_1h: 200
   bar_warmup_5m: 300
@@ -16,12 +16,16 @@ strategies:
     model_path:  "artefacts/models/golden/hmm_1h_3states_2026_03_17_ret89pct_sh4.10.pkl"
     magic_number: 100001
     base_allocation_frac: 0.10   # 10% of equity per trade
+    lot_min: 0.1               # lot size at confidence=0.0
+    lot_max: 0.2         # lot size at confidence=1.0
 
   - name: "hmm1h_smc5m_tp2x_49pct"
     config_path: "artefacts/approved_strategies/xauusd_mtf_hmm1h_smc5m_tp2x_49pct_2026_03_18/config.yaml"
     model_path:  "artefacts/approved_strategies/xauusd_mtf_hmm1h_smc5m_tp2x_49pct_2026_03_18/model.pkl"
     magic_number: 100002
     base_allocation_frac: 0.10
+    lot_min: 0.1           # lot size at confidence=0.0
+    lot_max: 0.2          # lot size at confidence=1.0
 
 reporting:
   interval_hours: 4
@@ -30,9 +34,12 @@ reporting:
 
 retrain:
   enabled: true
-  schedule: "sunday"        # day of week for scheduled retrain
+  schedule: "sunday"
+  mode: "warm"              # "warm" = adapt existing model to recent bars; "full" = retrain from scratch
+  warm_update_bars: 6500    # ~9 months of 1H bars used for warm update
+  warm_n_iter: 30           # EM iterations for warm update (fewer than full retrain)
   close_positions: true     # close open positions before model swap
   backup_model: true        # auto-backup old model before overwrite
   live_data_dir: "data/raw" # where accumulated live bars are stored
-  original_1h: "data/raw/XAUUSD_1H_2019_2025.csv"
+  original_1h: "data/raw/XAUUSD_1H_2019_2026_full.csv"
   original_5m: "data/raw/XAUUSD_5M_2019_2025.csv"

@@ -1,0 +1,42 @@
+{
+  "strategy": "xauusd_mtf_hmm1h_smc5m",
+  "date": "2026_03_19",
+  "source_model": "C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\artefacts\\models\\hmm_1h_3states.pkl",
+  "test_metrics": {
+    "annualized_return": 0.2225,
+    "total_return": 0.2234,
+    "annualized_volatility": 0.1057,
+    "sharpe_ratio": 1.5744,
+    "sortino_ratio": 0.9282,
+    "max_drawdown": -0.0561,
+    "calmar_ratio": 3.9676,
+    "n_years": 1.0,
+    "total_trades": 142,
+    "win_rate": 0.5915,
+    "profit_factor": 1.5445,
+    "avg_win_loss_ratio": 1.0665,
+    "avg_trade_pnl": 157.3366,
+    "avg_trade_duration_bars": 91.88,
+    "benchmark_return": 0.9098,
+    "alpha_vs_benchmark": -0.6874,
+    "information_ratio": -2.7579,
+    "exit_reasons": {
+      "tp": 78,
+      "signal": 40,
+      "sl": 23,
+      "end_of_data": 1
+    },
+    "random_baseline": {
+      "random_median_sharpe": 1.7602,
+      "random_median_return": 0.3133,
+      "random_p95_sharpe": 3.0513,
+      "n_simulations": 200
+    },
+    "beats_random_baseline": false,
+    "cost_sensitivity_2x": {
+      "sharpe_ratio": 1.2805,
+      "annualized_return": 0.185,
+      "max_drawdown": -0.0591
+    }
+  }
+}

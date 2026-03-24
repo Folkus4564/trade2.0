@@ -9,6 +9,9 @@ Usage:
     trade2 --retrain-model --export-approved
 """
 
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 import argparse
 import hashlib
 import json
@@ -278,7 +281,8 @@ def run_pipeline(
     test_reg_feat  = _load_features_cached(test_reg,  regime_tf, "test",  config, dirs, add_1h_features)
 
     if mode == "multi_tf":
-        print(f"[pipeline] Engineering {signal_tf} signal features (SMC)...")
+        smc_label = "" if not config.get("smc_5m", {}).get("enabled", True) else " (SMC)"
+        print(f"[pipeline] Engineering {signal_tf} signal features{smc_label}...")
         train_sig_feat = _load_features_cached(train_sig_raw, signal_tf, "train", config, dirs, add_5m_features, dc_period=p["dc_period"])
         val_sig_feat   = _load_features_cached(val_sig_raw,   signal_tf, "val",   config, dirs, add_5m_features, dc_period=p["dc_period"])
         test_sig_feat  = _load_features_cached(test_sig_raw,  signal_tf, "test",  config, dirs, add_5m_features, dc_period=p["dc_period"])

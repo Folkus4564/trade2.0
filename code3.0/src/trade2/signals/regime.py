@@ -43,21 +43,25 @@ def forward_fill_1h_regime(
     bull_prob_s = pd.Series(hmm_bull_prob,     index=hmm_index, name="bull_prob")
     bear_prob_s = pd.Series(hmm_bear_prob,     index=hmm_index, name="bear_prob")
 
-    out["regime"]    = regime_s.reindex(out.index).ffill().fillna("sideways")
-    out["bull_prob"] = bull_prob_s.reindex(out.index).ffill().fillna(0.0)
-    out["bear_prob"] = bear_prob_s.reindex(out.index).ffill().fillna(0.0)
+    # Use method="ffill" so that each 5M bar gets the regime from the most
+    # recently completed 1H bar even when no 1H timestamp falls exactly on a
+    # 5M boundary (which is always the case in live MT5 where the two windows
+    # may not share any exact timestamps).
+    out["regime"]    = regime_s.reindex(out.index, method="ffill").fillna("sideways")
+    out["bull_prob"] = bull_prob_s.reindex(out.index, method="ffill").fillna(0.0)
+    out["bear_prob"] = bear_prob_s.reindex(out.index, method="ffill").fillna(0.0)
 
     if hmm_sideways_prob is not None:
         sideways_s = pd.Series(hmm_sideways_prob, index=hmm_index, name="sideways_prob")
-        out["sideways_prob"] = sideways_s.reindex(out.index).ffill().fillna(0.0)
+        out["sideways_prob"] = sideways_s.reindex(out.index, method="ffill").fillna(0.0)
 
     if atr_1h is not None:
-        out["atr_1h"] = atr_1h.reindex(out.index).ffill().fillna(atr_1h.median())
+        out["atr_1h"] = atr_1h.reindex(out.index, method="ffill").fillna(atr_1h.median())
 
     if hma_rising is not None:
-        out["hma_rising"] = hma_rising.reindex(out.index).ffill().fillna(False).astype(bool)
+        out["hma_rising"] = hma_rising.reindex(out.index, method="ffill").fillna(False).astype(bool)
 
     if price_above_hma is not None:
-        out["price_above_hma"] = price_above_hma.reindex(out.index).ffill().fillna(False).astype(bool)
+        out["price_above_hma"] = price_above_hma.reindex(out.index, method="ffill").fillna(False).astype(bool)
 
     return out

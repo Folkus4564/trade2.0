@@ -113,9 +113,10 @@ def compute_random_baseline(
     sharpes, ann_rets = [], []
     avg_hold = max(n_bars // max(n_trades, 1), 1)
 
+    population = max(n_bars - avg_hold, n_trades)  # guard: never sample more than population
     for _ in range(n_simulations):
         equity = np.ones(n_bars) * init_cash
-        entry_bars = sorted(rng.choice(n_bars - avg_hold, size=n_trades, replace=False))
+        entry_bars = sorted(rng.choice(population, size=n_trades, replace=False))
         trade_set  = set(entry_bars)
         exit_set   = {b + avg_hold for b in entry_bars}
 

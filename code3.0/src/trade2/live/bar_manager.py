@@ -36,8 +36,8 @@ class BarManager:
         connector: MT5Connector,
         warmup_1h: int = 200,
         warmup_5m: int = 300,
-        stale_warn_sec: int = 120,
-        stale_pause_sec: int = 600,
+        stale_warn_sec: int = 280,
+        stale_pause_sec: int = 900,
     ):
         self.connector      = connector
         self.warmup_1h      = warmup_1h

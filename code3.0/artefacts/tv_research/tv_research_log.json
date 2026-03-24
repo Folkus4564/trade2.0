@@ -5539,5 +5539,3526 @@
     "verdict": null,
     "is_best": false,
     "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+  },
+  {
+    "id": 87,
+    "name": "supertrend",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-18T22:20:51",
+    "duration_seconds": 70,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 88,
+    "name": "squeeze_momentum",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-18T22:22:01",
+    "duration_seconds": 1188,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\squeeze_momentum.py",
+    "config_override": {
+      "tv_indicators": {
+        "squeeze_momentum": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "bb_length": 20,
+          "kc_length": 20,
+          "kc_mult": 1.5,
+          "filter_column_bull": "squeeze_momentum_hist",
+          "filter_column_bear": "squeeze_momentum_hist"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.1964,
+      "total_return": 0.1973,
+      "annualized_volatility": 0.1201,
+      "sharpe_ratio": 1.2206,
+      "sortino_ratio": 0.8334,
+      "max_drawdown": -0.0827,
+      "calmar_ratio": 2.3739,
+      "n_years": 1.0,
+      "total_trades": 193,
+      "win_rate": 0.6218,
+      "profit_factor": 1.2952,
+      "avg_win_loss_ratio": 0.7879,
+      "avg_trade_pnl": 102.2126,
+      "avg_trade_duration_bars": 103.09,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.7134,
+      "information_ratio": -2.8623,
+      "exit_reasons": {
+        "tp": 116,
+        "sl": 46,
+        "signal": 30,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8846,
+        "random_median_return": 0.3397,
+        "random_p95_sharpe": 3.4691,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 0.8688,
+        "annualized_return": 0.147,
+        "max_drawdown": -0.086
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.3095,
+      "sharpe_delta": -0.41880000000000006,
+      "dd_delta": 0.055499999999999994
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": 0.1964,
+          "total_return": 0.1973,
+          "annualized_volatility": 0.1201,
+          "sharpe_ratio": 1.2206,
+          "sortino_ratio": 0.8334,
+          "max_drawdown": -0.0827,
+          "calmar_ratio": 2.3739,
+          "n_years": 1.0,
+          "total_trades": 193,
+          "win_rate": 0.6218,
+          "profit_factor": 1.2952,
+          "avg_win_loss_ratio": 0.7879,
+          "avg_trade_pnl": 102.2126,
+          "avg_trade_duration_bars": 103.09,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.7134,
+          "information_ratio": -2.8623,
+          "exit_reasons": {
+            "tp": 116,
+            "sl": 46,
+            "signal": 30,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.8846,
+            "random_median_return": 0.3397,
+            "random_p95_sharpe": 3.4691,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.8688,
+            "annualized_return": 0.147,
+            "max_drawdown": -0.086
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "squeeze_momentum": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "bb_length": 20,
+              "kc_length": 20,
+              "kc_mult": 1.5,
+              "filter_column_bull": "squeeze_momentum_hist",
+              "filter_column_bear": "squeeze_momentum_hist"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 12 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": 0.1473,
+          "total_return": 0.1479,
+          "annualized_volatility": 0.1152,
+          "sharpe_ratio": 0.9032,
+          "sortino_ratio": 0.5535,
+          "max_drawdown": -0.0766,
+          "calmar_ratio": 1.9225,
+          "n_years": 1.0,
+          "total_trades": 169,
+          "win_rate": 0.6036,
+          "profit_factor": 1.251,
+          "avg_win_loss_ratio": 0.8217,
+          "avg_trade_pnl": 87.5263,
+          "avg_trade_duration_bars": 100.41,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.7625,
+          "information_ratio": -3.0594,
+          "exit_reasons": {
+            "tp": 97,
+            "sl": 40,
+            "signal": 31,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.7981,
+            "random_median_return": 0.3326,
+            "random_p95_sharpe": 3.4596,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.5825,
+            "annualized_return": 0.1057,
+            "max_drawdown": -0.0789
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "squeeze_momentum": {
+              "enabled": true,
+              "integration_mode": "both",
+              "bb_length": 20,
+              "kc_length": 20,
+              "kc_mult": 1.5,
+              "filter_column_bull": "squeeze_momentum_hist",
+              "filter_column_bear": "squeeze_momentum_hist"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 89,
+    "name": "ichimoku",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-18T22:41:50",
+    "duration_seconds": 69,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 90,
+    "name": "donchian_width",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-18T22:42:59",
+    "duration_seconds": 68,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 91,
+    "name": "keltner_channel",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-18T22:44:08",
+    "duration_seconds": 933,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\keltner_channel.py",
+    "config_override": {
+      "tv_indicators": {
+        "keltner_channel": {
+          "enabled": true,
+          "integration_mode": "both",
+          "period": 20,
+          "atr_mult": 2.0,
+          "filter_column_bull": "keltner_channel_pos",
+          "filter_column_bear": "keltner_channel_pos"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0,
+      "sharpe_ratio": 0.0,
+      "max_drawdown": 0.0,
+      "total_trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 0.0,
+        "annualized_return": 0.0,
+        "max_drawdown": 0.0
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.5059,
+      "sharpe_delta": -1.6394,
+      "dd_delta": 0.1382
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "both",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.0582,
+          "total_return": -0.0584,
+          "annualized_volatility": 0.1272,
+          "sharpe_ratio": -0.722,
+          "sortino_ratio": -0.3312,
+          "max_drawdown": -0.1146,
+          "calmar_ratio": -0.5076,
+          "n_years": 1.0,
+          "total_trades": 56,
+          "win_rate": 0.5179,
+          "profit_factor": 0.862,
+          "avg_win_loss_ratio": 0.8025,
+          "avg_trade_pnl": -104.293,
+          "avg_trade_duration_bars": 156.46,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.968,
+          "information_ratio": -3.8839,
+          "exit_reasons": {
+            "tp": 27,
+            "sl": 22,
+            "signal": 6,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.722,
+            "random_median_return": 0.3254,
+            "random_p95_sharpe": 3.2518,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -0.8169,
+            "annualized_return": -0.0694,
+            "max_drawdown": -0.122
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "keltner_channel": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 20,
+              "atr_mult": 2.0,
+              "filter_column_bull": "keltner_channel_pos",
+              "filter_column_bear": "keltner_channel_pos"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 12 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": 0.0,
+          "sharpe_ratio": 0.0,
+          "max_drawdown": 0.0,
+          "total_trades": 0,
+          "win_rate": 0.0,
+          "profit_factor": 0.0,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.0,
+            "annualized_return": 0.0,
+            "max_drawdown": 0.0
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "keltner_channel": {
+              "enabled": true,
+              "integration_mode": "both",
+              "period": 20,
+              "atr_mult": 2.0,
+              "filter_column_bull": "keltner_channel_pos",
+              "filter_column_bear": "keltner_channel_pos"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 92,
+    "name": "parabolic_sar",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-18T22:59:41",
+    "duration_seconds": 68,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 93,
+    "name": "aroon",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-18T23:00:50",
+    "duration_seconds": 68,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 94,
+    "name": "stochastic_rsi",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-18T23:01:59",
+    "duration_seconds": 70,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 95,
+    "name": "fisher_transform",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-18T23:03:09",
+    "duration_seconds": 70,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 96,
+    "name": "vortex",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-18T23:04:19",
+    "duration_seconds": 404,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\vortex.py",
+    "config_override": null,
+    "test_metrics": {},
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.5059,
+      "sharpe_delta": -1.6394,
+      "dd_delta": 0.1382
+    },
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "hmm": {
+        "error": "Found array with 0 sample(s) (shape=(0, 11)) while a minimum of 1 is required by StandardScaler."
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 12 features as input."
+      },
+      "both": {
+        "error": "Found array with 0 sample(s) (shape=(0, 11)) while a minimum of 1 is required by StandardScaler."
+      }
+    }
+  },
+  {
+    "id": 97,
+    "name": "trix",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-18T23:11:04",
+    "duration_seconds": 458,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\trix.py",
+    "config_override": null,
+    "test_metrics": {},
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.5059,
+      "sharpe_delta": -1.6394,
+      "dd_delta": 0.1382
+    },
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "hmm": {
+        "error": "Found array with 0 sample(s) (shape=(0, 11)) while a minimum of 1 is required by StandardScaler."
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 12 features as input."
+      },
+      "both": {
+        "error": "Found array with 0 sample(s) (shape=(0, 11)) while a minimum of 1 is required by StandardScaler."
+      }
+    }
+  },
+  {
+    "id": 98,
+    "name": "elder_ray",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-18T23:18:42",
+    "duration_seconds": 1046,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\elder_ray.py",
+    "config_override": {
+      "tv_indicators": {
+        "elder_ray": {
+          "enabled": true,
+          "integration_mode": "both",
+          "period": 13,
+          "filter_column_bull": "elder_ray_bull_power",
+          "filter_column_bear": "elder_ray_bear_power"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.002,
+      "total_return": -0.002,
+      "annualized_volatility": 0.0933,
+      "sharpe_ratio": -0.4032,
+      "sortino_ratio": -0.1846,
+      "max_drawdown": -0.0887,
+      "calmar_ratio": -0.0224,
+      "n_years": 1.0,
+      "total_trades": 101,
+      "win_rate": 0.4752,
+      "profit_factor": 0.9951,
+      "avg_win_loss_ratio": 1.0987,
+      "avg_trade_pnl": -1.9712,
+      "avg_trade_duration_bars": 75.57,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9118,
+      "information_ratio": -3.6584,
+      "exit_reasons": {
+        "tp": 43,
+        "signal": 42,
+        "sl": 15,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8532,
+        "random_median_return": 0.3342,
+        "random_p95_sharpe": 3.1773,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.6374,
+        "annualized_return": -0.0236,
+        "max_drawdown": -0.0891
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.5079,
+      "sharpe_delta": -2.0426,
+      "dd_delta": 0.04949999999999999
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "both",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.0034,
+          "total_return": -0.0035,
+          "annualized_volatility": 0.0934,
+          "sharpe_ratio": -0.4187,
+          "sortino_ratio": -0.1929,
+          "max_drawdown": -0.0887,
+          "calmar_ratio": -0.0388,
+          "n_years": 1.0,
+          "total_trades": 102,
+          "win_rate": 0.4706,
+          "profit_factor": 0.9915,
+          "avg_win_loss_ratio": 1.1154,
+          "avg_trade_pnl": -3.3853,
+          "avg_trade_duration_bars": 77.13,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.9133,
+          "information_ratio": -3.6642,
+          "exit_reasons": {
+            "tp": 43,
+            "signal": 42,
+            "sl": 16,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.7823,
+            "random_median_return": 0.3252,
+            "random_p95_sharpe": 3.2255,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -0.6538,
+            "annualized_return": -0.0251,
+            "max_drawdown": -0.0891
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "elder_ray": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 13,
+              "filter_column_bull": "elder_ray_bull_power",
+              "filter_column_bear": "elder_ray_bear_power"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 12 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": -0.002,
+          "total_return": -0.002,
+          "annualized_volatility": 0.0933,
+          "sharpe_ratio": -0.4032,
+          "sortino_ratio": -0.1846,
+          "max_drawdown": -0.0887,
+          "calmar_ratio": -0.0224,
+          "n_years": 1.0,
+          "total_trades": 101,
+          "win_rate": 0.4752,
+          "profit_factor": 0.9951,
+          "avg_win_loss_ratio": 1.0987,
+          "avg_trade_pnl": -1.9712,
+          "avg_trade_duration_bars": 75.57,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.9118,
+          "information_ratio": -3.6584,
+          "exit_reasons": {
+            "tp": 43,
+            "signal": 42,
+            "sl": 15,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.8532,
+            "random_median_return": 0.3342,
+            "random_p95_sharpe": 3.1773,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -0.6374,
+            "annualized_return": -0.0236,
+            "max_drawdown": -0.0891
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "elder_ray": {
+              "enabled": true,
+              "integration_mode": "both",
+              "period": 13,
+              "filter_column_bull": "elder_ray_bull_power",
+              "filter_column_bear": "elder_ray_bear_power"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 99,
+    "name": "mass_index",
+    "category": "volatility",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-18T23:36:09",
+    "duration_seconds": 68,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 100,
+    "name": "schaff_trend_cycle",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-18T23:37:17",
+    "duration_seconds": 67,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 101,
+    "name": "connors_rsi",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-18T23:38:25",
+    "duration_seconds": 68,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 102,
+    "name": "chande_momentum",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-18T23:39:34",
+    "duration_seconds": 1120,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\chande_momentum.py",
+    "config_override": {
+      "tv_indicators": {
+        "chande_momentum": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "period": 14,
+          "filter_column_bull": "chande_momentum_val",
+          "filter_column_bear": "chande_momentum_val"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.0068,
+      "total_return": -0.0068,
+      "annualized_volatility": 0.0067,
+      "sharpe_ratio": -7.0199,
+      "sortino_ratio": -0.5831,
+      "max_drawdown": -0.0097,
+      "calmar_ratio": -0.7016,
+      "n_years": 1.0,
+      "total_trades": 3,
+      "win_rate": 0.3333,
+      "profit_factor": 0.0681,
+      "avg_win_loss_ratio": 0.1363,
+      "avg_trade_pnl": -226.7953,
+      "avg_trade_duration_bars": 77.67,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9166,
+      "information_ratio": -3.6776,
+      "exit_reasons": {
+        "sl": 2,
+        "signal": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 2.0139,
+        "random_median_return": 0.2277,
+        "random_p95_sharpe": 3.195,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -7.02,
+        "annualized_return": -0.0071,
+        "max_drawdown": -0.0098
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.5127,
+      "sharpe_delta": -8.6593,
+      "dd_delta": 0.1285
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.0068,
+          "total_return": -0.0068,
+          "annualized_volatility": 0.0067,
+          "sharpe_ratio": -7.0199,
+          "sortino_ratio": -0.5831,
+          "max_drawdown": -0.0097,
+          "calmar_ratio": -0.7016,
+          "n_years": 1.0,
+          "total_trades": 3,
+          "win_rate": 0.3333,
+          "profit_factor": 0.0681,
+          "avg_win_loss_ratio": 0.1363,
+          "avg_trade_pnl": -226.7953,
+          "avg_trade_duration_bars": 77.67,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.9166,
+          "information_ratio": -3.6776,
+          "exit_reasons": {
+            "sl": 2,
+            "signal": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 2.0139,
+            "random_median_return": 0.2277,
+            "random_p95_sharpe": 3.195,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -7.02,
+            "annualized_return": -0.0071,
+            "max_drawdown": -0.0098
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "chande_momentum": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 14,
+              "filter_column_bull": "chande_momentum_val",
+              "filter_column_bear": "chande_momentum_val"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 10 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": -0.0074,
+          "total_return": -0.0075,
+          "annualized_volatility": 0.0042,
+          "sharpe_ratio": -11.3475,
+          "sortino_ratio": -0.5099,
+          "max_drawdown": -0.0106,
+          "calmar_ratio": -0.7037,
+          "n_years": 1.0,
+          "total_trades": 2,
+          "win_rate": 0.0,
+          "profit_factor": 0.0,
+          "avg_win_loss_ratio": 0.0,
+          "avg_trade_pnl": -373.0031,
+          "avg_trade_duration_bars": 30.5,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.9172,
+          "information_ratio": -3.6802,
+          "exit_reasons": {
+            "sl": 1,
+            "signal": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.9007,
+            "random_median_return": 0.245,
+            "random_p95_sharpe": 2.4596,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -11.7082,
+            "annualized_return": -0.0079,
+            "max_drawdown": -0.0108
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "chande_momentum": {
+              "enabled": true,
+              "integration_mode": "both",
+              "period": 14,
+              "filter_column_bull": "chande_momentum_val",
+              "filter_column_bear": "chande_momentum_val"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 103,
+    "name": "coppock_curve",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-18T23:58:14",
+    "duration_seconds": 1061,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\coppock_curve.py",
+    "config_override": {
+      "tv_indicators": {
+        "coppock_curve": {
+          "enabled": true,
+          "integration_mode": "both",
+          "wma_period": 10,
+          "roc_long": 14,
+          "roc_short": 11,
+          "filter_column_bull": "coppock_curve_val",
+          "filter_column_bear": "coppock_curve_val"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0439,
+      "total_return": 0.044,
+      "annualized_volatility": 0.132,
+      "sharpe_ratio": 0.0883,
+      "sortino_ratio": 0.0175,
+      "max_drawdown": -0.1155,
+      "calmar_ratio": 0.3798,
+      "n_years": 1.0,
+      "total_trades": 216,
+      "win_rate": 0.5278,
+      "profit_factor": 1.0556,
+      "avg_win_loss_ratio": 0.9444,
+      "avg_trade_pnl": 20.3893,
+      "avg_trade_duration_bars": 85.96,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8659,
+      "information_ratio": -3.4744,
+      "exit_reasons": {
+        "tp": 108,
+        "signal": 62,
+        "sl": 46
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.7962,
+        "random_median_return": 0.3337,
+        "random_p95_sharpe": 3.2719,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.2687,
+        "annualized_return": -0.0042,
+        "max_drawdown": -0.1196
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.462,
+      "sharpe_delta": -1.5511,
+      "dd_delta": 0.022699999999999984
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "both",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": 0.0173,
+          "total_return": 0.0173,
+          "annualized_volatility": 0.1332,
+          "sharpe_ratio": -0.105,
+          "sortino_ratio": -0.104,
+          "max_drawdown": -0.1155,
+          "calmar_ratio": 0.1495,
+          "n_years": 1.0,
+          "total_trades": 221,
+          "win_rate": 0.5158,
+          "profit_factor": 1.0213,
+          "avg_win_loss_ratio": 0.9586,
+          "avg_trade_pnl": 7.8459,
+          "avg_trade_duration_bars": 88.22,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.8925,
+          "information_ratio": -3.5811,
+          "exit_reasons": {
+            "tp": 111,
+            "signal": 60,
+            "sl": 50
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.7679,
+            "random_median_return": 0.3213,
+            "random_p95_sharpe": 3.2571,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -0.469,
+            "annualized_return": -0.0309,
+            "max_drawdown": -0.1196
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "coppock_curve": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "wma_period": 10,
+              "roc_long": 14,
+              "roc_short": 11,
+              "filter_column_bull": "coppock_curve_val",
+              "filter_column_bear": "coppock_curve_val"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 10 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": 0.0439,
+          "total_return": 0.044,
+          "annualized_volatility": 0.132,
+          "sharpe_ratio": 0.0883,
+          "sortino_ratio": 0.0175,
+          "max_drawdown": -0.1155,
+          "calmar_ratio": 0.3798,
+          "n_years": 1.0,
+          "total_trades": 216,
+          "win_rate": 0.5278,
+          "profit_factor": 1.0556,
+          "avg_win_loss_ratio": 0.9444,
+          "avg_trade_pnl": 20.3893,
+          "avg_trade_duration_bars": 85.96,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.8659,
+          "information_ratio": -3.4744,
+          "exit_reasons": {
+            "tp": 108,
+            "signal": 62,
+            "sl": 46
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.7962,
+            "random_median_return": 0.3337,
+            "random_p95_sharpe": 3.2719,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -0.2687,
+            "annualized_return": -0.0042,
+            "max_drawdown": -0.1196
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "coppock_curve": {
+              "enabled": true,
+              "integration_mode": "both",
+              "wma_period": 10,
+              "roc_long": 14,
+              "roc_short": 11,
+              "filter_column_bull": "coppock_curve_val",
+              "filter_column_bear": "coppock_curve_val"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 104,
+    "name": "dpo",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "hmm",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-19T00:15:56",
+    "duration_seconds": 169,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "TestRun: RuntimeError: 'close'"
+  },
+  {
+    "id": 105,
+    "name": "williams_alligator",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-19T00:18:46",
+    "duration_seconds": 62,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 106,
+    "name": "ehlers_filter",
+    "category": "trend",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-19T00:19:48",
+    "duration_seconds": 189,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: unterminated triple-quoted string literal (detected at line 10) (<unknown>, line 7)"
+  },
+  {
+    "id": 107,
+    "name": "cci",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-19T00:22:58",
+    "duration_seconds": 1083,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\cci.py",
+    "config_override": {
+      "tv_indicators": {
+        "cci": {
+          "enabled": true,
+          "integration_mode": "both",
+          "period": 20,
+          "filter_column_bull": "cci_val",
+          "filter_column_bear": "cci_val"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0307,
+      "total_return": 0.0309,
+      "annualized_volatility": 0.1209,
+      "sharpe_ratio": -0.0199,
+      "sortino_ratio": -0.0359,
+      "max_drawdown": -0.0965,
+      "calmar_ratio": 0.3184,
+      "n_years": 1.0,
+      "total_trades": 144,
+      "win_rate": 0.5278,
+      "profit_factor": 1.0583,
+      "avg_win_loss_ratio": 0.9469,
+      "avg_trade_pnl": 21.4272,
+      "avg_trade_duration_bars": 83.08,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8791,
+      "information_ratio": -3.5271,
+      "exit_reasons": {
+        "tp": 69,
+        "signal": 52,
+        "sl": 23
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8044,
+        "random_median_return": 0.3233,
+        "random_p95_sharpe": 3.3063,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.28,
+        "annualized_return": -0.0012,
+        "max_drawdown": -0.0969
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.4752,
+      "sharpe_delta": -1.6593,
+      "dd_delta": 0.04169999999999999
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "both",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": 0.0273,
+          "total_return": 0.0274,
+          "annualized_volatility": 0.1209,
+          "sharpe_ratio": -0.0472,
+          "sortino_ratio": -0.0491,
+          "max_drawdown": -0.0965,
+          "calmar_ratio": 0.2832,
+          "n_years": 1.0,
+          "total_trades": 145,
+          "win_rate": 0.5241,
+          "profit_factor": 1.0516,
+          "avg_win_loss_ratio": 0.9547,
+          "avg_trade_pnl": 18.9241,
+          "avg_trade_duration_bars": 82.53,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.8825,
+          "information_ratio": -3.5408,
+          "exit_reasons": {
+            "tp": 69,
+            "signal": 53,
+            "sl": 23
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.9154,
+            "random_median_return": 0.3462,
+            "random_p95_sharpe": 3.2755,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -0.3091,
+            "annualized_return": -0.0047,
+            "max_drawdown": -0.0969
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "cci": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 20,
+              "filter_column_bull": "cci_val",
+              "filter_column_bear": "cci_val"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 10 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": 0.0307,
+          "total_return": 0.0309,
+          "annualized_volatility": 0.1209,
+          "sharpe_ratio": -0.0199,
+          "sortino_ratio": -0.0359,
+          "max_drawdown": -0.0965,
+          "calmar_ratio": 0.3184,
+          "n_years": 1.0,
+          "total_trades": 144,
+          "win_rate": 0.5278,
+          "profit_factor": 1.0583,
+          "avg_win_loss_ratio": 0.9469,
+          "avg_trade_pnl": 21.4272,
+          "avg_trade_duration_bars": 83.08,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.8791,
+          "information_ratio": -3.5271,
+          "exit_reasons": {
+            "tp": 69,
+            "signal": 52,
+            "sl": 23
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.8044,
+            "random_median_return": 0.3233,
+            "random_p95_sharpe": 3.3063,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -0.28,
+            "annualized_return": -0.0012,
+            "max_drawdown": -0.0969
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "cci": {
+              "enabled": true,
+              "integration_mode": "both",
+              "period": 20,
+              "filter_column_bull": "cci_val",
+              "filter_column_bear": "cci_val"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 108,
+    "name": "williams_r",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-19T00:41:01",
+    "duration_seconds": 1008,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\williams_r.py",
+    "config_override": {
+      "tv_indicators": {
+        "williams_r": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "period": 14,
+          "filter_column_bull": "williams_r_val",
+          "filter_column_bear": "williams_r_val"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.0336,
+      "total_return": -0.0337,
+      "annualized_volatility": 0.1227,
+      "sharpe_ratio": -0.5432,
+      "sortino_ratio": -0.2704,
+      "max_drawdown": -0.0965,
+      "calmar_ratio": -0.3479,
+      "n_years": 1.0,
+      "total_trades": 143,
+      "win_rate": 0.4825,
+      "profit_factor": 0.9389,
+      "avg_win_loss_ratio": 1.0069,
+      "avg_trade_pnl": -23.5745,
+      "avg_trade_duration_bars": 73.34,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9434,
+      "information_ratio": -3.7852,
+      "exit_reasons": {
+        "signal": 64,
+        "tp": 58,
+        "sl": 20,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8154,
+        "random_median_return": 0.3356,
+        "random_p95_sharpe": 3.1975,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.7951,
+        "annualized_return": -0.063,
+        "max_drawdown": -0.0969
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.5395,
+      "sharpe_delta": -2.1826,
+      "dd_delta": 0.04169999999999999
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.0336,
+          "total_return": -0.0337,
+          "annualized_volatility": 0.1227,
+          "sharpe_ratio": -0.5432,
+          "sortino_ratio": -0.2704,
+          "max_drawdown": -0.0965,
+          "calmar_ratio": -0.3479,
+          "n_years": 1.0,
+          "total_trades": 143,
+          "win_rate": 0.4825,
+          "profit_factor": 0.9389,
+          "avg_win_loss_ratio": 1.0069,
+          "avg_trade_pnl": -23.5745,
+          "avg_trade_duration_bars": 73.34,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.9434,
+          "information_ratio": -3.7852,
+          "exit_reasons": {
+            "signal": 64,
+            "tp": 58,
+            "sl": 20,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.8154,
+            "random_median_return": 0.3356,
+            "random_p95_sharpe": 3.1975,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -0.7951,
+            "annualized_return": -0.063,
+            "max_drawdown": -0.0969
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "williams_r": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 14,
+              "filter_column_bull": "williams_r_val",
+              "filter_column_bear": "williams_r_val"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 10 features as input."
+      },
+      "both": {
+        "error": "a must be a positive integer unless no samples are taken"
+      }
+    }
+  },
+  {
+    "id": 109,
+    "name": "tsi",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-19T00:57:50",
+    "duration_seconds": 1067,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\tsi.py",
+    "config_override": {
+      "tv_indicators": {
+        "tsi": {
+          "enabled": true,
+          "integration_mode": "both",
+          "long_period": 25,
+          "short_period": 13,
+          "signal": 7,
+          "filter_column_bull": "tsi_hist",
+          "filter_column_bear": "tsi_hist"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.0375,
+      "total_return": -0.0377,
+      "annualized_volatility": 0.1299,
+      "sharpe_ratio": -0.5372,
+      "sortino_ratio": -0.2985,
+      "max_drawdown": -0.1165,
+      "calmar_ratio": -0.322,
+      "n_years": 1.0,
+      "total_trades": 109,
+      "win_rate": 0.5596,
+      "profit_factor": 0.9209,
+      "avg_win_loss_ratio": 0.7246,
+      "avg_trade_pnl": -34.5461,
+      "avg_trade_duration_bars": 110.7,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9473,
+      "information_ratio": -3.8009,
+      "exit_reasons": {
+        "tp": 44,
+        "signal": 34,
+        "sl": 30,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9544,
+        "random_median_return": 0.341,
+        "random_p95_sharpe": 3.2961,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.7192,
+        "annualized_return": -0.06,
+        "max_drawdown": -0.1329
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.5434,
+      "sharpe_delta": -2.1766,
+      "dd_delta": 0.021699999999999983
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "both",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.0907,
+          "total_return": -0.0911,
+          "annualized_volatility": 0.1339,
+          "sharpe_ratio": -0.9422,
+          "sortino_ratio": -0.5089,
+          "max_drawdown": -0.1476,
+          "calmar_ratio": -0.6149,
+          "n_years": 1.0,
+          "total_trades": 133,
+          "win_rate": 0.5564,
+          "profit_factor": 0.8432,
+          "avg_win_loss_ratio": 0.6723,
+          "avg_trade_pnl": -68.4821,
+          "avg_trade_duration_bars": 99.75,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -1.0006,
+          "information_ratio": -4.0145,
+          "exit_reasons": {
+            "tp": 53,
+            "signal": 42,
+            "sl": 37,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.8814,
+            "random_median_return": 0.343,
+            "random_p95_sharpe": 3.3787,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -1.1566,
+            "annualized_return": -0.1164,
+            "max_drawdown": -0.1676
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "tsi": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "long_period": 25,
+              "short_period": 13,
+              "signal": 7,
+              "filter_column_bull": "tsi_hist",
+              "filter_column_bear": "tsi_hist"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 11 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": -0.0375,
+          "total_return": -0.0377,
+          "annualized_volatility": 0.1299,
+          "sharpe_ratio": -0.5372,
+          "sortino_ratio": -0.2985,
+          "max_drawdown": -0.1165,
+          "calmar_ratio": -0.322,
+          "n_years": 1.0,
+          "total_trades": 109,
+          "win_rate": 0.5596,
+          "profit_factor": 0.9209,
+          "avg_win_loss_ratio": 0.7246,
+          "avg_trade_pnl": -34.5461,
+          "avg_trade_duration_bars": 110.7,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.9473,
+          "information_ratio": -3.8009,
+          "exit_reasons": {
+            "tp": 44,
+            "signal": 34,
+            "sl": 30,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.9544,
+            "random_median_return": 0.341,
+            "random_p95_sharpe": 3.2961,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -0.7192,
+            "annualized_return": -0.06,
+            "max_drawdown": -0.1329
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "tsi": {
+              "enabled": true,
+              "integration_mode": "both",
+              "long_period": 25,
+              "short_period": 13,
+              "signal": 7,
+              "filter_column_bull": "tsi_hist",
+              "filter_column_bear": "tsi_hist"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 110,
+    "name": "awesome_oscillator",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-19T01:15:38",
+    "duration_seconds": 557,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\awesome_oscillator.py",
+    "config_override": null,
+    "test_metrics": {},
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.5059,
+      "sharpe_delta": -1.6394,
+      "dd_delta": 0.1382
+    },
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "hmm": {
+        "error": "'Close'"
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 15 features as input."
+      },
+      "both": {
+        "error": "'Close'"
+      }
+    }
+  },
+  {
+    "id": 111,
+    "name": "ultimate_oscillator",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-19T01:24:55",
+    "duration_seconds": 62,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 112,
+    "name": "ppo",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-19T01:25:57",
+    "duration_seconds": 61,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Translation returned empty output"
+  },
+  {
+    "id": 113,
+    "name": "roc",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-19T01:26:58",
+    "duration_seconds": 1052,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\roc.py",
+    "config_override": {
+      "tv_indicators": {
+        "roc": {
+          "enabled": true,
+          "integration_mode": "both",
+          "period": 12,
+          "filter_column_bull": "roc_val",
+          "filter_column_bear": "roc_val"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.0262,
+      "total_return": -0.0263,
+      "annualized_volatility": 0.1334,
+      "sharpe_ratio": -0.4318,
+      "sortino_ratio": -0.2752,
+      "max_drawdown": -0.0965,
+      "calmar_ratio": -0.271,
+      "n_years": 1.0,
+      "total_trades": 138,
+      "win_rate": 0.5652,
+      "profit_factor": 0.9536,
+      "avg_win_loss_ratio": 0.7335,
+      "avg_trade_pnl": -19.025,
+      "avg_trade_duration_bars": 112.8,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.936,
+      "information_ratio": -3.7554,
+      "exit_reasons": {
+        "tp": 64,
+        "sl": 41,
+        "signal": 32,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.7572,
+        "random_median_return": 0.3202,
+        "random_p95_sharpe": 3.2849,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.657,
+        "annualized_return": -0.0549,
+        "max_drawdown": -0.1123
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.5321,
+      "sharpe_delta": -2.0712,
+      "dd_delta": 0.04169999999999999
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "both",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.0903,
+          "total_return": -0.0906,
+          "annualized_volatility": 0.1374,
+          "sharpe_ratio": -0.9106,
+          "sortino_ratio": -0.5464,
+          "max_drawdown": -0.1472,
+          "calmar_ratio": -0.6133,
+          "n_years": 1.0,
+          "total_trades": 151,
+          "win_rate": 0.5497,
+          "profit_factor": 0.8599,
+          "avg_win_loss_ratio": 0.7045,
+          "avg_trade_pnl": -60.0115,
+          "avg_trade_duration_bars": 111.01,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -1.0001,
+          "information_ratio": -4.0126,
+          "exit_reasons": {
+            "tp": 68,
+            "sl": 45,
+            "signal": 37,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.8162,
+            "random_median_return": 0.3283,
+            "random_p95_sharpe": 3.3177,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -1.1495,
+            "annualized_return": -0.1197,
+            "max_drawdown": -0.1644
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "roc": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 12,
+              "filter_column_bull": "roc_val",
+              "filter_column_bear": "roc_val"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 10 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": -0.0262,
+          "total_return": -0.0263,
+          "annualized_volatility": 0.1334,
+          "sharpe_ratio": -0.4318,
+          "sortino_ratio": -0.2752,
+          "max_drawdown": -0.0965,
+          "calmar_ratio": -0.271,
+          "n_years": 1.0,
+          "total_trades": 138,
+          "win_rate": 0.5652,
+          "profit_factor": 0.9536,
+          "avg_win_loss_ratio": 0.7335,
+          "avg_trade_pnl": -19.025,
+          "avg_trade_duration_bars": 112.8,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.936,
+          "information_ratio": -3.7554,
+          "exit_reasons": {
+            "tp": 64,
+            "sl": 41,
+            "signal": 32,
+            "end_of_data": 1
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.7572,
+            "random_median_return": 0.3202,
+            "random_p95_sharpe": 3.2849,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -0.657,
+            "annualized_return": -0.0549,
+            "max_drawdown": -0.1123
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "roc": {
+              "enabled": true,
+              "integration_mode": "both",
+              "period": 12,
+              "filter_column_bull": "roc_val",
+              "filter_column_bear": "roc_val"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 114,
+    "name": "momentum",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-19T01:44:31",
+    "duration_seconds": 1031,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\momentum.py",
+    "config_override": {
+      "tv_indicators": {
+        "momentum": {
+          "enabled": true,
+          "integration_mode": "both",
+          "period": 10,
+          "filter_column_bull": "momentum_val",
+          "filter_column_bear": "momentum_val"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.0769,
+      "total_return": -0.0772,
+      "annualized_volatility": 0.0432,
+      "sharpe_ratio": -2.7579,
+      "sortino_ratio": -0.979,
+      "max_drawdown": -0.0981,
+      "calmar_ratio": -0.7836,
+      "n_years": 1.0,
+      "total_trades": 100,
+      "win_rate": 0.44,
+      "profit_factor": 0.6705,
+      "avg_win_loss_ratio": 0.8533,
+      "avg_trade_pnl": -77.1991,
+      "avg_trade_duration_bars": 57.79,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.9867,
+      "information_ratio": -3.959,
+      "exit_reasons": {
+        "signal": 47,
+        "tp": 32,
+        "sl": 21
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8916,
+        "random_median_return": 0.3225,
+        "random_p95_sharpe": 3.1288,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -3.2384,
+        "annualized_return": -0.0964,
+        "max_drawdown": -0.1149
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.5828,
+      "sharpe_delta": -4.3972999999999995,
+      "dd_delta": 0.04009999999999998
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "both",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.079,
+          "total_return": -0.0793,
+          "annualized_volatility": 0.0433,
+          "sharpe_ratio": -2.7995,
+          "sortino_ratio": -0.9966,
+          "max_drawdown": -0.0982,
+          "calmar_ratio": -0.8048,
+          "n_years": 1.0,
+          "total_trades": 101,
+          "win_rate": 0.4356,
+          "profit_factor": 0.6645,
+          "avg_win_loss_ratio": 0.8608,
+          "avg_trade_pnl": -78.5152,
+          "avg_trade_duration_bars": 57.73,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.9888,
+          "information_ratio": -3.9674,
+          "exit_reasons": {
+            "signal": 47,
+            "tp": 32,
+            "sl": 22
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.8532,
+            "random_median_return": 0.3342,
+            "random_p95_sharpe": 3.1773,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -3.2805,
+            "annualized_return": -0.0985,
+            "max_drawdown": -0.115
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "momentum": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 10,
+              "filter_column_bull": "momentum_val",
+              "filter_column_bear": "momentum_val"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 10 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": -0.0769,
+          "total_return": -0.0772,
+          "annualized_volatility": 0.0432,
+          "sharpe_ratio": -2.7579,
+          "sortino_ratio": -0.979,
+          "max_drawdown": -0.0981,
+          "calmar_ratio": -0.7836,
+          "n_years": 1.0,
+          "total_trades": 100,
+          "win_rate": 0.44,
+          "profit_factor": 0.6705,
+          "avg_win_loss_ratio": 0.8533,
+          "avg_trade_pnl": -77.1991,
+          "avg_trade_duration_bars": 57.79,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.9867,
+          "information_ratio": -3.959,
+          "exit_reasons": {
+            "signal": 47,
+            "tp": 32,
+            "sl": 21
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.8916,
+            "random_median_return": 0.3225,
+            "random_p95_sharpe": 3.1288,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -3.2384,
+            "annualized_return": -0.0964,
+            "max_drawdown": -0.1149
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "momentum": {
+              "enabled": true,
+              "integration_mode": "both",
+              "period": 10,
+              "filter_column_bull": "momentum_val",
+              "filter_column_bear": "momentum_val"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 115,
+    "name": "stochastic",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-19T02:01:42",
+    "duration_seconds": 1189,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\stochastic.py",
+    "config_override": {
+      "tv_indicators": {
+        "stochastic": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "period": 14,
+          "k_smooth": 3,
+          "d_smooth": 3,
+          "filter_column_bull": "stochastic_k",
+          "filter_column_bear": "stochastic_k"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0382,
+      "total_return": 0.0383,
+      "annualized_volatility": 0.0569,
+      "sharpe_ratio": -0.0163,
+      "sortino_ratio": -0.0166,
+      "max_drawdown": -0.0582,
+      "calmar_ratio": 0.6554,
+      "n_years": 1.0,
+      "total_trades": 132,
+      "win_rate": 0.5833,
+      "profit_factor": 1.1264,
+      "avg_win_loss_ratio": 0.8046,
+      "avg_trade_pnl": 29.0242,
+      "avg_trade_duration_bars": 85.65,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8717,
+      "information_ratio": -3.4973,
+      "exit_reasons": {
+        "tp": 65,
+        "signal": 36,
+        "sl": 31
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.8883,
+        "random_median_return": 0.3382,
+        "random_p95_sharpe": 3.288,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -0.5084,
+        "annualized_return": 0.0095,
+        "max_drawdown": -0.0623
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.4677,
+      "sharpe_delta": -1.6557,
+      "dd_delta": 0.07999999999999999
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": 0.0382,
+          "total_return": 0.0383,
+          "annualized_volatility": 0.0569,
+          "sharpe_ratio": -0.0163,
+          "sortino_ratio": -0.0166,
+          "max_drawdown": -0.0582,
+          "calmar_ratio": 0.6554,
+          "n_years": 1.0,
+          "total_trades": 132,
+          "win_rate": 0.5833,
+          "profit_factor": 1.1264,
+          "avg_win_loss_ratio": 0.8046,
+          "avg_trade_pnl": 29.0242,
+          "avg_trade_duration_bars": 85.65,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.8717,
+          "information_ratio": -3.4973,
+          "exit_reasons": {
+            "tp": 65,
+            "signal": 36,
+            "sl": 31
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.8883,
+            "random_median_return": 0.3382,
+            "random_p95_sharpe": 3.288,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -0.5084,
+            "annualized_return": 0.0095,
+            "max_drawdown": -0.0623
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "stochastic": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 14,
+              "k_smooth": 3,
+              "d_smooth": 3,
+              "filter_column_bull": "stochastic_k",
+              "filter_column_bear": "stochastic_k"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 11 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": -0.0046,
+          "total_return": -0.0046,
+          "annualized_volatility": 0.049,
+          "sharpe_ratio": -0.8853,
+          "sortino_ratio": -0.3869,
+          "max_drawdown": -0.0401,
+          "calmar_ratio": -0.1139,
+          "n_years": 1.0,
+          "total_trades": 98,
+          "win_rate": 0.5612,
+          "profit_factor": 0.9813,
+          "avg_win_loss_ratio": 0.7672,
+          "avg_trade_pnl": -4.6766,
+          "avg_trade_duration_bars": 81.77,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.9144,
+          "information_ratio": -3.6687,
+          "exit_reasons": {
+            "tp": 46,
+            "sl": 27,
+            "signal": 25
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.8304,
+            "random_median_return": 0.3284,
+            "random_p95_sharpe": 3.3602,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -1.3103,
+            "annualized_return": -0.0252,
+            "max_drawdown": -0.0484
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "stochastic": {
+              "enabled": true,
+              "integration_mode": "both",
+              "period": 14,
+              "k_smooth": 3,
+              "d_smooth": 3,
+              "filter_column_bull": "stochastic_k",
+              "filter_column_bear": "stochastic_k"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 116,
+    "name": "detrended_rsi",
+    "category": "momentum",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-19T02:21:32",
+    "duration_seconds": 999,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\detrended_rsi.py",
+    "config_override": {
+      "tv_indicators": {
+        "detrended_rsi": {
+          "enabled": true,
+          "integration_mode": "both",
+          "period": 14,
+          "filter_column_bull": "detrended_rsi_val",
+          "filter_column_bear": "detrended_rsi_val"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0874,
+      "total_return": 0.0877,
+      "annualized_volatility": 0.0606,
+      "sharpe_ratio": 0.7528,
+      "sortino_ratio": 0.356,
+      "max_drawdown": -0.0402,
+      "calmar_ratio": 2.1725,
+      "n_years": 1.0,
+      "total_trades": 124,
+      "win_rate": 0.5887,
+      "profit_factor": 1.2926,
+      "avg_win_loss_ratio": 0.9031,
+      "avg_trade_pnl": 70.7658,
+      "avg_trade_duration_bars": 82.2,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.8224,
+      "information_ratio": -3.2998,
+      "exit_reasons": {
+        "tp": 67,
+        "signal": 33,
+        "sl": 24
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9199,
+        "random_median_return": 0.3441,
+        "random_p95_sharpe": 3.3559,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 0.3056,
+        "annualized_return": 0.0584,
+        "max_drawdown": -0.0449
+      }
+    },
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.4185,
+      "sharpe_delta": -0.8865999999999999,
+      "dd_delta": 0.09799999999999999
+    },
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "both",
+    "mode_results": {
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": 0.0,
+          "sharpe_ratio": 0.0,
+          "max_drawdown": 0.0,
+          "total_trades": 0,
+          "win_rate": 0.0,
+          "profit_factor": 0.0,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.0,
+            "annualized_return": 0.0,
+            "max_drawdown": 0.0
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "detrended_rsi": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 14,
+              "filter_column_bull": "detrended_rsi_val",
+              "filter_column_bear": "detrended_rsi_val"
+            }
+          }
+        }
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 10 features as input."
+      },
+      "both": {
+        "test_metrics": {
+          "annualized_return": 0.0874,
+          "total_return": 0.0877,
+          "annualized_volatility": 0.0606,
+          "sharpe_ratio": 0.7528,
+          "sortino_ratio": 0.356,
+          "max_drawdown": -0.0402,
+          "calmar_ratio": 2.1725,
+          "n_years": 1.0,
+          "total_trades": 124,
+          "win_rate": 0.5887,
+          "profit_factor": 1.2926,
+          "avg_win_loss_ratio": 0.9031,
+          "avg_trade_pnl": 70.7658,
+          "avg_trade_duration_bars": 82.2,
+          "benchmark_return": 0.9098,
+          "alpha_vs_benchmark": -0.8224,
+          "information_ratio": -3.2998,
+          "exit_reasons": {
+            "tp": 67,
+            "signal": 33,
+            "sl": 24
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.9199,
+            "random_median_return": 0.3441,
+            "random_p95_sharpe": 3.3559,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.3056,
+            "annualized_return": 0.0584,
+            "max_drawdown": -0.0449
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "config": {
+          "tv_indicators": {
+            "detrended_rsi": {
+              "enabled": true,
+              "integration_mode": "both",
+              "period": 14,
+              "filter_column_bull": "detrended_rsi_val",
+              "filter_column_bear": "detrended_rsi_val"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 117,
+    "name": "obv",
+    "category": "volume",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-19T02:38:12",
+    "duration_seconds": 447,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\obv.py",
+    "config_override": null,
+    "test_metrics": {},
+    "baseline_metrics": {
+      "annualized_return": 0.5059,
+      "total_return": 0.5083,
+      "annualized_volatility": 0.2434,
+      "sharpe_ratio": 1.6394,
+      "sortino_ratio": 1.6217,
+      "max_drawdown": -0.1382,
+      "calmar_ratio": 3.6594,
+      "n_years": 1.0,
+      "total_trades": 93,
+      "win_rate": 0.5484,
+      "profit_factor": 1.8259,
+      "avg_win_loss_ratio": 1.5037,
+      "avg_trade_pnl": 546.5542,
+      "avg_trade_duration_bars": 385.76,
+      "benchmark_return": 0.9098,
+      "alpha_vs_benchmark": -0.4039,
+      "information_ratio": -1.6207,
+      "exit_reasons": {
+        "signal": 51,
+        "timeout": 33,
+        "sl": 8,
+        "end_of_data": 1
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.9645,
+        "random_median_return": 0.354,
+        "random_p95_sharpe": 3.2058,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 1.5202,
+        "annualized_return": 0.463,
+        "max_drawdown": -0.1391
+      }
+    },
+    "delta_vs_baseline": {
+      "return_delta": -0.5059,
+      "sharpe_delta": -1.6394,
+      "dd_delta": 0.1382
+    },
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "hmm": {
+        "error": "Found array with 0 sample(s) (shape=(0, 11)) while a minimum of 1 is required by StandardScaler."
+      },
+      "signal_filter": {
+        "error": "X has 7 features, but StandardScaler is expecting 10 features as input."
+      },
+      "both": {
+        "error": "Found array with 0 sample(s) (shape=(0, 11)) while a minimum of 1 is required by StandardScaler."
+      }
+    }
   }
 ]

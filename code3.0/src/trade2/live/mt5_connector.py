@@ -219,7 +219,7 @@ class MT5Connector:
             "magic":        magic,
             "comment":      comment[:31],   # MT5 max 31 chars
             "type_time":    mt5.ORDER_TIME_GTC,
-            "type_filling": mt5.ORDER_FILLING_IOC,
+            "type_filling": mt5.ORDER_FILLING_FOK,
         }
 
         for attempt in range(1, max_retries + 1):
@@ -283,7 +283,7 @@ class MT5Connector:
             "magic":        magic,
             "comment":      "close",
             "type_time":    mt5.ORDER_TIME_GTC,
-            "type_filling": mt5.ORDER_FILLING_IOC,
+            "type_filling": mt5.ORDER_FILLING_FOK,
         }
 
         for attempt in range(1, max_retries + 1):
@@ -363,6 +363,30 @@ class MT5Connector:
                 "comment":    p.comment,
             })
         return result
+
+    def get_deal_exit_price(self, ticket: int) -> Optional[float]:
+        """
+        Look up the actual exit price for a closed position from MT5 deal history.
+
+        Searches the last 30 days of history for a deal that closes the given position ticket.
+        Returns the deal price, or None if not found.
+        """
+        mt5 = _mt5()
+        from datetime import timedelta
+        date_to   = datetime.now(tz=timezone.utc)
+        date_from = date_to - timedelta(days=30)
+
+        deals = mt5.history_deals_get(date_from, date_to, position=ticket)
+        if not deals:
+            return None
+
+        # The closing deal has DEAL_ENTRY_OUT (value 1)
+        DEAL_ENTRY_OUT = 1
+        for deal in deals:
+            if deal.entry == DEAL_ENTRY_OUT:
+                return deal.price
+
+        return None
 
     def get_symbol_info(self, symbol: Optional[str] = None) -> Dict[str, Any]:
         mt5  = _mt5()

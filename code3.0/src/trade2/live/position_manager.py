@@ -107,6 +107,34 @@ class PositionManager:
 
     def _handle_open_position(self, state: Dict[str, Any], trade_logger) -> None:
         direction = self.direction
+
+        # Check if MT5 already closed the position (SL/TP hit by broker)
+        live_positions = self.connector.get_positions(magic=self.magic)
+        live_tickets = [p["ticket"] for p in live_positions]
+        if self.ticket not in live_tickets:
+            logger.info(
+                f"[{self.strategy_name}] Position {self.ticket} closed by broker (SL/TP hit)"
+            )
+            # Try to get actual fill price from MT5 deal history
+            actual_price = self.connector.get_deal_exit_price(self.ticket)
+            exit_price   = actual_price if actual_price is not None else state["close_5m"]
+            exit_reason  = "sl_tp"
+            if actual_price is None:
+                logger.warning(
+                    f"[{self.strategy_name}] Could not fetch deal price for ticket={self.ticket}, "
+                    f"using bar close {exit_price:.2f} as approximation"
+                )
+            trade_logger.log_exit(
+                ticket=self.ticket,
+                strategy=self.strategy_name,
+                exit_price=exit_price,
+                exit_time=state["bar_time"],
+                pnl=self._compute_pnl(exit_price),
+                exit_reason=exit_reason,
+            )
+            self._clear_state()
+            return
+
         exit_flag = state["exit_long"] if direction == "long" else state["exit_short"]
 
         if exit_flag:

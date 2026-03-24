@@ -47,6 +47,8 @@ class StrategyInstance:
         self.name           = strategy_cfg["name"]
         self.magic          = strategy_cfg["magic_number"]
         self.base_alloc     = base_allocation_frac
+        self.lot_min        = strategy_cfg["lot_min"]
+        self.lot_max        = strategy_cfg["lot_max"]
         self.project_root   = Path(project_root)
         self.connector      = connector
 
@@ -76,10 +78,16 @@ class StrategyInstance:
             trade_log_dir / f"live_trades_{self.name}.csv"
         )
 
+        # Dashboard cache
+        self._last_regime    = "?"
+        self._last_bull_prob = 0.0
+        self._last_bear_prob = 0.0
+
         logger.info(
             f"[StrategyInstance] Initialized | name={self.name} | magic={self.magic} | "
             f"config={cfg_path.name}"
         )
+        self._log_lot_range()
 
     # ------------------------------------------------------------------
     # Per-bar update
@@ -92,6 +100,11 @@ class StrategyInstance:
         except Exception as e:
             logger.error(f"[{self.name}] Signal pipeline error: {e}", exc_info=True)
             return
+
+        # Cache regime info for dashboard display
+        self._last_regime    = state.get("regime", "?")
+        self._last_bull_prob = state.get("bull_prob", 0.0)
+        self._last_bear_prob = state.get("bear_prob", 0.0)
 
         # Compute lot size from current account equity
         lots = self._compute_lots(state)
@@ -110,6 +123,23 @@ class StrategyInstance:
     def recover(self) -> None:
         """Discover and resume any orphaned MT5 position on startup."""
         self.position_manager.recover()
+        pm = self.position_manager
+        if pm.ticket is not None:
+            # Pre-populate TradeLogger so exit row has entry data on restart
+            self.trade_logger.log_entry(
+                ticket        = pm.ticket,
+                strategy      = self.name,
+                direction     = pm.direction or "",
+                entry_price   = pm.entry_price or 0.0,
+                sl            = pm.sl or 0.0,
+                tp            = pm.tp or 0.0,
+                lots          = pm.lots or 0.0,
+                entry_time    = pm.entry_time,
+                regime        = pm.entry_regime or "?",
+                bull_prob     = pm.entry_bull_prob,
+                bear_prob     = pm.entry_bear_prob,
+                signal_source = pm.signal_source or "recovered",
+            )
 
     # ------------------------------------------------------------------
     # Model reload (after retrain)
@@ -137,24 +167,32 @@ class StrategyInstance:
 
     def _compute_lots(self, state: Dict[str, Any]) -> float:
         """
-        Compute lot size matching backtest sizing logic.
+        Scale lot size by regime confidence between lot_min and lot_max (from live.yaml).
 
-        pos_val = equity * base_alloc * position_size_multiplier
-        lots    = pos_val / entry_price / 100
+        confidence = bear_prob if short signal, bull_prob if long signal
+        lots = lot_min + (lot_max - lot_min) * confidence, snapped to 0.01 grid
         """
-        equity   = self._get_equity()
-        ps_long  = state.get("position_size_long",  0.5)
-        ps_short = state.get("position_size_short", 0.5)
-        ps_mult  = ps_long if state.get("signal_long") == 1 else ps_short
-        ps_mult  = max(ps_mult, 0.01)  # safety floor
+        is_short   = state.get("signal_short") == 1
+        confidence = state.get("bear_prob", 0.0) if is_short else state.get("bull_prob", 0.0)
 
-        price    = max(state.get("close_5m", 1.0), 1.0)
-        pos_val  = equity * self.base_alloc * ps_mult
-        lots     = pos_val / price / 100.0
-
-        # Clamp and round to broker step
-        lots = max(round(lots, 2), 0.01)
+        raw  = self.lot_min + (self.lot_max - self.lot_min) * confidence
+        lots = round(round(raw, 2) / 0.01) * 0.01   # snap to 0.01 grid
+        lots = max(self.lot_min, min(self.lot_max, round(lots, 2)))
         return lots
+
+    def _log_lot_range(self) -> None:
+        """Print the lot size range this strategy will use based on regime confidence."""
+        try:
+            equity = self._get_equity()
+            print(
+                f"[{self.name}] Lot size range: {self.lot_min} (confidence=0.0) "
+                f"to {self.lot_max} (confidence=1.0) | equity={equity:.2f} | method=confidence_scaled"
+            )
+            logger.info(
+                f"[{self.name}] Lot range: min={self.lot_min} max={self.lot_max} equity={equity:.2f}"
+            )
+        except Exception as e:
+            logger.warning(f"[{self.name}] Could not compute lot range: {e}")
 
     def _get_equity(self) -> float:
         try:

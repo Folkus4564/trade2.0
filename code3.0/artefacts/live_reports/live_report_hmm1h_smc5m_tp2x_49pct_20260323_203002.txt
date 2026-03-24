@@ -1,0 +1,21 @@
+Live Performance Report — hmm1h_smc5m_tp2x_49pct
+Generated: 2026-03-23T20:30:02.423525
+=======================================================
+  Trades:             8
+  Total P&L:          $-1,223,152.43
+  Total Return:       -15302.93%
+  Ann. Return:        nan%
+  Sharpe Ratio:       -6.00
+  Max Drawdown:       -14086.84%
+  Win Rate:           87.5%
+  Profit Factor:      0.00
+  Avg P&L/Trade:      $-152894.05
+  Avg Duration:       1115.0min
+
+Backtest Comparison:
+  annualized_return         live=     nan  bt=   0.490  delta=  +nan%
+  sharpe_ratio              live=  -5.997  bt=   3.160  delta=-289.8% *** DIVERGENCE ***
+  max_drawdown              live=-140.868  bt=  -0.100  delta=-140768.4% *** DIVERGENCE ***
+  win_rate                  live=   0.875  bt=   0.500  delta= +75.0% *** DIVERGENCE ***
+  profit_factor             live=   0.001  bt=   2.000  delta=-100.0% *** DIVERGENCE ***
+  total_trades              live=   8.000  bt=  50.000  delta= -84.0% *** DIVERGENCE ***

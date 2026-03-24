@@ -20,6 +20,7 @@ data:
   raw_1h_csv: data/raw/XAUUSD_1H_2019_2026.csv
   raw_4h_csv: data/raw/XAUUSD_4H_2019_2026.csv
   raw_5m_csv: data/raw/XAUUSD_5M_2019_2026.csv
+  raw_1m_csv: data/raw/XAUUSD_1M_2019_2026.csv
   timezone: UTC
   missing_bar_policy: forward_fill
   processed_dir: data/processed
@@ -320,6 +321,18 @@ tv_research:
   model: claude-sonnet-4-6
   trials_per_indicator: 100
   seed_list: configs/tv_seed_list.yaml
+
+# ---- Scalping Research loop --------------------------------
+scalp_research:
+  max_ideas: 30
+  goal_return: 0.30
+  goal_sharpe: 1.5
+  goal_max_dd: -0.20
+  min_trades_per_day: 5
+  model: claude-sonnet-4-6
+  translate_provider: claude
+  translate_model: claude-sonnet-4-6
+  trials_per_indicator: 50
 
 # ---- TV indicator feature flags (populated by tv_research) --
 tv_indicators:

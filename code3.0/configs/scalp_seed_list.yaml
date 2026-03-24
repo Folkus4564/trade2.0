@@ -1,0 +1,1851 @@
+# Scalping Indicator Seed List
+# Curated indicators for the scalp_research loop, tagged by scalping technique.
+# Techniques: momentum_breakout | vwap_pullback | range_mean_reversion | order_flow | opening_range
+
+indicators:
+
+  - name: donchian_breakout_momentum
+    technique: momentum_breakout
+    category: momentum
+    description: "Donchian channel breakout confirmed by a volume surge above a rolling average"
+    default_params: { period: 8, vol_period: 6, vol_mult: 1.5 }
+    integration_mode: both
+    filter_column_bull: "donchian_breakout_momentum_bull"
+    filter_column_bear: "donchian_breakout_momentum_bear"
+
+  - name: vwap_deviation_bounce
+    technique: vwap_pullback
+    category: mean_reversion
+    description: "Price pulls back inside one standard deviation of session VWAP then resumes in trend direction"
+    default_params: { std_mult: 1.0 }
+    integration_mode: both
+    filter_column_bull: "vwap_deviation_bounce_bull"
+    filter_column_bear: "vwap_deviation_bounce_bear"
+
+  - name: bollinger_band_mean_reversion
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Price touches outer Bollinger Band then closes back inside; bull at lower band, bear at upper band"
+    default_params: { period: 10, std_dev: 2.0 }
+    integration_mode: both
+    filter_column_bull: "bollinger_band_mean_reversion_bull"
+    filter_column_bear: "bollinger_band_mean_reversion_bear"
+
+  - name: delta_proxy_oscillator
+    technique: order_flow
+    category: micro_structure
+    description: "Buy/sell pressure proxy using (Close-Low)/(High-Low) as intrabar delta, smoothed over a short window"
+    default_params: { period: 5 }
+    integration_mode: both
+    filter_column_bull: "delta_proxy_oscillator_bull"
+    filter_column_bear: "delta_proxy_oscillator_bear"
+
+  - name: opening_range_breakout_signal
+    technique: opening_range
+    category: momentum
+    description: "Defines opening range from the first N bars of the session; bull on breakout above, bear on breakout below"
+    default_params: { range_bars: 5 }
+    integration_mode: both
+    filter_column_bull: "opening_range_breakout_signal_bull"
+    filter_column_bear: "opening_range_breakout_signal_bear"
+
+
+  - name: atr_channel_break_surge
+    technique: momentum_breakout
+    category: momentum
+    description: "Breakout beyond a short ATR channel with volume expansion confirming directional continuation"
+    default_params: { period: 7, atr_period: 5, atr_mult: 1.2, vol_period: 6, vol_mult: 1.4 }
+    integration_mode: both
+    filter_column_bull: "atr_channel_break_surge_bull"
+    filter_column_bear: "atr_channel_break_surge_bear"
+
+  - name: keltner_expansion_breakout
+    technique: momentum_breakout
+    category: momentum
+    description: "Close breaks outside a compressed Keltner Channel after range contraction"
+    default_params: { period: 10, atr_period: 5, atr_mult: 1.3, compression_period: 8 }
+    integration_mode: both
+    filter_column_bull: "keltner_expansion_breakout_bull"
+    filter_column_bear: "keltner_expansion_breakout_bear"
+
+  - name: nr4_range_release
+    technique: momentum_breakout
+    category: momentum
+    description: "Breakout from a narrowest-range-in-4-bars setup with directional follow-through"
+    default_params: { lookback: 4, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "nr4_range_release_bull"
+    filter_column_bear: "nr4_range_release_bear"
+
+  - name: nr7_range_release
+    technique: momentum_breakout
+    category: momentum
+    description: "Breakout from a narrowest-range-in-7-bars setup with volatility expansion"
+    default_params: { lookback: 7, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "nr7_range_release_bull"
+    filter_column_bear: "nr7_range_release_bear"
+
+  - name: inside_bar_break_impulse
+    technique: momentum_breakout
+    category: momentum
+    description: "Break above or below the prior inside bar range with immediate momentum confirmation"
+    default_params: { confirm_bars: 1, vol_period: 5 }
+    integration_mode: both
+    filter_column_bull: "inside_bar_break_impulse_bull"
+    filter_column_bear: "inside_bar_break_impulse_bear"
+
+  - name: micro_box_breakout
+    technique: momentum_breakout
+    category: momentum
+    description: "Breakout from a short micro consolidation box defined by recent highs and lows"
+    default_params: { box_period: 6, min_tight_bars: 3 }
+    integration_mode: both
+    filter_column_bull: "micro_box_breakout_bull"
+    filter_column_bear: "micro_box_breakout_bear"
+
+  - name: pivot_high_low_burst
+    technique: momentum_breakout
+    category: momentum
+    description: "Break through a recent pivot high or pivot low with acceleration in the breakout direction"
+    default_params: { pivot_left: 2, pivot_right: 2, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "pivot_high_low_burst_bull"
+    filter_column_bear: "pivot_high_low_burst_bear"
+
+  - name: ema_stack_breakout
+    technique: momentum_breakout
+    category: trend
+    description: "Price breaks a local range while short EMAs are aligned in the breakout direction"
+    default_params: { fast_period: 5, mid_period: 8, slow_period: 13 }
+    integration_mode: both
+    filter_column_bull: "ema_stack_breakout_bull"
+    filter_column_bear: "ema_stack_breakout_bear"
+
+  - name: macd_zero_line_pop
+    technique: momentum_breakout
+    category: momentum
+    description: "Price breakout accompanied by MACD histogram crossing and expanding through zero"
+    default_params: { fast_period: 6, slow_period: 13, signal_period: 4 }
+    integration_mode: both
+    filter_column_bull: "macd_zero_line_pop_bull"
+    filter_column_bear: "macd_zero_line_pop_bear"
+
+  - name: roc_thrust_breakout
+    technique: momentum_breakout
+    category: momentum
+    description: "Range break confirmed by short-term rate-of-change exceeding a threshold"
+    default_params: { roc_period: 4, roc_threshold: 0.4, box_period: 6 }
+    integration_mode: both
+    filter_column_bull: "roc_thrust_breakout_bull"
+    filter_column_bear: "roc_thrust_breakout_bear"
+
+  - name: rsi_expansion_breakout
+    technique: momentum_breakout
+    category: momentum
+    description: "Breakout confirmed by RSI leaving a neutral compression zone into trend territory"
+    default_params: { rsi_period: 7, upper_band: 60, lower_band: 40 }
+    integration_mode: both
+    filter_column_bull: "rsi_expansion_breakout_bull"
+    filter_column_bear: "rsi_expansion_breakout_bear"
+
+  - name: stoch_thrust_breakout
+    technique: momentum_breakout
+    category: momentum
+    description: "Directional breakout validated by a fast stochastic surge from mid-range"
+    default_params: { k_period: 5, d_period: 3, trigger: 60 }
+    integration_mode: both
+    filter_column_bull: "stoch_thrust_breakout_bull"
+    filter_column_bear: "stoch_thrust_breakout_bear"
+
+  - name: adx_acceleration_break
+    technique: momentum_breakout
+    category: trend
+    description: "Breakout favored when ADX rises from a low-volatility base into expansion"
+    default_params: { adx_period: 7, adx_threshold: 18, box_period: 8 }
+    integration_mode: both
+    filter_column_bull: "adx_acceleration_break_bull"
+    filter_column_bear: "adx_acceleration_break_bear"
+
+  - name: dmi_breakout_alignment
+    technique: momentum_breakout
+    category: trend
+    description: "Range break confirmed by DI+ and DI- separation in the breakout direction"
+    default_params: { dmi_period: 7, separation_threshold: 4 }
+    integration_mode: both
+    filter_column_bull: "dmi_breakout_alignment_bull"
+    filter_column_bear: "dmi_breakout_alignment_bear"
+
+  - name: supertrend_flip_breakout
+    technique: momentum_breakout
+    category: trend
+    description: "Breakout coincides with a short Supertrend direction flip and continuation"
+    default_params: { atr_period: 5, atr_mult: 1.8 }
+    integration_mode: both
+    filter_column_bull: "supertrend_flip_breakout_bull"
+    filter_column_bear: "supertrend_flip_breakout_bear"
+
+  - name: anchored_vwap_break_launch
+    technique: momentum_breakout
+    category: momentum
+    description: "Price breaks an anchored VWAP reference with volume and directional thrust"
+    default_params: { anchor_bars: 20, vol_period: 6, vol_mult: 1.3 }
+    integration_mode: both
+    filter_column_bull: "anchored_vwap_break_launch_bull"
+    filter_column_bear: "anchored_vwap_break_launch_bear"
+
+  - name: opening_drive_continuation
+    technique: momentum_breakout
+    category: momentum
+    description: "Early-session directional drive extends beyond initial impulse high or low"
+    default_params: { drive_bars: 3, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "opening_drive_continuation_bull"
+    filter_column_bear: "opening_drive_continuation_bear"
+
+  - name: high_of_day_retake_surge
+    technique: momentum_breakout
+    category: momentum
+    description: "Bull signal on reclaim and break of intraday high; bear on loss and break of intraday low"
+    default_params: { lookback_bars: 30, vol_period: 5 }
+    integration_mode: both
+    filter_column_bull: "high_of_day_retake_surge_bull"
+    filter_column_bear: "high_of_day_retake_surge_bear"
+
+  - name: volume_climax_break_follow
+    technique: momentum_breakout
+    category: volume
+    description: "Breakout following a local volume climax and directional close continuation"
+    default_params: { vol_period: 8, climax_mult: 1.8 }
+    integration_mode: both
+    filter_column_bull: "volume_climax_break_follow_bull"
+    filter_column_bear: "volume_climax_break_follow_bear"
+
+  - name: gap_go_followthrough
+    technique: momentum_breakout
+    category: momentum
+    description: "Gap direction continuation triggers when price clears the first pullback pivot"
+    default_params: { pullback_bars: 3, gap_threshold: 0.3 }
+    integration_mode: both
+    filter_column_bull: "gap_go_followthrough_bull"
+    filter_column_bear: "gap_go_followthrough_bear"
+
+  - name: compression_triangle_break
+    technique: momentum_breakout
+    category: momentum
+    description: "Breakout from a short contracting triangle structure with rising range expansion"
+    default_params: { lookback: 8, min_swings: 3 }
+    integration_mode: both
+    filter_column_bull: "compression_triangle_break_bull"
+    filter_column_bear: "compression_triangle_break_bear"
+
+  - name: flag_pennant_resolution
+    technique: momentum_breakout
+    category: momentum
+    description: "Bullish or bearish continuation from a compact flag or pennant consolidation"
+    default_params: { impulse_bars: 3, flag_bars: 5 }
+    integration_mode: both
+    filter_column_bull: "flag_pennant_resolution_bull"
+    filter_column_bear: "flag_pennant_resolution_bear"
+
+  - name: chaikin_money_flow_break
+    technique: momentum_breakout
+    category: volume
+    description: "Range break supported by positive or negative Chaikin Money Flow momentum"
+    default_params: { cmf_period: 8, box_period: 6 }
+    integration_mode: both
+    filter_column_bull: "chaikin_money_flow_break_bull"
+    filter_column_bear: "chaikin_money_flow_break_bear"
+
+  - name: on_balance_volume_lead_break
+    technique: momentum_breakout
+    category: volume
+    description: "Breakout favored when OBV leads price by making a new local extreme first"
+    default_params: { obv_lookback: 10, price_box_period: 6 }
+    integration_mode: both
+    filter_column_bull: "on_balance_volume_lead_break_bull"
+    filter_column_bear: "on_balance_volume_lead_break_bear"
+
+  - name: relative_volume_breakout
+    technique: momentum_breakout
+    category: volume
+    description: "Breakout only qualifies when current volume exceeds recent average by a threshold"
+    default_params: { vol_period: 10, vol_mult: 1.7, box_period: 6 }
+    integration_mode: both
+    filter_column_bull: "relative_volume_breakout_bull"
+    filter_column_bear: "relative_volume_breakout_bear"
+
+  - name: candle_body_expansion_break
+    technique: momentum_breakout
+    category: momentum
+    description: "Large real-body candle exits a micro range and closes near its extreme"
+    default_params: { body_period: 6, body_mult: 1.5 }
+    integration_mode: both
+    filter_column_bull: "candle_body_expansion_break_bull"
+    filter_column_bear: "candle_body_expansion_break_bear"
+
+  - name: wick_rejection_breakout
+    technique: momentum_breakout
+    category: momentum
+    description: "Breakout after repeated wick rejections at one side of a short consolidation"
+    default_params: { lookback: 7, min_rejections: 2 }
+    integration_mode: both
+    filter_column_bull: "wick_rejection_breakout_bull"
+    filter_column_bear: "wick_rejection_breakout_bear"
+
+  - name: rvi_thrust_breakout
+    technique: momentum_breakout
+    category: momentum
+    description: "Range break confirmed by Relative Vigor Index thrust in the breakout direction"
+    default_params: { rvi_period: 6, signal_period: 3 }
+    integration_mode: both
+    filter_column_bull: "rvi_thrust_breakout_bull"
+    filter_column_bear: "rvi_thrust_breakout_bear"
+
+  - name: tsi_impulse_breakout
+    technique: momentum_breakout
+    category: momentum
+    description: "Directional breakout supported by a fast True Strength Index impulse"
+    default_params: { long_period: 8, short_period: 4, signal_period: 3 }
+    integration_mode: both
+    filter_column_bull: "tsi_impulse_breakout_bull"
+    filter_column_bear: "tsi_impulse_breakout_bear"
+
+  - name: cci_plusminus_100_break
+    technique: momentum_breakout
+    category: momentum
+    description: "Breakout confirmed when CCI crosses above +100 or below -100 with follow-through"
+    default_params: { cci_period: 8 }
+    integration_mode: both
+    filter_column_bull: "cci_plusminus_100_break_bull"
+    filter_column_bear: "cci_plusminus_100_break_bear"
+
+  - name: parabolic_sar_launch
+    technique: momentum_breakout
+    category: trend
+    description: "Breakout aligns with Parabolic SAR flip and accelerating directional candles"
+    default_params: { step: 0.02, max_step: 0.2 }
+    integration_mode: both
+    filter_column_bull: "parabolic_sar_launch_bull"
+    filter_column_bear: "parabolic_sar_launch_bear"
+
+  - name: heikin_ashi_break_drive
+    technique: momentum_breakout
+    category: trend
+    description: "Breakout is validated by consecutive Heikin Ashi trend candles without opposing wicks"
+    default_params: { confirm_bars: 2 }
+    integration_mode: both
+    filter_column_bull: "heikin_ashi_break_drive_bull"
+    filter_column_bear: "heikin_ashi_break_drive_bear"
+
+  - name: fractal_break_continuation
+    technique: momentum_breakout
+    category: momentum
+    description: "Break through the most recent bullish or bearish fractal with continuation bias"
+    default_params: { fractal_span: 2, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "fractal_break_continuation_bull"
+    filter_column_bear: "fractal_break_continuation_bear"
+
+  - name: linreg_slope_breakout
+    technique: momentum_breakout
+    category: trend
+    description: "Price breaks range as linear regression slope sharply inflects in the same direction"
+    default_params: { period: 8, slope_threshold: 0.03 }
+    integration_mode: both
+    filter_column_bull: "linreg_slope_breakout_bull"
+    filter_column_bear: "linreg_slope_breakout_bear"
+
+  - name: ema_ribbon_expansion_break
+    technique: momentum_breakout
+    category: trend
+    description: "Breakout accompanied by expanding distance between short EMA ribbon components"
+    default_params: { periods: [3, 5, 8, 13], expansion_threshold: 0.05 }
+    integration_mode: both
+    filter_column_bull: "ema_ribbon_expansion_break_bull"
+    filter_column_bear: "ema_ribbon_expansion_break_bear"
+
+  - name: volatility_stop_release
+    technique: momentum_breakout
+    category: volatility
+    description: "Directional break occurs as price exits a volatility stop compression zone"
+    default_params: { atr_period: 5, atr_mult: 1.5, lookback: 7 }
+    integration_mode: both
+    filter_column_bull: "volatility_stop_release_bull"
+    filter_column_bear: "volatility_stop_release_bear"
+
+  - name: session_high_low_break_retest
+    technique: momentum_breakout
+    category: momentum
+    description: "Break of session extreme followed by a quick retest and continuation entry"
+    default_params: { lookback_bars: 20, retest_bars: 2 }
+    integration_mode: both
+    filter_column_bull: "session_high_low_break_retest_bull"
+    filter_column_bear: "session_high_low_break_retest_bear"
+
+  - name: ttm_squeeze_release_scalp
+    technique: momentum_breakout
+    category: volatility
+    description: "Momentum scalp triggered when squeeze releases and price exits the compression range"
+    default_params: { bb_period: 10, kc_period: 10, bb_mult: 2.0, kc_mult: 1.5 }
+    integration_mode: both
+    filter_column_bull: "ttm_squeeze_release_scalp_bull"
+    filter_column_bear: "ttm_squeeze_release_scalp_bear"
+
+  - name: range_percentile_breakout
+    technique: momentum_breakout
+    category: volatility
+    description: "Breakout from a low percentile intrabar range regime into expansion"
+    default_params: { range_period: 20, percentile_threshold: 25 }
+    integration_mode: both
+    filter_column_bull: "range_percentile_breakout_bull"
+    filter_column_bear: "range_percentile_breakout_bear"
+
+  - name: median_price_thrust_break
+    technique: momentum_breakout
+    category: momentum
+    description: "Breakout confirmed by median price acceleration and close beyond recent structure"
+    default_params: { period: 6, thrust_threshold: 0.25 }
+    integration_mode: both
+    filter_column_bull: "median_price_thrust_break_bull"
+    filter_column_bear: "median_price_thrust_break_bear"
+
+  - name: vwap_band_reclaim_trend
+    technique: vwap_pullback
+    category: mean_reversion
+    description: "Price pulls back to the lower or upper VWAP band and reclaims VWAP in trend direction"
+    default_params: { band_std: 1.0, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "vwap_band_reclaim_trend_bull"
+    filter_column_bear: "vwap_band_reclaim_trend_bear"
+
+  - name: vwap_touch_go_ema_align
+    technique: vwap_pullback
+    category: trend
+    description: "VWAP touch entry only qualifies when short EMAs remain stacked with trend"
+    default_params: { fast_period: 5, slow_period: 9, max_vwap_dev: 0.4 }
+    integration_mode: both
+    filter_column_bull: "vwap_touch_go_ema_align_bull"
+    filter_column_bear: "vwap_touch_go_ema_align_bear"
+
+  - name: anchored_vwap_pullback_resume
+    technique: vwap_pullback
+    category: trend
+    description: "Pullback to anchored VWAP after an impulse move, then continuation in the original direction"
+    default_params: { anchor_bars: 30, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "anchored_vwap_pullback_resume_bull"
+    filter_column_bear: "anchored_vwap_pullback_resume_bear"
+
+  - name: dual_vwap_confluence_bounce
+    technique: vwap_pullback
+    category: trend
+    description: "Continuation signal when session VWAP and anchored VWAP cluster near pullback support or resistance"
+    default_params: { anchor_bars: 20, max_spread: 0.15 }
+    integration_mode: both
+    filter_column_bull: "dual_vwap_confluence_bounce_bull"
+    filter_column_bear: "dual_vwap_confluence_bounce_bear"
+
+  - name: vwap_zscore_reversion_resume
+    technique: vwap_pullback
+    category: mean_reversion
+    description: "Trend resumes after price mean-reverts from an extreme VWAP z-score back toward the first band"
+    default_params: { z_period: 20, entry_z: 1.2 }
+    integration_mode: both
+    filter_column_bull: "vwap_zscore_reversion_resume_bull"
+    filter_column_bear: "vwap_zscore_reversion_resume_bear"
+
+  - name: vwap_keltner_reentry
+    technique: vwap_pullback
+    category: trend
+    description: "Pullback into VWAP and Keltner overlap zone, then trend continuation candle"
+    default_params: { period: 10, atr_period: 5, atr_mult: 1.0 }
+    integration_mode: both
+    filter_column_bull: "vwap_keltner_reentry_bull"
+    filter_column_bear: "vwap_keltner_reentry_bear"
+
+  - name: vwap_rsi_reset_resume
+    technique: vwap_pullback
+    category: momentum
+    description: "Trend entry after RSI cools during VWAP pullback and turns back with price"
+    default_params: { rsi_period: 7, reset_level: 50 }
+    integration_mode: both
+    filter_column_bull: "vwap_rsi_reset_resume_bull"
+    filter_column_bear: "vwap_rsi_reset_resume_bear"
+
+  - name: vwap_stoch_reset_resume
+    technique: vwap_pullback
+    category: momentum
+    description: "Price revisits VWAP while stochastic resets from overextended levels into trend resumption"
+    default_params: { k_period: 5, d_period: 3, reset_band: 50 }
+    integration_mode: both
+    filter_column_bull: "vwap_stoch_reset_resume_bull"
+    filter_column_bear: "vwap_stoch_reset_resume_bear"
+
+  - name: vwap_macd_hook_continuation
+    technique: vwap_pullback
+    category: momentum
+    description: "MACD histogram hooks back toward trend direction as price bounces near VWAP"
+    default_params: { fast_period: 6, slow_period: 13, signal_period: 4 }
+    integration_mode: both
+    filter_column_bull: "vwap_macd_hook_continuation_bull"
+    filter_column_bear: "vwap_macd_hook_continuation_bear"
+
+  - name: vwap_cci_reclaim
+    technique: vwap_pullback
+    category: momentum
+    description: "Continuation setup when CCI recovers through zero after a controlled VWAP pullback"
+    default_params: { cci_period: 8 }
+    integration_mode: both
+    filter_column_bull: "vwap_cci_reclaim_bull"
+    filter_column_bear: "vwap_cci_reclaim_bear"
+
+  - name: vwap_ema_cross_resume
+    technique: vwap_pullback
+    category: trend
+    description: "Bull when fast EMA re-crosses above slow EMA near VWAP; bear on opposite cross near VWAP"
+    default_params: { fast_period: 5, slow_period: 9 }
+    integration_mode: both
+    filter_column_bull: "vwap_ema_cross_resume_bull"
+    filter_column_bear: "vwap_ema_cross_resume_bear"
+
+  - name: vwap_adx_trend_pullback
+    technique: vwap_pullback
+    category: trend
+    description: "VWAP pullback favored only while ADX indicates trend strength remains intact"
+    default_params: { adx_period: 7, adx_threshold: 20 }
+    integration_mode: both
+    filter_column_bull: "vwap_adx_trend_pullback_bull"
+    filter_column_bear: "vwap_adx_trend_pullback_bear"
+
+  - name: vwap_dmi_support
+    technique: vwap_pullback
+    category: trend
+    description: "Trend continuation near VWAP confirmed by DI dominance remaining in trend direction"
+    default_params: { dmi_period: 7, min_spread: 3 }
+    integration_mode: both
+    filter_column_bull: "vwap_dmi_support_bull"
+    filter_column_bear: "vwap_dmi_support_bear"
+
+  - name: vwap_heikin_ashi_resume
+    technique: vwap_pullback
+    category: trend
+    description: "After a VWAP pullback, continuation triggers on a clean Heikin Ashi trend candle"
+    default_params: { confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "vwap_heikin_ashi_resume_bull"
+    filter_column_bear: "vwap_heikin_ashi_resume_bear"
+
+  - name: vwap_supertrend_bounce
+    technique: vwap_pullback
+    category: trend
+    description: "Session VWAP pullback that holds while Supertrend remains aligned with direction"
+    default_params: { atr_period: 5, atr_mult: 1.8 }
+    integration_mode: both
+    filter_column_bull: "vwap_supertrend_bounce_bull"
+    filter_column_bear: "vwap_supertrend_bounce_bear"
+
+  - name: vwap_parabolic_sar_resume
+    technique: vwap_pullback
+    category: trend
+    description: "Price tags VWAP and resumes as Parabolic SAR stays on the trend side of price"
+    default_params: { step: 0.02, max_step: 0.2 }
+    integration_mode: both
+    filter_column_bull: "vwap_parabolic_sar_resume_bull"
+    filter_column_bear: "vwap_parabolic_sar_resume_bear"
+
+  - name: vwap_donchian_midline_hold
+    technique: vwap_pullback
+    category: trend
+    description: "Pullback finds support or resistance near VWAP and Donchian midline before continuing"
+    default_params: { period: 10 }
+    integration_mode: both
+    filter_column_bull: "vwap_donchian_midline_hold_bull"
+    filter_column_bear: "vwap_donchian_midline_hold_bear"
+
+  - name: vwap_halfback_rejection
+    technique: vwap_pullback
+    category: mean_reversion
+    description: "Continuation from the 50% retracement of the prior impulse move near VWAP"
+    default_params: { impulse_lookback: 8, tolerance: 0.12 }
+    integration_mode: both
+    filter_column_bull: "vwap_halfback_rejection_bull"
+    filter_column_bear: "vwap_halfback_rejection_bear"
+
+  - name: vwap_fib_382_resume
+    technique: vwap_pullback
+    category: trend
+    description: "Trend resumes after a shallow 38.2% retrace into the VWAP zone"
+    default_params: { impulse_lookback: 8, fib_level: 0.382, tolerance: 0.1 }
+    integration_mode: both
+    filter_column_bull: "vwap_fib_382_resume_bull"
+    filter_column_bear: "vwap_fib_382_resume_bear"
+
+  - name: vwap_fib_618_resume
+    technique: vwap_pullback
+    category: trend
+    description: "Deeper 61.8% retrace into VWAP area followed by rejection back with trend"
+    default_params: { impulse_lookback: 8, fib_level: 0.618, tolerance: 0.12 }
+    integration_mode: both
+    filter_column_bull: "vwap_fib_618_resume_bull"
+    filter_column_bear: "vwap_fib_618_resume_bear"
+
+  - name: vwap_micro_trendline_bounce
+    technique: vwap_pullback
+    category: trend
+    description: "Price pulls back to VWAP and a micro trendline, then breaks back in trend direction"
+    default_params: { lookback: 6, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "vwap_micro_trendline_bounce_bull"
+    filter_column_bear: "vwap_micro_trendline_bounce_bear"
+
+  - name: vwap_pullback_inside_bar
+    technique: vwap_pullback
+    category: momentum
+    description: "Controlled retrace into VWAP forms an inside bar, then breaks with original trend"
+    default_params: { confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "vwap_pullback_inside_bar_bull"
+    filter_column_bear: "vwap_pullback_inside_bar_bear"
+
+  - name: vwap_pullback_pinbar_reject
+    technique: vwap_pullback
+    category: mean_reversion
+    description: "Continuation entry based on a rejection pin bar formed at VWAP"
+    default_params: { wick_body_ratio: 1.8 }
+    integration_mode: both
+    filter_column_bull: "vwap_pullback_pinbar_reject_bull"
+    filter_column_bear: "vwap_pullback_pinbar_reject_bear"
+
+  - name: vwap_pullback_engulf_resume
+    technique: vwap_pullback
+    category: momentum
+    description: "An engulfing candle at VWAP signals resumption of the larger intraday trend"
+    default_params: { engulf_min_body_mult: 1.2 }
+    integration_mode: both
+    filter_column_bull: "vwap_pullback_engulf_resume_bull"
+    filter_column_bear: "vwap_pullback_engulf_resume_bear"
+
+  - name: vwap_pullback_obv_confirm
+    technique: vwap_pullback
+    category: volume
+    description: "VWAP bounce confirmed when OBV turns back in the direction of the prevailing trend"
+    default_params: { obv_period: 8 }
+    integration_mode: both
+    filter_column_bull: "vwap_pullback_obv_confirm_bull"
+    filter_column_bear: "vwap_pullback_obv_confirm_bear"
+
+  - name: vwap_pullback_cmf_confirm
+    technique: vwap_pullback
+    category: volume
+    description: "Chaikin Money Flow remains supportive while price tests VWAP and resumes"
+    default_params: { cmf_period: 8 }
+    integration_mode: both
+    filter_column_bull: "vwap_pullback_cmf_confirm_bull"
+    filter_column_bear: "vwap_pullback_cmf_confirm_bear"
+
+  - name: vwap_pullback_mfi_rebound
+    technique: vwap_pullback
+    category: volume
+    description: "Money Flow Index resets during pullback and turns back with price at VWAP"
+    default_params: { mfi_period: 7, reset_level: 50 }
+    integration_mode: both
+    filter_column_bull: "vwap_pullback_mfi_rebound_bull"
+    filter_column_bear: "vwap_pullback_mfi_rebound_bear"
+
+  - name: vwap_band_slope_resume
+    technique: vwap_pullback
+    category: trend
+    description: "Price touches a VWAP band while VWAP slope stays strong in the trend direction"
+    default_params: { slope_period: 6, band_std: 1.0 }
+    integration_mode: both
+    filter_column_bull: "vwap_band_slope_resume_bull"
+    filter_column_bear: "vwap_band_slope_resume_bear"
+
+  - name: vwap_reclaim_after_sweep
+    technique: vwap_pullback
+    category: momentum
+    description: "After briefly sweeping through VWAP, price reclaims it and resumes the trend"
+    default_params: { sweep_tolerance: 0.15, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "vwap_reclaim_after_sweep_bull"
+    filter_column_bear: "vwap_reclaim_after_sweep_bear"
+
+  - name: vwap_midband_higher_low
+    technique: vwap_pullback
+    category: trend
+    description: "Bull signal on higher low near VWAP midband; bear on lower high near VWAP midband"
+    default_params: { band_std: 0.5, swing_lookback: 5 }
+    integration_mode: both
+    filter_column_bull: "vwap_midband_higher_low_bull"
+    filter_column_bear: "vwap_midband_higher_low_bear"
+
+  - name: vwap_first_pullback_only
+    technique: vwap_pullback
+    category: trend
+    description: "Only the first retrace to VWAP after an impulse is considered valid for continuation"
+    default_params: { impulse_bars: 3, max_pullbacks: 1 }
+    integration_mode: both
+    filter_column_bull: "vwap_first_pullback_only_bull"
+    filter_column_bear: "vwap_first_pullback_only_bear"
+
+  - name: vwap_second_chance_entry
+    technique: vwap_pullback
+    category: trend
+    description: "Second test of VWAP becomes valid only if the first test held and trend remains intact"
+    default_params: { max_tests: 2, adx_period: 7 }
+    integration_mode: both
+    filter_column_bull: "vwap_second_chance_entry_bull"
+    filter_column_bear: "vwap_second_chance_entry_bear"
+
+  - name: vwap_retest_breakout_support
+    technique: vwap_pullback
+    category: trend
+    description: "Breakout level retests into VWAP confluence, then continuation in breakout direction"
+    default_params: { breakout_lookback: 10, tolerance: 0.15 }
+    integration_mode: both
+    filter_column_bull: "vwap_retest_breakout_support_bull"
+    filter_column_bear: "vwap_retest_breakout_support_bear"
+
+  - name: vwap_sigma_compression_release
+    technique: vwap_pullback
+    category: volatility
+    description: "Price compresses around VWAP within tight sigma bands before directional resumption"
+    default_params: { std_period: 20, compression_threshold: 0.35 }
+    integration_mode: both
+    filter_column_bull: "vwap_sigma_compression_release_bull"
+    filter_column_bear: "vwap_sigma_compression_release_bear"
+
+  - name: vwap_atr_pullback_limit
+    technique: vwap_pullback
+    category: volatility
+    description: "Pullback is valid only if retracement stays within a fraction of ATR around VWAP"
+    default_params: { atr_period: 5, max_atr_pullback: 0.8 }
+    integration_mode: both
+    filter_column_bull: "vwap_atr_pullback_limit_bull"
+    filter_column_bear: "vwap_atr_pullback_limit_bear"
+
+  - name: vwap_regression_channel_bounce
+    technique: vwap_pullback
+    category: trend
+    description: "VWAP pullback aligns with lower or upper regression channel before resumption"
+    default_params: { period: 12, std_mult: 1.0 }
+    integration_mode: both
+    filter_column_bull: "vwap_regression_channel_bounce_bull"
+    filter_column_bear: "vwap_regression_channel_bounce_bear"
+
+  - name: vwap_tsi_resume
+    technique: vwap_pullback
+    category: momentum
+    description: "True Strength Index turns back with trend as price reacts off VWAP"
+    default_params: { long_period: 8, short_period: 4, signal_period: 3 }
+    integration_mode: both
+    filter_column_bull: "vwap_tsi_resume_bull"
+    filter_column_bear: "vwap_tsi_resume_bear"
+
+  - name: vwap_rvi_resume
+    technique: vwap_pullback
+    category: momentum
+    description: "Relative Vigor Index confirms trend continuation after a VWAP pullback"
+    default_params: { rvi_period: 6, signal_period: 3 }
+    integration_mode: both
+    filter_column_bull: "vwap_rvi_resume_bull"
+    filter_column_bear: "vwap_rvi_resume_bear"
+
+  - name: vwap_linreg_slope_hold
+    technique: vwap_pullback
+    category: trend
+    description: "Linear regression slope remains positive or negative while price finds VWAP support or resistance"
+    default_params: { period: 10, slope_threshold: 0.02 }
+    integration_mode: both
+    filter_column_bull: "vwap_linreg_slope_hold_bull"
+    filter_column_bear: "vwap_linreg_slope_hold_bear"
+
+  - name: vwap_delta_proxy_reversal
+    technique: vwap_pullback
+    category: micro_structure
+    description: "Intrabar pressure proxy flips back in trend direction as price rejects VWAP"
+    default_params: { period: 5, threshold: 0.15 }
+    integration_mode: both
+    filter_column_bull: "vwap_delta_proxy_reversal_bull"
+    filter_column_bear: "vwap_delta_proxy_reversal_bear"
+
+  - name: rsi_extreme_snapback
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "RSI reaches a short-term extreme at range edge and snaps back toward the middle"
+    default_params: { rsi_period: 5, upper_band: 80, lower_band: 20 }
+    integration_mode: both
+    filter_column_bull: "rsi_extreme_snapback_bull"
+    filter_column_bear: "rsi_extreme_snapback_bear"
+
+  - name: stoch_range_reversal
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Fast stochastic turns down from overbought or up from oversold near established range boundaries"
+    default_params: { k_period: 5, d_period: 3, upper_band: 85, lower_band: 15 }
+    integration_mode: both
+    filter_column_bull: "stoch_range_reversal_bull"
+    filter_column_bear: "stoch_range_reversal_bear"
+
+  - name: cci_range_fade
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "CCI extreme at a range edge reverts as price closes back inside the local range"
+    default_params: { cci_period: 7, threshold: 120 }
+    integration_mode: both
+    filter_column_bull: "cci_range_fade_bull"
+    filter_column_bear: "cci_range_fade_bear"
+
+  - name: williams_r_snapback
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Williams %R reaches exhaustion at range extremes and reverses back inward"
+    default_params: { period: 7, upper_band: -10, lower_band: -90 }
+    integration_mode: both
+    filter_column_bull: "williams_r_snapback_bull"
+    filter_column_bear: "williams_r_snapback_bear"
+
+  - name: keltner_band_reversion
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Price stretches to outer Keltner band and reverts toward the midline"
+    default_params: { period: 10, atr_period: 5, atr_mult: 1.5 }
+    integration_mode: both
+    filter_column_bull: "keltner_band_reversion_bull"
+    filter_column_bear: "keltner_band_reversion_bear"
+
+  - name: atr_stretch_revert
+    technique: range_mean_reversion
+    category: volatility
+    description: "A short-term ATR stretch from the local mean is faded when momentum stalls"
+    default_params: { atr_period: 5, stretch_mult: 1.6, mean_period: 10 }
+    integration_mode: both
+    filter_column_bull: "atr_stretch_revert_bull"
+    filter_column_bear: "atr_stretch_revert_bear"
+
+  - name: zscore_mean_revert
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Price z-score reaches a local extreme and reverts back toward its rolling mean"
+    default_params: { period: 12, entry_z: 1.5 }
+    integration_mode: both
+    filter_column_bull: "zscore_mean_revert_bull"
+    filter_column_bear: "zscore_mean_revert_bear"
+
+  - name: ema_envelope_reversion
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Price tags a tight EMA envelope and closes back toward the envelope center"
+    default_params: { ema_period: 8, pct_band: 0.25 }
+    integration_mode: both
+    filter_column_bull: "ema_envelope_reversion_bull"
+    filter_column_bear: "ema_envelope_reversion_bear"
+
+  - name: donchian_edge_fade
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Price fails at Donchian channel boundary and rotates back toward the channel middle"
+    default_params: { period: 10 }
+    integration_mode: both
+    filter_column_bull: "donchian_edge_fade_bull"
+    filter_column_bear: "donchian_edge_fade_bear"
+
+  - name: session_midpoint_reversion
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Range extension away from session midpoint reverts after rejection at extremes"
+    default_params: { lookback_bars: 20, threshold_pct: 0.35 }
+    integration_mode: both
+    filter_column_bull: "session_midpoint_reversion_bull"
+    filter_column_bear: "session_midpoint_reversion_bear"
+
+  - name: rolling_midpoint_bounce
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Price mean-reverts from short rolling high-low midpoint deviations"
+    default_params: { period: 8, deviation_mult: 0.8 }
+    integration_mode: both
+    filter_column_bull: "rolling_midpoint_bounce_bull"
+    filter_column_bear: "rolling_midpoint_bounce_bear"
+
+  - name: pivot_band_reversal
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Price rejects a short-term pivot band and returns toward center range"
+    default_params: { pivot_period: 10, band_tolerance: 0.15 }
+    integration_mode: both
+    filter_column_bull: "pivot_band_reversal_bull"
+    filter_column_bear: "pivot_band_reversal_bear"
+
+  - name: fractal_range_fade
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Recent fractal high or low is swept and rejected back into the prior range"
+    default_params: { fractal_span: 2, sweep_tolerance: 0.1 }
+    integration_mode: both
+    filter_column_bull: "fractal_range_fade_bull"
+    filter_column_bear: "fractal_range_fade_bear"
+
+  - name: inside_band_reversal
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Price pokes outside a volatility band and finishes back inside the envelope"
+    default_params: { period: 10, std_dev: 1.8 }
+    integration_mode: both
+    filter_column_bull: "inside_band_reversal_bull"
+    filter_column_bear: "inside_band_reversal_bear"
+
+  - name: false_break_range_return
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "A failed breakout re-enters the prior range and targets the middle"
+    default_params: { lookback: 8, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "false_break_range_return_bull"
+    filter_column_bear: "false_break_range_return_bear"
+
+  - name: wick_exhaustion_fade
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Long wick at range edge suggests exhaustion and reversion toward mean"
+    default_params: { wick_body_ratio: 2.0, range_period: 10 }
+    integration_mode: both
+    filter_column_bull: "wick_exhaustion_fade_bull"
+    filter_column_bear: "wick_exhaustion_fade_bear"
+
+  - name: engulfing_range_turn
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Reversal engulfing candle forms at range edge and points back to midpoint"
+    default_params: { min_body_mult: 1.2, range_period: 10 }
+    integration_mode: both
+    filter_column_bull: "engulfing_range_turn_bull"
+    filter_column_bear: "engulfing_range_turn_bear"
+
+  - name: doji_range_reversal
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Indecision doji at range boundary followed by opposite-direction confirmation"
+    default_params: { body_threshold: 0.15, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "doji_range_reversal_bull"
+    filter_column_bear: "doji_range_reversal_bear"
+
+  - name: heikin_ashi_exhaustion
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Heikin Ashi trend stalls at range extreme and flips back toward mean"
+    default_params: { confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "heikin_ashi_exhaustion_bull"
+    filter_column_bear: "heikin_ashi_exhaustion_bear"
+
+  - name: parabolic_sar_fade
+    technique: range_mean_reversion
+    category: trend
+    description: "Parabolic SAR flips against the prior short trend at a range edge, favoring reversion"
+    default_params: { step: 0.02, max_step: 0.2 }
+    integration_mode: both
+    filter_column_bull: "parabolic_sar_fade_bull"
+    filter_column_bear: "parabolic_sar_fade_bear"
+
+  - name: supertrend_range_flip
+    technique: range_mean_reversion
+    category: trend
+    description: "Supertrend flip occurs only after price stretches into a local range boundary"
+    default_params: { atr_period: 5, atr_mult: 1.6 }
+    integration_mode: both
+    filter_column_bull: "supertrend_range_flip_bull"
+    filter_column_bear: "supertrend_range_flip_bear"
+
+  - name: mfi_exhaustion_revert
+    technique: range_mean_reversion
+    category: volume
+    description: "Money Flow Index reaches an extreme and price reverts from a range edge"
+    default_params: { mfi_period: 7, upper_band: 85, lower_band: 15 }
+    integration_mode: both
+    filter_column_bull: "mfi_exhaustion_revert_bull"
+    filter_column_bear: "mfi_exhaustion_revert_bear"
+
+  - name: cmf_range_divergence
+    technique: range_mean_reversion
+    category: volume
+    description: "Price tests range extreme while Chaikin Money Flow diverges against the move"
+    default_params: { cmf_period: 8, divergence_lookback: 6 }
+    integration_mode: both
+    filter_column_bull: "cmf_range_divergence_bull"
+    filter_column_bear: "cmf_range_divergence_bear"
+
+  - name: obv_failure_at_edge
+    technique: range_mean_reversion
+    category: volume
+    description: "OBV fails to confirm price test of range high or low, favoring fade"
+    default_params: { obv_lookback: 8, range_period: 10 }
+    integration_mode: both
+    filter_column_bull: "obv_failure_at_edge_bull"
+    filter_column_bear: "obv_failure_at_edge_bear"
+
+  - name: roc_exhaustion_fade
+    technique: range_mean_reversion
+    category: momentum
+    description: "Rate-of-change spikes into exhaustion at a range edge and then reverses"
+    default_params: { roc_period: 4, threshold: 0.6 }
+    integration_mode: both
+    filter_column_bull: "roc_exhaustion_fade_bull"
+    filter_column_bear: "roc_exhaustion_fade_bear"
+
+  - name: tsi_divergence_revert
+    technique: range_mean_reversion
+    category: momentum
+    description: "True Strength Index diverges at a range extreme and price rotates inward"
+    default_params: { long_period: 8, short_period: 4, signal_period: 3 }
+    integration_mode: both
+    filter_column_bull: "tsi_divergence_revert_bull"
+    filter_column_bear: "tsi_divergence_revert_bear"
+
+  - name: rvi_divergence_revert
+    technique: range_mean_reversion
+    category: momentum
+    description: "Relative Vigor Index fails to confirm a price extreme, supporting reversion"
+    default_params: { rvi_period: 6, signal_period: 3 }
+    integration_mode: both
+    filter_column_bull: "rvi_divergence_revert_bull"
+    filter_column_bear: "rvi_divergence_revert_bear"
+
+  - name: macd_histogram_fade
+    technique: range_mean_reversion
+    category: momentum
+    description: "MACD histogram peaks at range edge and rolls over back toward center"
+    default_params: { fast_period: 6, slow_period: 13, signal_period: 4 }
+    integration_mode: both
+    filter_column_bull: "macd_histogram_fade_bull"
+    filter_column_bear: "macd_histogram_fade_bear"
+
+  - name: dpo_mean_reversion
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Detrended Price Oscillator extreme indicates short-term overextension inside a range"
+    default_params: { period: 10, threshold: 0.4 }
+    integration_mode: both
+    filter_column_bull: "dpo_mean_reversion_bull"
+    filter_column_bear: "dpo_mean_reversion_bear"
+
+  - name: linreg_deviation_fade
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Price deviates from a short regression line and reverts after stall"
+    default_params: { period: 10, std_mult: 1.2 }
+    integration_mode: both
+    filter_column_bull: "linreg_deviation_fade_bull"
+    filter_column_bear: "linreg_deviation_fade_bear"
+
+  - name: median_reversion_channel
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Price tags the outer median channel and rotates back toward channel median"
+    default_params: { period: 12, band_mult: 1.3 }
+    integration_mode: both
+    filter_column_bull: "median_reversion_channel_bull"
+    filter_column_bear: "median_reversion_channel_bear"
+
+  - name: percent_b_band_reversal
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Percent-B reaches outer band extreme and reverses back inside the Bollinger range"
+    default_params: { period: 10, std_dev: 2.0 }
+    integration_mode: both
+    filter_column_bull: "percent_b_band_reversal_bull"
+    filter_column_bear: "percent_b_band_reversal_bear"
+
+  - name: range_adx_decay_fade
+    technique: range_mean_reversion
+    category: trend
+    description: "Low and declining ADX identifies non-trending conditions suitable for range fades"
+    default_params: { adx_period: 7, adx_threshold: 16 }
+    integration_mode: both
+    filter_column_bull: "range_adx_decay_fade_bull"
+    filter_column_bear: "range_adx_decay_fade_bear"
+
+  - name: narrow_range_revert
+    technique: range_mean_reversion
+    category: volatility
+    description: "Price repeatedly mean-reverts inside a compressed narrow-range regime"
+    default_params: { lookback: 6, range_threshold: 0.5 }
+    integration_mode: both
+    filter_column_bull: "narrow_range_revert_bull"
+    filter_column_bear: "narrow_range_revert_bear"
+
+  - name: halfback_range_return
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Failed directional push beyond halfback retraces to the range midpoint"
+    default_params: { range_period: 10, tolerance: 0.12 }
+    integration_mode: both
+    filter_column_bull: "halfback_range_return_bull"
+    filter_column_bear: "halfback_range_return_bear"
+
+  - name: micro_gap_fill_reversion
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Small intraday gap or impulse pocket gets filled as price mean-reverts"
+    default_params: { gap_threshold: 0.2, fill_target_pct: 0.8 }
+    integration_mode: both
+    filter_column_bull: "micro_gap_fill_reversion_bull"
+    filter_column_bear: "micro_gap_fill_reversion_bear"
+
+  - name: range_volume_exhaustion
+    technique: range_mean_reversion
+    category: volume
+    description: "Volume spikes at range edge but price fails to expand, signaling exhaustion"
+    default_params: { vol_period: 8, climax_mult: 1.7 }
+    integration_mode: both
+    filter_column_bull: "range_volume_exhaustion_bull"
+    filter_column_bear: "range_volume_exhaustion_bear"
+
+  - name: delta_proxy_range_flip
+    technique: range_mean_reversion
+    category: micro_structure
+    description: "Intrabar pressure proxy abruptly flips at range edge, favoring mean reversion"
+    default_params: { period: 5, threshold: 0.2 }
+    integration_mode: both
+    filter_column_bull: "delta_proxy_range_flip_bull"
+    filter_column_bear: "delta_proxy_range_flip_bear"
+
+  - name: vwap_band_range_reject
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Price rejects a VWAP deviation band and reverts toward VWAP in a sideways session"
+    default_params: { std_mult: 1.2 }
+    integration_mode: both
+    filter_column_bull: "vwap_band_range_reject_bull"
+    filter_column_bear: "vwap_band_range_reject_bear"
+
+  - name: twap_reversion_ping
+    technique: range_mean_reversion
+    category: mean_reversion
+    description: "Price stretches away from a rolling TWAP and rotates back as momentum cools"
+    default_params: { period: 12, deviation_threshold: 0.35 }
+    integration_mode: both
+    filter_column_bull: "twap_reversion_ping_bull"
+    filter_column_bear: "twap_reversion_ping_bear"
+
+  - name: intrabar_delta_surge
+    technique: order_flow
+    category: micro_structure
+    description: "Bull when intrabar pressure sharply shifts toward close near highs; bear on opposite shift"
+    default_params: { period: 3, threshold: 0.3 }
+    integration_mode: both
+    filter_column_bull: "intrabar_delta_surge_bull"
+    filter_column_bear: "intrabar_delta_surge_bear"
+
+  - name: bid_ask_pressure_proxy
+    technique: order_flow
+    category: micro_structure
+    description: "Pressure proxy from candle location and spread compression estimates short-term buying or selling control"
+    default_params: { period: 5, spread_period: 5 }
+    integration_mode: both
+    filter_column_bull: "bid_ask_pressure_proxy_bull"
+    filter_column_bear: "bid_ask_pressure_proxy_bear"
+
+  - name: close_location_value_impulse
+    technique: order_flow
+    category: micro_structure
+    description: "Repeated closes near bar extremes indicate directional aggression building"
+    default_params: { period: 4, clv_threshold: 0.7 }
+    integration_mode: both
+    filter_column_bull: "close_location_value_impulse_bull"
+    filter_column_bear: "close_location_value_impulse_bear"
+
+  - name: volume_imbalance_proxy
+    technique: order_flow
+    category: volume
+    description: "Directional signal based on up-volume versus down-volume imbalance over a short window"
+    default_params: { period: 6, imbalance_ratio: 1.4 }
+    integration_mode: both
+    filter_column_bull: "volume_imbalance_proxy_bull"
+    filter_column_bear: "volume_imbalance_proxy_bear"
+
+  - name: tick_rule_pressure
+    technique: order_flow
+    category: micro_structure
+    description: "Approximates buyer or seller initiative using tick-direction accumulation"
+    default_params: { period: 8, threshold: 3 }
+    integration_mode: both
+    filter_column_bull: "tick_rule_pressure_bull"
+    filter_column_bear: "tick_rule_pressure_bear"
+
+  - name: effort_result_dislocation
+    technique: order_flow
+    category: volume
+    description: "Large volume with poor directional progress suggests absorption; progress with volume suggests initiative"
+    default_params: { period: 6, volume_mult: 1.5 }
+    integration_mode: both
+    filter_column_bull: "effort_result_dislocation_bull"
+    filter_column_bear: "effort_result_dislocation_bear"
+
+  - name: spread_compression_expansion
+    technique: order_flow
+    category: micro_structure
+    description: "Compressed candle spreads followed by directional expansion imply one-sided control"
+    default_params: { compression_period: 5, expansion_mult: 1.4 }
+    integration_mode: both
+    filter_column_bull: "spread_compression_expansion_bull"
+    filter_column_bear: "spread_compression_expansion_bear"
+
+  - name: absorption_proxy_reversal
+    technique: order_flow
+    category: micro_structure
+    description: "Price stalls near extreme while pressure persists, suggesting absorption and reversal risk"
+    default_params: { period: 5, stall_bars: 2 }
+    integration_mode: both
+    filter_column_bull: "absorption_proxy_reversal_bull"
+    filter_column_bear: "absorption_proxy_reversal_bear"
+
+  - name: initiative_drive_sequence
+    technique: order_flow
+    category: micro_structure
+    description: "Consecutive directional closes near extremes indicate initiative buying or selling"
+    default_params: { sequence_bars: 3, clv_threshold: 0.65 }
+    integration_mode: both
+    filter_column_bull: "initiative_drive_sequence_bull"
+    filter_column_bear: "initiative_drive_sequence_bear"
+
+  - name: iceberg_absorption_proxy
+    technique: order_flow
+    category: micro_structure
+    description: "Repeated failed pushes through the same level imply hidden liquidity absorption"
+    default_params: { lookback: 8, min_tests: 3, tolerance: 0.08 }
+    integration_mode: both
+    filter_column_bull: "iceberg_absorption_proxy_bull"
+    filter_column_bear: "iceberg_absorption_proxy_bear"
+
+  - name: sweep_and_reclaim_proxy
+    technique: order_flow
+    category: micro_structure
+    description: "Price sweeps a local high or low then sharply reclaims, signaling trapped breakout traders"
+    default_params: { lookback: 10, reclaim_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "sweep_and_reclaim_proxy_bull"
+    filter_column_bear: "sweep_and_reclaim_proxy_bear"
+
+  - name: micro_pullback_pressure_resume
+    technique: order_flow
+    category: micro_structure
+    description: "Short pullback with weak opposing pressure resolves back in prevailing direction"
+    default_params: { period: 5, weakness_threshold: 0.2 }
+    integration_mode: both
+    filter_column_bull: "micro_pullback_pressure_resume_bull"
+    filter_column_bear: "micro_pullback_pressure_resume_bear"
+
+  - name: stacked_closes_momentum
+    technique: order_flow
+    category: micro_structure
+    description: "Multiple strong closes in the same direction suggest persistent order-flow dominance"
+    default_params: { sequence_bars: 4, clv_threshold: 0.6 }
+    integration_mode: both
+    filter_column_bull: "stacked_closes_momentum_bull"
+    filter_column_bear: "stacked_closes_momentum_bear"
+
+  - name: bar_overlap_drain
+    technique: order_flow
+    category: micro_structure
+    description: "Reduced overlap implies directional acceptance; increased overlap implies absorption and chop"
+    default_params: { period: 6, overlap_threshold: 0.35 }
+    integration_mode: both
+    filter_column_bull: "bar_overlap_drain_bull"
+    filter_column_bear: "bar_overlap_drain_bear"
+
+  - name: range_efficiency_burst
+    technique: order_flow
+    category: micro_structure
+    description: "High directional efficiency ratio over a short window signals one-way auction behavior"
+    default_params: { period: 6, efficiency_threshold: 0.55 }
+    integration_mode: both
+    filter_column_bull: "range_efficiency_burst_bull"
+    filter_column_bear: "range_efficiency_burst_bear"
+
+  - name: signed_return_pressure
+    technique: order_flow
+    category: momentum
+    description: "Accumulated signed returns create a short-term pressure oscillator for buyer or seller control"
+    default_params: { period: 7, threshold: 0.4 }
+    integration_mode: both
+    filter_column_bull: "signed_return_pressure_bull"
+    filter_column_bear: "signed_return_pressure_bear"
+
+  - name: cumulative_tick_pressure
+    technique: order_flow
+    category: micro_structure
+    description: "Short cumulative tick movement indicates whether market orders are dominating one side"
+    default_params: { period: 10, threshold: 4 }
+    integration_mode: both
+    filter_column_bull: "cumulative_tick_pressure_bull"
+    filter_column_bear: "cumulative_tick_pressure_bear"
+
+  - name: updown_volume_delta_proxy
+    technique: order_flow
+    category: volume
+    description: "Compares volume on advancing bars versus declining bars to estimate directional dominance"
+    default_params: { period: 8, ratio_threshold: 1.3 }
+    integration_mode: both
+    filter_column_bull: "updown_volume_delta_proxy_bull"
+    filter_column_bear: "updown_volume_delta_proxy_bear"
+
+  - name: wick_absorption_ratio
+    technique: order_flow
+    category: micro_structure
+    description: "Long opposing wicks versus body size estimate whether aggressive flow is being absorbed"
+    default_params: { period: 5, ratio_threshold: 1.6 }
+    integration_mode: both
+    filter_column_bull: "wick_absorption_ratio_bull"
+    filter_column_bear: "wick_absorption_ratio_bear"
+
+  - name: close_near_extreme_cluster
+    technique: order_flow
+    category: micro_structure
+    description: "Cluster of closes near highs or lows suggests sustained pressure from one side"
+    default_params: { period: 5, cluster_threshold: 0.7 }
+    integration_mode: both
+    filter_column_bull: "close_near_extreme_cluster_bull"
+    filter_column_bear: "close_near_extreme_cluster_bear"
+
+  - name: failed_auction_proxy
+    technique: order_flow
+    category: micro_structure
+    description: "Extension beyond a local extreme that immediately fails indicates unfinished auction reversal"
+    default_params: { lookback: 8, failure_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "failed_auction_proxy_bull"
+    filter_column_bear: "failed_auction_proxy_bear"
+
+  - name: acceptance_rejection_flip
+    technique: order_flow
+    category: micro_structure
+    description: "Acceptance outside a level followed by rejection back inside measures short-lived imbalance"
+    default_params: { lookback: 8, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "acceptance_rejection_flip_bull"
+    filter_column_bear: "acceptance_rejection_flip_bear"
+
+  - name: volume_spike_no_progress
+    technique: order_flow
+    category: volume
+    description: "Climactic volume without follow-through estimates absorption by passive liquidity"
+    default_params: { vol_period: 8, climax_mult: 1.8 }
+    integration_mode: both
+    filter_column_bull: "volume_spike_no_progress_bull"
+    filter_column_bear: "volume_spike_no_progress_bear"
+
+  - name: small_pullback_large_response
+    technique: order_flow
+    category: micro_structure
+    description: "Weak retracement met by outsized continuation move implies strong side control"
+    default_params: { pullback_bars: 2, response_mult: 1.5 }
+    integration_mode: both
+    filter_column_bull: "small_pullback_large_response_bull"
+    filter_column_bear: "small_pullback_large_response_bear"
+
+  - name: pace_of_trade_proxy
+    technique: order_flow
+    category: micro_structure
+    description: "Acceleration in directional range and body size acts as a proxy for trading pace"
+    default_params: { period: 5, pace_threshold: 1.4 }
+    integration_mode: both
+    filter_column_bull: "pace_of_trade_proxy_bull"
+    filter_column_bear: "pace_of_trade_proxy_bear"
+
+  - name: auction_rotation_intensity
+    technique: order_flow
+    category: micro_structure
+    description: "Frequent bar flips with limited progress indicate two-sided trade and rotation"
+    default_params: { period: 6, flip_threshold: 4 }
+    integration_mode: both
+    filter_column_bull: "auction_rotation_intensity_bull"
+    filter_column_bear: "auction_rotation_intensity_bear"
+
+  - name: directional_conviction_score
+    technique: order_flow
+    category: micro_structure
+    description: "Composite score from body size, close location, and overlap estimates conviction"
+    default_params: { period: 5, score_threshold: 0.6 }
+    integration_mode: both
+    filter_column_bull: "directional_conviction_score_bull"
+    filter_column_bear: "directional_conviction_score_bear"
+
+  - name: micro_balance_break
+    technique: order_flow
+    category: micro_structure
+    description: "Short balance area breaks with strong close location and range expansion"
+    default_params: { balance_period: 6, clv_threshold: 0.65 }
+    integration_mode: both
+    filter_column_bull: "micro_balance_break_bull"
+    filter_column_bear: "micro_balance_break_bear"
+
+  - name: micro_exhaustion_then_shift
+    technique: order_flow
+    category: micro_structure
+    description: "Exhaustive directional bars followed by opposite close near extreme imply flow reversal"
+    default_params: { sequence_bars: 3, reversal_confirm: 1 }
+    integration_mode: both
+    filter_column_bull: "micro_exhaustion_then_shift_bull"
+    filter_column_bear: "micro_exhaustion_then_shift_bear"
+
+  - name: candle_spread_volume_ratio
+    technique: order_flow
+    category: volume
+    description: "Spread-to-volume relationship estimates whether volume is producing efficient price movement"
+    default_params: { period: 6, ratio_threshold: 0.8 }
+    integration_mode: both
+    filter_column_bull: "candle_spread_volume_ratio_bull"
+    filter_column_bear: "candle_spread_volume_ratio_bear"
+
+  - name: buy_sell_climax_rotation
+    technique: order_flow
+    category: volume
+    description: "One-sided climax followed by opposite directional close suggests rotational scalp setup"
+    default_params: { vol_period: 8, climax_mult: 1.7 }
+    integration_mode: both
+    filter_column_bull: "buy_sell_climax_rotation_bull"
+    filter_column_bear: "buy_sell_climax_rotation_bear"
+
+  - name: delta_proxy_divergence
+    technique: order_flow
+    category: micro_structure
+    description: "Pressure proxy diverges from price at local extremes, signaling fading aggression"
+    default_params: { period: 6, divergence_lookback: 8 }
+    integration_mode: both
+    filter_column_bull: "delta_proxy_divergence_bull"
+    filter_column_bear: "delta_proxy_divergence_bear"
+
+  - name: body_to_range_persistence
+    technique: order_flow
+    category: micro_structure
+    description: "Large bodies relative to total range repeated across bars imply persistent initiative"
+    default_params: { period: 5, ratio_threshold: 0.6 }
+    integration_mode: both
+    filter_column_bull: "body_to_range_persistence_bull"
+    filter_column_bear: "body_to_range_persistence_bear"
+
+  - name: opposing_wick_failure
+    technique: order_flow
+    category: micro_structure
+    description: "Shrinking opposing wick sizes across bars indicate the counterparty side is weakening"
+    default_params: { period: 4, threshold: 0.2 }
+    integration_mode: both
+    filter_column_bull: "opposing_wick_failure_bull"
+    filter_column_bear: "opposing_wick_failure_bear"
+
+  - name: short_term_lob_proxy
+    technique: order_flow
+    category: micro_structure
+    description: "Synthetic order-book pressure proxy from range, wick, and close location behavior"
+    default_params: { period: 5, weight_close: 0.5, weight_wick: 0.3, weight_range: 0.2 }
+    integration_mode: both
+    filter_column_bull: "short_term_lob_proxy_bull"
+    filter_column_bear: "short_term_lob_proxy_bear"
+
+  - name: micro_trap_breaker
+    technique: order_flow
+    category: micro_structure
+    description: "Breakout fails and reverses quickly, implying trapped aggressive participation"
+    default_params: { lookback: 7, reversal_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "micro_trap_breaker_bull"
+    filter_column_bear: "micro_trap_breaker_bear"
+
+  - name: reversal_after_absorption_cluster
+    technique: order_flow
+    category: micro_structure
+    description: "Series of absorption-style bars resolves into a short reversal impulse"
+    default_params: { period: 6, min_absorption_bars: 2 }
+    integration_mode: both
+    filter_column_bull: "reversal_after_absorption_cluster_bull"
+    filter_column_bear: "reversal_after_absorption_cluster_bear"
+
+  - name: pressure_slope_shift
+    technique: order_flow
+    category: micro_structure
+    description: "Slope change in a composite pressure series signals buyer or seller control handoff"
+    default_params: { period: 7, slope_period: 3 }
+    integration_mode: both
+    filter_column_bull: "pressure_slope_shift_bull"
+    filter_column_bear: "pressure_slope_shift_bear"
+
+  - name: high_low_close_pressure_index
+    technique: order_flow
+    category: micro_structure
+    description: "Pressure index from bar position within range smooths directional order-flow inference"
+    default_params: { period: 5 }
+    integration_mode: both
+    filter_column_bull: "high_low_close_pressure_index_bull"
+    filter_column_bear: "high_low_close_pressure_index_bear"
+
+  - name: bar_by_bar_imbalance_streak
+    technique: order_flow
+    category: micro_structure
+    description: "Streak count of one-sided bars measures sustained short-term imbalance"
+    default_params: { period: 6, min_streak: 3 }
+    integration_mode: both
+    filter_column_bull: "bar_by_bar_imbalance_streak_bull"
+    filter_column_bear: "bar_by_bar_imbalance_streak_bear"
+
+  - name: opening_range_retest_hold
+    technique: opening_range
+    category: momentum
+    description: "After opening range break, price retests the boundary and resumes in breakout direction"
+    default_params: { range_bars: 5, retest_bars: 2 }
+    integration_mode: both
+    filter_column_bull: "opening_range_retest_hold_bull"
+    filter_column_bear: "opening_range_retest_hold_bear"
+
+  - name: opening_drive_extension
+    technique: opening_range
+    category: momentum
+    description: "The first opening drive continues beyond the initial opening range extreme"
+    default_params: { range_bars: 3, extension_mult: 0.5 }
+    integration_mode: both
+    filter_column_bull: "opening_drive_extension_bull"
+    filter_column_bear: "opening_drive_extension_bear"
+
+  - name: first_pullback_after_orb
+    technique: opening_range
+    category: trend
+    description: "First pullback after an opening range breakout offers continuation entry"
+    default_params: { range_bars: 5, pullback_bars: 3 }
+    integration_mode: both
+    filter_column_bull: "first_pullback_after_orb_bull"
+    filter_column_bear: "first_pullback_after_orb_bear"
+
+  - name: narrow_opening_range_expansion
+    technique: opening_range
+    category: volatility
+    description: "Compressed opening range resolves with outsized directional expansion"
+    default_params: { range_bars: 5, narrow_threshold: 0.6 }
+    integration_mode: both
+    filter_column_bull: "narrow_opening_range_expansion_bull"
+    filter_column_bear: "narrow_opening_range_expansion_bear"
+
+  - name: wide_opening_range_fade
+    technique: opening_range
+    category: mean_reversion
+    description: "Overextended opening range expansion reverses back toward the opening range midpoint"
+    default_params: { range_bars: 5, stretch_mult: 1.5 }
+    integration_mode: both
+    filter_column_bull: "wide_opening_range_fade_bull"
+    filter_column_bear: "wide_opening_range_fade_bear"
+
+  - name: opening_range_vwap_alignment
+    technique: opening_range
+    category: trend
+    description: "Opening range breakout is taken only when VWAP supports the same direction"
+    default_params: { range_bars: 5, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "opening_range_vwap_alignment_bull"
+    filter_column_bear: "opening_range_vwap_alignment_bear"
+
+  - name: opening_range_volume_confirm
+    technique: opening_range
+    category: volume
+    description: "Breakout of the opening range qualifies only on strong relative volume"
+    default_params: { range_bars: 5, vol_period: 8, vol_mult: 1.6 }
+    integration_mode: both
+    filter_column_bull: "opening_range_volume_confirm_bull"
+    filter_column_bear: "opening_range_volume_confirm_bear"
+
+  - name: opening_range_delta_proxy
+    technique: opening_range
+    category: micro_structure
+    description: "Opening range break is confirmed by intrabar pressure proxy in the same direction"
+    default_params: { range_bars: 5, pressure_period: 3 }
+    integration_mode: both
+    filter_column_bull: "opening_range_delta_proxy_bull"
+    filter_column_bear: "opening_range_delta_proxy_bear"
+
+  - name: opening_range_gap_continuation
+    technique: opening_range
+    category: momentum
+    description: "Gap direction continuation triggers when price breaks the opening range with trend"
+    default_params: { range_bars: 5, gap_threshold: 0.3 }
+    integration_mode: both
+    filter_column_bull: "opening_range_gap_continuation_bull"
+    filter_column_bear: "opening_range_gap_continuation_bear"
+
+  - name: opening_range_gap_fill_fade
+    technique: opening_range
+    category: mean_reversion
+    description: "Failed opening drive rotates back through the opening range toward gap fill"
+    default_params: { range_bars: 5, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "opening_range_gap_fill_fade_bull"
+    filter_column_bear: "opening_range_gap_fill_fade_bear"
+
+  - name: opening_range_high_low_sweep
+    technique: opening_range
+    category: momentum
+    description: "Price sweeps an opening range boundary and expands sharply beyond it"
+    default_params: { range_bars: 5, sweep_tolerance: 0.1 }
+    integration_mode: both
+    filter_column_bull: "opening_range_high_low_sweep_bull"
+    filter_column_bear: "opening_range_high_low_sweep_bear"
+
+  - name: opening_range_false_break_reclaim
+    technique: opening_range
+    category: mean_reversion
+    description: "False break beyond opening range reclaims the box and targets opposite side or midpoint"
+    default_params: { range_bars: 5, reclaim_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "opening_range_false_break_reclaim_bull"
+    filter_column_bear: "opening_range_false_break_reclaim_bear"
+
+  - name: opening_range_ema_drive
+    technique: opening_range
+    category: trend
+    description: "Opening range breakout filtered by fast EMA staying above or below slow EMA"
+    default_params: { range_bars: 5, fast_period: 5, slow_period: 9 }
+    integration_mode: both
+    filter_column_bull: "opening_range_ema_drive_bull"
+    filter_column_bear: "opening_range_ema_drive_bear"
+
+  - name: opening_range_macd_thrust
+    technique: opening_range
+    category: momentum
+    description: "MACD impulse accompanies the opening range breakout for continuation"
+    default_params: { range_bars: 5, fast_period: 6, slow_period: 13, signal_period: 4 }
+    integration_mode: both
+    filter_column_bull: "opening_range_macd_thrust_bull"
+    filter_column_bear: "opening_range_macd_thrust_bear"
+
+  - name: opening_range_rsi_expansion
+    technique: opening_range
+    category: momentum
+    description: "RSI leaves neutral zone as price exits the opening range"
+    default_params: { range_bars: 5, rsi_period: 7, upper_band: 60, lower_band: 40 }
+    integration_mode: both
+    filter_column_bull: "opening_range_rsi_expansion_bull"
+    filter_column_bear: "opening_range_rsi_expansion_bear"
+
+  - name: opening_range_stoch_release
+    technique: opening_range
+    category: momentum
+    description: "Fast stochastic thrust aligns with breakout from opening range"
+    default_params: { range_bars: 5, k_period: 5, d_period: 3 }
+    integration_mode: both
+    filter_column_bull: "opening_range_stoch_release_bull"
+    filter_column_bear: "opening_range_stoch_release_bear"
+
+  - name: opening_range_adx_filter
+    technique: opening_range
+    category: trend
+    description: "Opening range breakout is favored only when ADX is rising from low levels"
+    default_params: { range_bars: 5, adx_period: 7, adx_threshold: 18 }
+    integration_mode: both
+    filter_column_bull: "opening_range_adx_filter_bull"
+    filter_column_bear: "opening_range_adx_filter_bear"
+
+  - name: opening_range_dmi_filter
+    technique: opening_range
+    category: trend
+    description: "Directional movement separation confirms the breakout side after opening range resolution"
+    default_params: { range_bars: 5, dmi_period: 7, min_spread: 3 }
+    integration_mode: both
+    filter_column_bull: "opening_range_dmi_filter_bull"
+    filter_column_bear: "opening_range_dmi_filter_bear"
+
+  - name: opening_range_supertrend_flip
+    technique: opening_range
+    category: trend
+    description: "Opening range break aligns with a Supertrend direction change or continuation"
+    default_params: { range_bars: 5, atr_period: 5, atr_mult: 1.8 }
+    integration_mode: both
+    filter_column_bull: "opening_range_supertrend_flip_bull"
+    filter_column_bear: "opening_range_supertrend_flip_bear"
+
+  - name: opening_range_parabolic_launch
+    technique: opening_range
+    category: trend
+    description: "Parabolic SAR confirms early-session directional expansion out of opening range"
+    default_params: { range_bars: 5, step: 0.02, max_step: 0.2 }
+    integration_mode: both
+    filter_column_bull: "opening_range_parabolic_launch_bull"
+    filter_column_bear: "opening_range_parabolic_launch_bear"
+
+  - name: opening_range_halfback_continuation
+    technique: opening_range
+    category: trend
+    description: "After breakout, price retraces roughly halfway and resumes away from opening range"
+    default_params: { range_bars: 5, tolerance: 0.12 }
+    integration_mode: both
+    filter_column_bull: "opening_range_halfback_continuation_bull"
+    filter_column_bear: "opening_range_halfback_continuation_bear"
+
+  - name: opening_range_fib_382_hold
+    technique: opening_range
+    category: trend
+    description: "Shallow 38.2% retrace after opening break resumes continuation"
+    default_params: { range_bars: 5, fib_level: 0.382, tolerance: 0.1 }
+    integration_mode: both
+    filter_column_bull: "opening_range_fib_382_hold_bull"
+    filter_column_bear: "opening_range_fib_382_hold_bear"
+
+  - name: opening_range_fib_618_relaunch
+    technique: opening_range
+    category: trend
+    description: "Deeper 61.8% retrace after opening break rejects and relaunches"
+    default_params: { range_bars: 5, fib_level: 0.618, tolerance: 0.12 }
+    integration_mode: both
+    filter_column_bull: "opening_range_fib_618_relaunch_bull"
+    filter_column_bear: "opening_range_fib_618_relaunch_bear"
+
+  - name: opening_range_midpoint_reject
+    technique: opening_range
+    category: mean_reversion
+    description: "Price fails beyond one side of the opening range and rotates around the midpoint"
+    default_params: { range_bars: 5, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "opening_range_midpoint_reject_bull"
+    filter_column_bear: "opening_range_midpoint_reject_bear"
+
+  - name: opening_range_inside_bar_break
+    technique: opening_range
+    category: momentum
+    description: "Inside bar forms just outside opening range and breaks in continuation direction"
+    default_params: { range_bars: 5, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "opening_range_inside_bar_break_bull"
+    filter_column_bear: "opening_range_inside_bar_break_bear"
+
+  - name: opening_range_pinbar_reversal
+    technique: opening_range
+    category: mean_reversion
+    description: "Pin bar at opening range boundary signals rejection and short counter move"
+    default_params: { range_bars: 5, wick_body_ratio: 1.8 }
+    integration_mode: both
+    filter_column_bull: "opening_range_pinbar_reversal_bull"
+    filter_column_bear: "opening_range_pinbar_reversal_bear"
+
+  - name: opening_range_engulf_follow
+    technique: opening_range
+    category: momentum
+    description: "Engulfing candle after opening range break confirms follow-through"
+    default_params: { range_bars: 5, min_body_mult: 1.2 }
+    integration_mode: both
+    filter_column_bull: "opening_range_engulf_follow_bull"
+    filter_column_bear: "opening_range_engulf_follow_bear"
+
+  - name: opening_range_band_expansion
+    technique: opening_range
+    category: volatility
+    description: "Volatility bands expand as price escapes opening range compression"
+    default_params: { range_bars: 5, period: 10, std_dev: 2.0 }
+    integration_mode: both
+    filter_column_bull: "opening_range_band_expansion_bull"
+    filter_column_bear: "opening_range_band_expansion_bear"
+
+  - name: opening_range_sigma_squeeze_release
+    technique: opening_range
+    category: volatility
+    description: "Tight early-session sigma compression releases with directional range expansion"
+    default_params: { range_bars: 5, std_period: 15, compression_threshold: 0.35 }
+    integration_mode: both
+    filter_column_bull: "opening_range_sigma_squeeze_release_bull"
+    filter_column_bear: "opening_range_sigma_squeeze_release_bear"
+
+  - name: opening_range_relative_volume_burst
+    technique: opening_range
+    category: volume
+    description: "Breakout requires a high relative-volume burst in the first minutes"
+    default_params: { range_bars: 5, vol_period: 10, vol_mult: 1.8 }
+    integration_mode: both
+    filter_column_bull: "opening_range_relative_volume_burst_bull"
+    filter_column_bear: "opening_range_relative_volume_burst_bear"
+
+  - name: opening_range_obv_confirm
+    technique: opening_range
+    category: volume
+    description: "OBV makes a confirming new intraday swing as price exits opening range"
+    default_params: { range_bars: 5, obv_lookback: 10 }
+    integration_mode: both
+    filter_column_bull: "opening_range_obv_confirm_bull"
+    filter_column_bear: "opening_range_obv_confirm_bear"
+
+  - name: opening_range_cmf_confirm
+    technique: opening_range
+    category: volume
+    description: "Chaikin Money Flow stays aligned with the opening range breakout direction"
+    default_params: { range_bars: 5, cmf_period: 8 }
+    integration_mode: both
+    filter_column_bull: "opening_range_cmf_confirm_bull"
+    filter_column_bear: "opening_range_cmf_confirm_bear"
+
+  - name: opening_range_mfi_spike
+    technique: opening_range
+    category: volume
+    description: "Money Flow Index spike supports opening range directional resolution"
+    default_params: { range_bars: 5, mfi_period: 7, threshold: 60 }
+    integration_mode: both
+    filter_column_bull: "opening_range_mfi_spike_bull"
+    filter_column_bear: "opening_range_mfi_spike_bear"
+
+  - name: opening_range_trendday_filter
+    technique: opening_range
+    category: trend
+    description: "Opening behavior suggests a trend day when early range break holds and expands"
+    default_params: { range_bars: 5, hold_bars: 3, expansion_mult: 1.2 }
+    integration_mode: both
+    filter_column_bull: "opening_range_trendday_filter_bull"
+    filter_column_bear: "opening_range_trendday_filter_bear"
+
+  - name: opening_range_reversal_day_filter
+    technique: opening_range
+    category: mean_reversion
+    description: "Opening extension fails and rotates back through the opening range, favoring reversal day behavior"
+    default_params: { range_bars: 5, failure_bars: 2 }
+    integration_mode: both
+    filter_column_bull: "opening_range_reversal_day_filter_bull"
+    filter_column_bear: "opening_range_reversal_day_filter_bear"
+
+  - name: opening_range_double_break
+    technique: opening_range
+    category: momentum
+    description: "Second break attempt beyond the opening range is taken after the first was absorbed"
+    default_params: { range_bars: 5, max_attempts: 2 }
+    integration_mode: both
+    filter_column_bull: "opening_range_double_break_bull"
+    filter_column_bear: "opening_range_double_break_bear"
+
+  - name: opening_range_session_high_attack
+    technique: opening_range
+    category: momentum
+    description: "Price breaks opening range and immediately attacks fresh session high or low levels"
+    default_params: { range_bars: 5, lookback_bars: 20 }
+    integration_mode: both
+    filter_column_bull: "opening_range_session_high_attack_bull"
+    filter_column_bear: "opening_range_session_high_attack_bear"
+
+  - name: opening_range_vwap_reclaim
+    technique: opening_range
+    category: trend
+    description: "After a brief opening fakeout, price reclaims VWAP and the opening range boundary together"
+    default_params: { range_bars: 5, confirm_bars: 1 }
+    integration_mode: both
+    filter_column_bull: "opening_range_vwap_reclaim_bull"
+    filter_column_bear: "opening_range_vwap_reclaim_bear"
+
+  - name: opening_range_donchian_extension
+    technique: opening_range
+    category: momentum
+    description: "Opening range breakout continues as price also clears a short Donchian channel"
+    default_params: { range_bars: 5, donchian_period: 8 }
+    integration_mode: both
+    filter_column_bull: "opening_range_donchian_extension_bull"
+    filter_column_bear: "opening_range_donchian_extension_bear"
+
+  - name: opening_range_anchored_vwap_follow
+    technique: opening_range
+    category: trend
+    description: "Opening range breakout holds above or below an anchored VWAP from the session start"
+    default_params: { range_bars: 5, anchor_bars: 15 }
+    integration_mode: both
+    filter_column_bull: "opening_range_anchored_vwap_follow_bull"
+    filter_column_bear: "opening_range_anchored_vwap_follow_bear"

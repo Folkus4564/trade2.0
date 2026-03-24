@@ -1,0 +1,16 @@
+{
+  "strategy_name": "hmm1h_smc5m_89pct",
+  "report_time": "2026-03-19T21:10:02.107109",
+  "total_trades": 0,
+  "total_pnl": 0.0,
+  "total_return": 0.0,
+  "annualized_return": 0.0,
+  "sharpe_ratio": 0.0,
+  "max_drawdown": 0.0,
+  "win_rate": 0.0,
+  "profit_factor": 0.0,
+  "avg_pnl_per_trade": 0.0,
+  "avg_duration_min": null,
+  "n_years_live": 0.0,
+  "note": "No completed trades yet"
+}

@@ -118,6 +118,24 @@ trade2 --model-path artefacts/models/golden/hmm_1h_3states_2026_03_17_ret25pct_s
 - Save strategies achieving >= 20% return
 - Golden model auto-save threshold: >= 20% annualized return (pipeline.golden_model_threshold in base.yaml)
 
+## APPROVED STRATEGY PROTECTION — ABSOLUTE RULE
+
+**NEVER modify any file inside `code3.0/artefacts/approved_strategies/`.**
+
+This directory contains two live-deployed strategies and is permanently frozen:
+
+| Strategy | Folder | Test Return | Sharpe | DD |
+|----------|--------|-------------|--------|----|
+| 89% (Strategy A) | `xauusd_mtf_hmm1h_smc5m_2026_03_18/` | 89.33% | 4.10 | -7.53% |
+| 49% (Strategy B) | `xauusd_mtf_hmm1h_smc5m_tp2x_49pct_2026_03_18/` | 49.27% | 3.16 | -7.15% |
+
+Rules:
+- Do NOT edit `config.yaml`, `metrics.json`, `trades_test.csv`, or `training_summary.md` in either folder.
+- Do NOT delete or overwrite `model.pkl` in either folder.
+- Do NOT run `trade2 --export-approved` in a way that would overwrite these folders.
+- Any improvement work must go to a NEW folder with a new timestamp name.
+- Read-only access only — you may read these files for reference but never write to them.
+
 ## Planning Workflow
 When the user asks to plan something (new feature, refactor, investigation, etc.):
 
@@ -186,6 +204,57 @@ The approved strategy's `model.pkl` has 7 features but the config needs 36.
 ### Weekly Retrain
 Every Sunday, the HMM retrains on all data (original 2019-2025 + accumulated live bars).
 Live bars are accumulated to `data/raw/XAUUSD_1H_live.csv` and `data/raw/XAUUSD_5M_live.csv`.
+
+## Scalping Research Loop (added 2026-03-22)
+
+Automated LLM-driven loop to discover scalping-suitable indicators for XAUUSD 5M signals.
+Forked from `tv_research_loop.py` with scalping-specific discovery and tight 1:1.5 R:R.
+
+### CLI
+```bash
+scalp_research                              # defaults from config
+scalp_research --max-ideas 20              # limit iterations
+scalp_research --trials 30                 # Optuna trials per indicator
+scalp_research --dry-run --max-ideas 2     # translate only, skip pipeline
+scalp_research --provider deepseek         # LLM provider
+scalp_research --goal-return 0.40          # override return goal
+scalp_research --goal-sharpe 2.0           # override Sharpe goal
+scalp_research --min-trades-per-day 8      # stricter frequency threshold
+scalp_research --walk-forward              # enable walk-forward
+scalp_research --no-retrain                # reuse existing HMM
+scalp_research --skip-greedy-stack         # skip stacking phase
+scalp_research --source seed               # use seed list only (no LLM)
+scalp_research --source llm                # LLM discovery only (no seed)
+scalp_research --source both               # seed first, then LLM (default)
+scalp_research --technique momentum_breakout  # filter to one technique
+```
+
+### 5 Scalping Techniques
+Each discovered indicator is tagged with one of:
+- `momentum_breakout` — break of key level with volume confirmation
+- `vwap_pullback` — trend + pullback to VWAP, enter on resume
+- `range_mean_reversion` — fade into S/R, snap back to midpoint
+- `order_flow` — microstructure proxies from OHLCV (delta, bar imbalance)
+- `opening_range` — first volatility burst after market open or catalyst
+
+### Key Files
+- `code3.0/src/trade2/app/scalp_research_loop.py` — forked loop, scalping-adapted
+- `code3.0/configs/scalp.yaml` — overlay: 5M signals, SL=1.0x ATR, TP=1.5x ATR, session 8-17 UTC
+- `code3.0/configs/scalp_seed_list.yaml` — curated seed indicators tagged by technique (205 indicators)
+- `code3.0/artefacts/scalp_research/` — log, best, stack JSONs (auto-created)
+
+### Config Section
+`configs/base.yaml` has a `scalp_research:` section with goals (return>=30%, sharpe>=1.5, dd>=-20%, tpd>=5).
+`scalp.yaml` is always merged on top of base.yaml when running `scalp_research`.
+
+### Key Differences vs tv_research
+- `--source seed|llm|both` — seed list support added; LLM discovery also available
+- Each indicator tagged with a scalping technique (5 techniques total)
+- `--technique` flag filters discovery to one technique
+- Short-period constraint enforced in prompt: MAs 3-8 bars, oscillators 3-10 bars
+- Trade frequency validation: logs `trades_per_day`, warns if below threshold
+- Leaderboard shows Technique and TPD (trades/day) columns
+- Status `COMPLETED_LOW_FREQ` for runs below frequency threshold (not a hard stop)
 
 ## CLAUDE.md Maintenance
 CLAUDE.md must be kept up to date at all times. After any session where new modules, results, architecture decisions, configs, CLI usage patterns, or user preferences are introduced or changed, update the relevant section(s) of CLAUDE.md before finishing.
