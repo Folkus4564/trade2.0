@@ -1,0 +1,80 @@
+# ============================================================
+#  trade2 - Scalping Research Loop - Config Overlay
+#  Overlaid on top of base.yaml for scalp_research runs.
+#  1M signal TF + 15M regime TF. Tight 1:1.5 R:R.
+# ============================================================
+
+strategy:
+  name: xauusd_scalp_research
+  mode: multi_tf
+  signal_timeframe: 1M
+  regime_timeframe: 15M
+
+data:
+  raw_1m_csv:  code3.0/data/raw/XAUUSD_1M_2019_2026.csv
+  raw_15m_csv: data/raw/XAUUSD_15M_2019_2026.csv
+
+splits:
+  test_end: "2026-03-10"
+
+risk:
+  atr_stop_mult: 1.0        # tight stop for scalping
+  atr_tp_mult: 1.5          # 1:1.5 R:R
+  base_allocation_frac: 0.50
+  max_hold_bars: 0          # no timeout - exits via SL/TP/signal only
+
+features:
+  bb_period_5m: 300         # 300 x 1M bars = 5 hours (was 60 x 5M = 5 hours)
+
+smc_5m:
+  ob_validity_bars: 180     # 180 x 1M bars = 3 hours (was 36 x 5M = 3 hours)
+  fvg_validity_bars: 120    # 120 x 1M bars = 2 hours (was 24 x 5M = 2 hours)
+  swing_lookback_bars: 180  # 180 x 1M bars = 3 hours (was 36 x 5M = 3 hours)
+  ob_impulse_bars: 2
+  ob_impulse_mult: 1.2
+  require_confluence: false
+  require_pin_bar: false
+
+regime:
+  persistence_bars: 4             # 4 x 15M bars = 1 hour (was 1 x 1H = 1 hour)
+  persistence_bars_short: 8       # 8 x 15M bars = 2 hours
+  transition_cooldown_bars: 0
+
+hmm:
+  min_prob_hard: 0.60
+  min_prob_hard_short: 0.60
+  min_prob_entry: 0.60
+  min_prob_exit: 0.45
+  min_confidence: 0.40
+
+session:
+  enabled: true
+  allowed_hours_utc: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+
+scalp_research:
+  min_trades_per_day: 2.0   # lowered from 5.0 - realistic for 15M-gated 1M signals
+
+strategies:
+  trend:
+    enabled: true
+    persistence_bars: 4
+    atr_stop_mult: 1.0
+    atr_tp_mult: 1.5
+    trailing_enabled: false
+    session_enabled: true
+    allowed_hours_utc: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+  range:
+    enabled: true
+    persistence_bars: 4
+    atr_stop_mult: 0.8
+    atr_tp_mult: 1.2
+    session_enabled: true
+    allowed_hours_utc: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+  volatile:
+    enabled: true
+    atr_stop_mult: 0.8
+    atr_tp_mult: 1.2
+    session_enabled: true
+    allowed_hours_utc: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+  cdc:
+    enabled: false
