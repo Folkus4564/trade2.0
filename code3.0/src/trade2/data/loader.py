@@ -13,6 +13,9 @@ from typing import Any, Dict, Optional, Tuple
 
 
 TF_RULES = {
+    "1M":    "1min",
+    "5M":    "5min",
+    "15M":   "15min",
     "1H":    "1h",
     "4H":    "4h",
     "Daily": "1D",
@@ -83,13 +86,38 @@ def load_raw(path: Path) -> pd.DataFrame:
     return df
 
 
-def fill_gaps(df: pd.DataFrame, freq: str = "1h", max_gap_bars: int = 5) -> pd.DataFrame:
+def _forex_trading_index(full_index: pd.DatetimeIndex) -> pd.DatetimeIndex:
+    """
+    Filter a calendar DatetimeIndex to forex trading hours only.
+    Excludes Saturday and Sunday before 22:00 UTC (standard FX weekend).
+    """
+    dow = full_index.dayofweek  # 0=Mon ... 6=Sun
+    mask = (
+        (dow < 5) |  # Mon-Fri all hours
+        ((dow == 6) & (full_index.hour >= 22))  # Sun 22:00+ (session open)
+    )
+    return full_index[mask]
+
+
+def fill_gaps(df: pd.DataFrame, freq: str = "1h", max_gap_bars: int = 5,
+              exclude_weekends: bool = True) -> pd.DataFrame:
     """
     Forward-fill small gaps (<=max_gap_bars) in OHLCV data.
-    Larger gaps (weekends, holidays) are left as NaN and dropped.
+    Larger gaps (holidays) are left as NaN and dropped.
+
+    Args:
+        exclude_weekends: If True (default for forex), gap sizes are measured in
+                          trading hours rather than calendar hours.  This lets
+                          the Sunday 22:00 market-open bar (which is 50+ calendar
+                          hours from the last Friday bar but only 1 trading hour
+                          from Sunday 23:00) be treated as a 1-bar gap and filled.
     """
     full_index = pd.date_range(start=df.index[0], end=df.index[-1], freq=freq, tz=df.index.tz)
-    df_full = df.reindex(full_index)
+    if exclude_weekends:
+        trading_index = _forex_trading_index(full_index)
+        df_full = df.reindex(trading_index)
+    else:
+        df_full = df.reindex(full_index)
 
     df_full["_gap"] = df_full["Close"].isna()
     gap_size = df_full["_gap"].groupby(
