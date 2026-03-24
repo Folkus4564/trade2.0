@@ -1,0 +1,125 @@
+indicators:
+- category: momentum
+  default_params:
+    period: 6
+    thrust_threshold: 0.25
+  description: Breakout confirmed by median price acceleration and close beyond recent
+    structure
+  filter_column_bear: median_price_thrust_break_bear
+  filter_column_bull: median_price_thrust_break_bull
+  integration_mode: both
+  name: median_price_thrust_break
+  technique: momentum_breakout
+- category: mean_reversion
+  default_params:
+    band_std: 1.0
+    confirm_bars: 1
+  description: Price pulls back to the lower or upper VWAP band and reclaims VWAP
+    in trend direction
+  filter_column_bear: vwap_band_reclaim_trend_bear
+  filter_column_bull: vwap_band_reclaim_trend_bull
+  integration_mode: both
+  name: vwap_band_reclaim_trend
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    fast_period: 5
+    max_vwap_dev: 0.4
+    slow_period: 9
+  description: VWAP touch entry only qualifies when short EMAs remain stacked with
+    trend
+  filter_column_bear: vwap_touch_go_ema_align_bear
+  filter_column_bull: vwap_touch_go_ema_align_bull
+  integration_mode: both
+  name: vwap_touch_go_ema_align
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    anchor_bars: 30
+    confirm_bars: 1
+  description: Pullback to anchored VWAP after an impulse move, then continuation
+    in the original direction
+  filter_column_bear: anchored_vwap_pullback_resume_bear
+  filter_column_bull: anchored_vwap_pullback_resume_bull
+  integration_mode: both
+  name: anchored_vwap_pullback_resume
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    anchor_bars: 20
+    max_spread: 0.15
+  description: Continuation signal when session VWAP and anchored VWAP cluster near
+    pullback support or resistance
+  filter_column_bear: dual_vwap_confluence_bounce_bear
+  filter_column_bull: dual_vwap_confluence_bounce_bull
+  integration_mode: both
+  name: dual_vwap_confluence_bounce
+  technique: vwap_pullback
+- category: mean_reversion
+  default_params:
+    entry_z: 1.2
+    z_period: 20
+  description: Trend resumes after price mean-reverts from an extreme VWAP z-score
+    back toward the first band
+  filter_column_bear: vwap_zscore_reversion_resume_bear
+  filter_column_bull: vwap_zscore_reversion_resume_bull
+  integration_mode: both
+  name: vwap_zscore_reversion_resume
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    atr_mult: 1.0
+    atr_period: 5
+    period: 10
+  description: Pullback into VWAP and Keltner overlap zone, then trend continuation
+    candle
+  filter_column_bear: vwap_keltner_reentry_bear
+  filter_column_bull: vwap_keltner_reentry_bull
+  integration_mode: both
+  name: vwap_keltner_reentry
+  technique: vwap_pullback
+- category: momentum
+  default_params:
+    reset_level: 50
+    rsi_period: 7
+  description: Trend entry after RSI cools during VWAP pullback and turns back with
+    price
+  filter_column_bear: vwap_rsi_reset_resume_bear
+  filter_column_bull: vwap_rsi_reset_resume_bull
+  integration_mode: both
+  name: vwap_rsi_reset_resume
+  technique: vwap_pullback
+- category: momentum
+  default_params:
+    d_period: 3
+    k_period: 5
+    reset_band: 50
+  description: Price revisits VWAP while stochastic resets from overextended levels
+    into trend resumption
+  filter_column_bear: vwap_stoch_reset_resume_bear
+  filter_column_bull: vwap_stoch_reset_resume_bull
+  integration_mode: both
+  name: vwap_stoch_reset_resume
+  technique: vwap_pullback
+- category: momentum
+  default_params:
+    fast_period: 6
+    signal_period: 4
+    slow_period: 13
+  description: MACD histogram hooks back toward trend direction as price bounces near
+    VWAP
+  filter_column_bear: vwap_macd_hook_continuation_bear
+  filter_column_bull: vwap_macd_hook_continuation_bull
+  integration_mode: both
+  name: vwap_macd_hook_continuation
+  technique: vwap_pullback
+- category: momentum
+  default_params:
+    cci_period: 8
+  description: Continuation setup when CCI recovers through zero after a controlled
+    VWAP pullback
+  filter_column_bear: vwap_cci_reclaim_bear
+  filter_column_bull: vwap_cci_reclaim_bull
+  integration_mode: both
+  name: vwap_cci_reclaim
+  technique: vwap_pullback

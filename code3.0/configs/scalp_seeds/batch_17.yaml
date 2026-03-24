@@ -1,0 +1,109 @@
+indicators:
+- category: momentum
+  default_params:
+    range_bars: 5
+    retest_bars: 2
+  description: After opening range break, price retests the boundary and resumes in
+    breakout direction
+  filter_column_bear: opening_range_retest_hold_bear
+  filter_column_bull: opening_range_retest_hold_bull
+  integration_mode: both
+  name: opening_range_retest_hold
+  technique: opening_range
+- category: momentum
+  default_params:
+    extension_mult: 0.5
+    range_bars: 3
+  description: The first opening drive continues beyond the initial opening range
+    extreme
+  filter_column_bear: opening_drive_extension_bear
+  filter_column_bull: opening_drive_extension_bull
+  integration_mode: both
+  name: opening_drive_extension
+  technique: opening_range
+- category: trend
+  default_params:
+    pullback_bars: 3
+    range_bars: 5
+  description: First pullback after an opening range breakout offers continuation
+    entry
+  filter_column_bear: first_pullback_after_orb_bear
+  filter_column_bull: first_pullback_after_orb_bull
+  integration_mode: both
+  name: first_pullback_after_orb
+  technique: opening_range
+- category: volatility
+  default_params:
+    narrow_threshold: 0.6
+    range_bars: 5
+  description: Compressed opening range resolves with outsized directional expansion
+  filter_column_bear: narrow_opening_range_expansion_bear
+  filter_column_bull: narrow_opening_range_expansion_bull
+  integration_mode: both
+  name: narrow_opening_range_expansion
+  technique: opening_range
+- category: mean_reversion
+  default_params:
+    range_bars: 5
+    stretch_mult: 1.5
+  description: Overextended opening range expansion reverses back toward the opening
+    range midpoint
+  filter_column_bear: wide_opening_range_fade_bear
+  filter_column_bull: wide_opening_range_fade_bull
+  integration_mode: both
+  name: wide_opening_range_fade
+  technique: opening_range
+- category: trend
+  default_params:
+    confirm_bars: 1
+    range_bars: 5
+  description: Opening range breakout is taken only when VWAP supports the same direction
+  filter_column_bear: opening_range_vwap_alignment_bear
+  filter_column_bull: opening_range_vwap_alignment_bull
+  integration_mode: both
+  name: opening_range_vwap_alignment
+  technique: opening_range
+- category: volume
+  default_params:
+    range_bars: 5
+    vol_mult: 1.6
+    vol_period: 8
+  description: Breakout of the opening range qualifies only on strong relative volume
+  filter_column_bear: opening_range_volume_confirm_bear
+  filter_column_bull: opening_range_volume_confirm_bull
+  integration_mode: both
+  name: opening_range_volume_confirm
+  technique: opening_range
+- category: micro_structure
+  default_params:
+    pressure_period: 3
+    range_bars: 5
+  description: Opening range break is confirmed by intrabar pressure proxy in the
+    same direction
+  filter_column_bear: opening_range_delta_proxy_bear
+  filter_column_bull: opening_range_delta_proxy_bull
+  integration_mode: both
+  name: opening_range_delta_proxy
+  technique: opening_range
+- category: momentum
+  default_params:
+    gap_threshold: 0.3
+    range_bars: 5
+  description: Gap direction continuation triggers when price breaks the opening range
+    with trend
+  filter_column_bear: opening_range_gap_continuation_bear
+  filter_column_bull: opening_range_gap_continuation_bull
+  integration_mode: both
+  name: opening_range_gap_continuation
+  technique: opening_range
+- category: mean_reversion
+  default_params:
+    confirm_bars: 1
+    range_bars: 5
+  description: Failed opening drive rotates back through the opening range toward
+    gap fill
+  filter_column_bear: opening_range_gap_fill_fade_bear
+  filter_column_bull: opening_range_gap_fill_fade_bull
+  integration_mode: both
+  name: opening_range_gap_fill_fade
+  technique: opening_range

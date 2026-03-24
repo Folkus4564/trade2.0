@@ -1,0 +1,110 @@
+indicators:
+- category: micro_structure
+  default_params:
+    period: 3
+    threshold: 0.3
+  description: Bull when intrabar pressure sharply shifts toward close near highs;
+    bear on opposite shift
+  filter_column_bear: intrabar_delta_surge_bear
+  filter_column_bull: intrabar_delta_surge_bull
+  integration_mode: both
+  name: intrabar_delta_surge
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    period: 5
+    spread_period: 5
+  description: Pressure proxy from candle location and spread compression estimates
+    short-term buying or selling control
+  filter_column_bear: bid_ask_pressure_proxy_bear
+  filter_column_bull: bid_ask_pressure_proxy_bull
+  integration_mode: both
+  name: bid_ask_pressure_proxy
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    clv_threshold: 0.7
+    period: 4
+  description: Repeated closes near bar extremes indicate directional aggression building
+  filter_column_bear: close_location_value_impulse_bear
+  filter_column_bull: close_location_value_impulse_bull
+  integration_mode: both
+  name: close_location_value_impulse
+  technique: order_flow
+- category: volume
+  default_params:
+    imbalance_ratio: 1.4
+    period: 6
+  description: Directional signal based on up-volume versus down-volume imbalance
+    over a short window
+  filter_column_bear: volume_imbalance_proxy_bear
+  filter_column_bull: volume_imbalance_proxy_bull
+  integration_mode: both
+  name: volume_imbalance_proxy
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    period: 8
+    threshold: 3
+  description: Approximates buyer or seller initiative using tick-direction accumulation
+  filter_column_bear: tick_rule_pressure_bear
+  filter_column_bull: tick_rule_pressure_bull
+  integration_mode: both
+  name: tick_rule_pressure
+  technique: order_flow
+- category: volume
+  default_params:
+    period: 6
+    volume_mult: 1.5
+  description: Large volume with poor directional progress suggests absorption; progress
+    with volume suggests initiative
+  filter_column_bear: effort_result_dislocation_bear
+  filter_column_bull: effort_result_dislocation_bull
+  integration_mode: both
+  name: effort_result_dislocation
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    compression_period: 5
+    expansion_mult: 1.4
+  description: Compressed candle spreads followed by directional expansion imply one-sided
+    control
+  filter_column_bear: spread_compression_expansion_bear
+  filter_column_bull: spread_compression_expansion_bull
+  integration_mode: both
+  name: spread_compression_expansion
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    period: 5
+    stall_bars: 2
+  description: Price stalls near extreme while pressure persists, suggesting absorption
+    and reversal risk
+  filter_column_bear: absorption_proxy_reversal_bear
+  filter_column_bull: absorption_proxy_reversal_bull
+  integration_mode: both
+  name: absorption_proxy_reversal
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    clv_threshold: 0.65
+    sequence_bars: 3
+  description: Consecutive directional closes near extremes indicate initiative buying
+    or selling
+  filter_column_bear: initiative_drive_sequence_bear
+  filter_column_bull: initiative_drive_sequence_bull
+  integration_mode: both
+  name: initiative_drive_sequence
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    lookback: 8
+    min_tests: 3
+    tolerance: 0.08
+  description: Repeated failed pushes through the same level imply hidden liquidity
+    absorption
+  filter_column_bear: iceberg_absorption_proxy_bear
+  filter_column_bull: iceberg_absorption_proxy_bull
+  integration_mode: both
+  name: iceberg_absorption_proxy
+  technique: order_flow

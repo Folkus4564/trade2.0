@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "vwap_first_pullback_only",
+    "category": "trend",
+    "technique": "vwap_pullback",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-24T17:53:29",
+    "duration_seconds": 235,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: expected ':' (<unknown>, line 158)"
+  },
+  {
+    "id": 2,
+    "name": "vwap_second_chance_entry",
+    "category": "trend",
+    "technique": "vwap_pullback",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-24T17:57:24",
+    "duration_seconds": 223,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "TestRun: Function must return a DataFrame"
+  }
+]

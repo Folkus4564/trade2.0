@@ -1,0 +1,110 @@
+indicators:
+- category: volume
+  default_params:
+    obv_lookback: 10
+    range_bars: 5
+  description: OBV makes a confirming new intraday swing as price exits opening range
+  filter_column_bear: opening_range_obv_confirm_bear
+  filter_column_bull: opening_range_obv_confirm_bull
+  integration_mode: both
+  name: opening_range_obv_confirm
+  technique: opening_range
+- category: volume
+  default_params:
+    cmf_period: 8
+    range_bars: 5
+  description: Chaikin Money Flow stays aligned with the opening range breakout direction
+  filter_column_bear: opening_range_cmf_confirm_bear
+  filter_column_bull: opening_range_cmf_confirm_bull
+  integration_mode: both
+  name: opening_range_cmf_confirm
+  technique: opening_range
+- category: volume
+  default_params:
+    mfi_period: 7
+    range_bars: 5
+    threshold: 60
+  description: Money Flow Index spike supports opening range directional resolution
+  filter_column_bear: opening_range_mfi_spike_bear
+  filter_column_bull: opening_range_mfi_spike_bull
+  integration_mode: both
+  name: opening_range_mfi_spike
+  technique: opening_range
+- category: trend
+  default_params:
+    expansion_mult: 1.2
+    hold_bars: 3
+    range_bars: 5
+  description: Opening behavior suggests a trend day when early range break holds
+    and expands
+  filter_column_bear: opening_range_trendday_filter_bear
+  filter_column_bull: opening_range_trendday_filter_bull
+  integration_mode: both
+  name: opening_range_trendday_filter
+  technique: opening_range
+- category: mean_reversion
+  default_params:
+    failure_bars: 2
+    range_bars: 5
+  description: Opening extension fails and rotates back through the opening range,
+    favoring reversal day behavior
+  filter_column_bear: opening_range_reversal_day_filter_bear
+  filter_column_bull: opening_range_reversal_day_filter_bull
+  integration_mode: both
+  name: opening_range_reversal_day_filter
+  technique: opening_range
+- category: momentum
+  default_params:
+    max_attempts: 2
+    range_bars: 5
+  description: Second break attempt beyond the opening range is taken after the first
+    was absorbed
+  filter_column_bear: opening_range_double_break_bear
+  filter_column_bull: opening_range_double_break_bull
+  integration_mode: both
+  name: opening_range_double_break
+  technique: opening_range
+- category: momentum
+  default_params:
+    lookback_bars: 20
+    range_bars: 5
+  description: Price breaks opening range and immediately attacks fresh session high
+    or low levels
+  filter_column_bear: opening_range_session_high_attack_bear
+  filter_column_bull: opening_range_session_high_attack_bull
+  integration_mode: both
+  name: opening_range_session_high_attack
+  technique: opening_range
+- category: trend
+  default_params:
+    confirm_bars: 1
+    range_bars: 5
+  description: After a brief opening fakeout, price reclaims VWAP and the opening
+    range boundary together
+  filter_column_bear: opening_range_vwap_reclaim_bear
+  filter_column_bull: opening_range_vwap_reclaim_bull
+  integration_mode: both
+  name: opening_range_vwap_reclaim
+  technique: opening_range
+- category: momentum
+  default_params:
+    donchian_period: 8
+    range_bars: 5
+  description: Opening range breakout continues as price also clears a short Donchian
+    channel
+  filter_column_bear: opening_range_donchian_extension_bear
+  filter_column_bull: opening_range_donchian_extension_bull
+  integration_mode: both
+  name: opening_range_donchian_extension
+  technique: opening_range
+- category: trend
+  default_params:
+    anchor_bars: 15
+    range_bars: 5
+  description: Opening range breakout holds above or below an anchored VWAP from the
+    session start
+  filter_column_bear: opening_range_anchored_vwap_follow_bear
+  filter_column_bull: opening_range_anchored_vwap_follow_bull
+  integration_mode: both
+  name: opening_range_anchored_vwap_follow
+  technique: opening_range

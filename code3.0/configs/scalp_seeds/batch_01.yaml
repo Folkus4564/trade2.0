@@ -1,0 +1,122 @@
+indicators:
+- category: momentum
+  default_params:
+    period: 8
+    vol_mult: 1.5
+    vol_period: 6
+  description: Donchian channel breakout confirmed by a volume surge above a rolling
+    average
+  filter_column_bear: donchian_breakout_momentum_bear
+  filter_column_bull: donchian_breakout_momentum_bull
+  integration_mode: both
+  name: donchian_breakout_momentum
+  technique: momentum_breakout
+- category: mean_reversion
+  default_params:
+    std_mult: 1.0
+  description: Price pulls back inside one standard deviation of session VWAP then
+    resumes in trend direction
+  filter_column_bear: vwap_deviation_bounce_bear
+  filter_column_bull: vwap_deviation_bounce_bull
+  integration_mode: both
+  name: vwap_deviation_bounce
+  technique: vwap_pullback
+- category: mean_reversion
+  default_params:
+    period: 10
+    std_dev: 2.0
+  description: Price touches outer Bollinger Band then closes back inside; bull at
+    lower band, bear at upper band
+  filter_column_bear: bollinger_band_mean_reversion_bear
+  filter_column_bull: bollinger_band_mean_reversion_bull
+  integration_mode: both
+  name: bollinger_band_mean_reversion
+  technique: range_mean_reversion
+- category: micro_structure
+  default_params:
+    period: 5
+  description: Buy/sell pressure proxy using (Close-Low)/(High-Low) as intrabar delta,
+    smoothed over a short window
+  filter_column_bear: delta_proxy_oscillator_bear
+  filter_column_bull: delta_proxy_oscillator_bull
+  integration_mode: both
+  name: delta_proxy_oscillator
+  technique: order_flow
+- category: momentum
+  default_params:
+    range_bars: 5
+  description: Defines opening range from the first N bars of the session; bull on
+    breakout above, bear on breakout below
+  filter_column_bear: opening_range_breakout_signal_bear
+  filter_column_bull: opening_range_breakout_signal_bull
+  integration_mode: both
+  name: opening_range_breakout_signal
+  technique: opening_range
+- category: momentum
+  default_params:
+    atr_mult: 1.2
+    atr_period: 5
+    period: 7
+    vol_mult: 1.4
+    vol_period: 6
+  description: Breakout beyond a short ATR channel with volume expansion confirming
+    directional continuation
+  filter_column_bear: atr_channel_break_surge_bear
+  filter_column_bull: atr_channel_break_surge_bull
+  integration_mode: both
+  name: atr_channel_break_surge
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    atr_mult: 1.3
+    atr_period: 5
+    compression_period: 8
+    period: 10
+  description: Close breaks outside a compressed Keltner Channel after range contraction
+  filter_column_bear: keltner_expansion_breakout_bear
+  filter_column_bull: keltner_expansion_breakout_bull
+  integration_mode: both
+  name: keltner_expansion_breakout
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    confirm_bars: 1
+    lookback: 4
+  description: Breakout from a narrowest-range-in-4-bars setup with directional follow-through
+  filter_column_bear: nr4_range_release_bear
+  filter_column_bull: nr4_range_release_bull
+  integration_mode: both
+  name: nr4_range_release
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    confirm_bars: 1
+    lookback: 7
+  description: Breakout from a narrowest-range-in-7-bars setup with volatility expansion
+  filter_column_bear: nr7_range_release_bear
+  filter_column_bull: nr7_range_release_bull
+  integration_mode: both
+  name: nr7_range_release
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    confirm_bars: 1
+    vol_period: 5
+  description: Break above or below the prior inside bar range with immediate momentum
+    confirmation
+  filter_column_bear: inside_bar_break_impulse_bear
+  filter_column_bull: inside_bar_break_impulse_bull
+  integration_mode: both
+  name: inside_bar_break_impulse
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    box_period: 6
+    min_tight_bars: 3
+  description: Breakout from a short micro consolidation box defined by recent highs
+    and lows
+  filter_column_bear: micro_box_breakout_bear
+  filter_column_bull: micro_box_breakout_bull
+  integration_mode: both
+  name: micro_box_breakout
+  technique: momentum_breakout

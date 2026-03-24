@@ -1,0 +1,125 @@
+indicators:
+- category: momentum
+  default_params:
+    confirm_bars: 1
+    pivot_left: 2
+    pivot_right: 2
+  description: Break through a recent pivot high or pivot low with acceleration in
+    the breakout direction
+  filter_column_bear: pivot_high_low_burst_bear
+  filter_column_bull: pivot_high_low_burst_bull
+  integration_mode: both
+  name: pivot_high_low_burst
+  technique: momentum_breakout
+- category: trend
+  default_params:
+    fast_period: 5
+    mid_period: 8
+    slow_period: 13
+  description: Price breaks a local range while short EMAs are aligned in the breakout
+    direction
+  filter_column_bear: ema_stack_breakout_bear
+  filter_column_bull: ema_stack_breakout_bull
+  integration_mode: both
+  name: ema_stack_breakout
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    fast_period: 6
+    signal_period: 4
+    slow_period: 13
+  description: Price breakout accompanied by MACD histogram crossing and expanding
+    through zero
+  filter_column_bear: macd_zero_line_pop_bear
+  filter_column_bull: macd_zero_line_pop_bull
+  integration_mode: both
+  name: macd_zero_line_pop
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    box_period: 6
+    roc_period: 4
+    roc_threshold: 0.4
+  description: Range break confirmed by short-term rate-of-change exceeding a threshold
+  filter_column_bear: roc_thrust_breakout_bear
+  filter_column_bull: roc_thrust_breakout_bull
+  integration_mode: both
+  name: roc_thrust_breakout
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    lower_band: 40
+    rsi_period: 7
+    upper_band: 60
+  description: Breakout confirmed by RSI leaving a neutral compression zone into trend
+    territory
+  filter_column_bear: rsi_expansion_breakout_bear
+  filter_column_bull: rsi_expansion_breakout_bull
+  integration_mode: both
+  name: rsi_expansion_breakout
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    d_period: 3
+    k_period: 5
+    trigger: 60
+  description: Directional breakout validated by a fast stochastic surge from mid-range
+  filter_column_bear: stoch_thrust_breakout_bear
+  filter_column_bull: stoch_thrust_breakout_bull
+  integration_mode: both
+  name: stoch_thrust_breakout
+  technique: momentum_breakout
+- category: trend
+  default_params:
+    adx_period: 7
+    adx_threshold: 18
+    box_period: 8
+  description: Breakout favored when ADX rises from a low-volatility base into expansion
+  filter_column_bear: adx_acceleration_break_bear
+  filter_column_bull: adx_acceleration_break_bull
+  integration_mode: both
+  name: adx_acceleration_break
+  technique: momentum_breakout
+- category: trend
+  default_params:
+    dmi_period: 7
+    separation_threshold: 4
+  description: Range break confirmed by DI+ and DI- separation in the breakout direction
+  filter_column_bear: dmi_breakout_alignment_bear
+  filter_column_bull: dmi_breakout_alignment_bull
+  integration_mode: both
+  name: dmi_breakout_alignment
+  technique: momentum_breakout
+- category: trend
+  default_params:
+    atr_mult: 1.8
+    atr_period: 5
+  description: Breakout coincides with a short Supertrend direction flip and continuation
+  filter_column_bear: supertrend_flip_breakout_bear
+  filter_column_bull: supertrend_flip_breakout_bull
+  integration_mode: both
+  name: supertrend_flip_breakout
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    anchor_bars: 20
+    vol_mult: 1.3
+    vol_period: 6
+  description: Price breaks an anchored VWAP reference with volume and directional
+    thrust
+  filter_column_bear: anchored_vwap_break_launch_bear
+  filter_column_bull: anchored_vwap_break_launch_bull
+  integration_mode: both
+  name: anchored_vwap_break_launch
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    confirm_bars: 1
+    drive_bars: 3
+  description: Early-session directional drive extends beyond initial impulse high
+    or low
+  filter_column_bear: opening_drive_continuation_bear
+  filter_column_bull: opening_drive_continuation_bull
+  integration_mode: both
+  name: opening_drive_continuation
+  technique: momentum_breakout

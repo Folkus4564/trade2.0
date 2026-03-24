@@ -1,0 +1,104 @@
+indicators:
+- category: trend
+  default_params:
+    confirm_bars: 1
+    lookback: 6
+  description: Price pulls back to VWAP and a micro trendline, then breaks back in
+    trend direction
+  filter_column_bear: vwap_micro_trendline_bounce_bear
+  filter_column_bull: vwap_micro_trendline_bounce_bull
+  integration_mode: both
+  name: vwap_micro_trendline_bounce
+  technique: vwap_pullback
+- category: momentum
+  default_params:
+    confirm_bars: 1
+  description: Controlled retrace into VWAP forms an inside bar, then breaks with
+    original trend
+  filter_column_bear: vwap_pullback_inside_bar_bear
+  filter_column_bull: vwap_pullback_inside_bar_bull
+  integration_mode: both
+  name: vwap_pullback_inside_bar
+  technique: vwap_pullback
+- category: mean_reversion
+  default_params:
+    wick_body_ratio: 1.8
+  description: Continuation entry based on a rejection pin bar formed at VWAP
+  filter_column_bear: vwap_pullback_pinbar_reject_bear
+  filter_column_bull: vwap_pullback_pinbar_reject_bull
+  integration_mode: both
+  name: vwap_pullback_pinbar_reject
+  technique: vwap_pullback
+- category: momentum
+  default_params:
+    engulf_min_body_mult: 1.2
+  description: An engulfing candle at VWAP signals resumption of the larger intraday
+    trend
+  filter_column_bear: vwap_pullback_engulf_resume_bear
+  filter_column_bull: vwap_pullback_engulf_resume_bull
+  integration_mode: both
+  name: vwap_pullback_engulf_resume
+  technique: vwap_pullback
+- category: volume
+  default_params:
+    obv_period: 8
+  description: VWAP bounce confirmed when OBV turns back in the direction of the prevailing
+    trend
+  filter_column_bear: vwap_pullback_obv_confirm_bear
+  filter_column_bull: vwap_pullback_obv_confirm_bull
+  integration_mode: both
+  name: vwap_pullback_obv_confirm
+  technique: vwap_pullback
+- category: volume
+  default_params:
+    cmf_period: 8
+  description: Chaikin Money Flow remains supportive while price tests VWAP and resumes
+  filter_column_bear: vwap_pullback_cmf_confirm_bear
+  filter_column_bull: vwap_pullback_cmf_confirm_bull
+  integration_mode: both
+  name: vwap_pullback_cmf_confirm
+  technique: vwap_pullback
+- category: volume
+  default_params:
+    mfi_period: 7
+    reset_level: 50
+  description: Money Flow Index resets during pullback and turns back with price at
+    VWAP
+  filter_column_bear: vwap_pullback_mfi_rebound_bear
+  filter_column_bull: vwap_pullback_mfi_rebound_bull
+  integration_mode: both
+  name: vwap_pullback_mfi_rebound
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    band_std: 1.0
+    slope_period: 6
+  description: Price touches a VWAP band while VWAP slope stays strong in the trend
+    direction
+  filter_column_bear: vwap_band_slope_resume_bear
+  filter_column_bull: vwap_band_slope_resume_bull
+  integration_mode: both
+  name: vwap_band_slope_resume
+  technique: vwap_pullback
+- category: momentum
+  default_params:
+    confirm_bars: 1
+    sweep_tolerance: 0.15
+  description: After briefly sweeping through VWAP, price reclaims it and resumes
+    the trend
+  filter_column_bear: vwap_reclaim_after_sweep_bear
+  filter_column_bull: vwap_reclaim_after_sweep_bull
+  integration_mode: both
+  name: vwap_reclaim_after_sweep
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    band_std: 0.5
+    swing_lookback: 5
+  description: Bull signal on higher low near VWAP midband; bear on lower high near
+    VWAP midband
+  filter_column_bear: vwap_midband_higher_low_bear
+  filter_column_bull: vwap_midband_higher_low_bull
+  integration_mode: both
+  name: vwap_midband_higher_low
+  technique: vwap_pullback

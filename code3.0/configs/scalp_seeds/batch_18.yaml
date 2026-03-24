@@ -1,0 +1,116 @@
+indicators:
+- category: momentum
+  default_params:
+    range_bars: 5
+    sweep_tolerance: 0.1
+  description: Price sweeps an opening range boundary and expands sharply beyond it
+  filter_column_bear: opening_range_high_low_sweep_bear
+  filter_column_bull: opening_range_high_low_sweep_bull
+  integration_mode: both
+  name: opening_range_high_low_sweep
+  technique: opening_range
+- category: mean_reversion
+  default_params:
+    range_bars: 5
+    reclaim_bars: 1
+  description: False break beyond opening range reclaims the box and targets opposite
+    side or midpoint
+  filter_column_bear: opening_range_false_break_reclaim_bear
+  filter_column_bull: opening_range_false_break_reclaim_bull
+  integration_mode: both
+  name: opening_range_false_break_reclaim
+  technique: opening_range
+- category: trend
+  default_params:
+    fast_period: 5
+    range_bars: 5
+    slow_period: 9
+  description: Opening range breakout filtered by fast EMA staying above or below
+    slow EMA
+  filter_column_bear: opening_range_ema_drive_bear
+  filter_column_bull: opening_range_ema_drive_bull
+  integration_mode: both
+  name: opening_range_ema_drive
+  technique: opening_range
+- category: momentum
+  default_params:
+    fast_period: 6
+    range_bars: 5
+    signal_period: 4
+    slow_period: 13
+  description: MACD impulse accompanies the opening range breakout for continuation
+  filter_column_bear: opening_range_macd_thrust_bear
+  filter_column_bull: opening_range_macd_thrust_bull
+  integration_mode: both
+  name: opening_range_macd_thrust
+  technique: opening_range
+- category: momentum
+  default_params:
+    lower_band: 40
+    range_bars: 5
+    rsi_period: 7
+    upper_band: 60
+  description: RSI leaves neutral zone as price exits the opening range
+  filter_column_bear: opening_range_rsi_expansion_bear
+  filter_column_bull: opening_range_rsi_expansion_bull
+  integration_mode: both
+  name: opening_range_rsi_expansion
+  technique: opening_range
+- category: momentum
+  default_params:
+    d_period: 3
+    k_period: 5
+    range_bars: 5
+  description: Fast stochastic thrust aligns with breakout from opening range
+  filter_column_bear: opening_range_stoch_release_bear
+  filter_column_bull: opening_range_stoch_release_bull
+  integration_mode: both
+  name: opening_range_stoch_release
+  technique: opening_range
+- category: trend
+  default_params:
+    adx_period: 7
+    adx_threshold: 18
+    range_bars: 5
+  description: Opening range breakout is favored only when ADX is rising from low
+    levels
+  filter_column_bear: opening_range_adx_filter_bear
+  filter_column_bull: opening_range_adx_filter_bull
+  integration_mode: both
+  name: opening_range_adx_filter
+  technique: opening_range
+- category: trend
+  default_params:
+    dmi_period: 7
+    min_spread: 3
+    range_bars: 5
+  description: Directional movement separation confirms the breakout side after opening
+    range resolution
+  filter_column_bear: opening_range_dmi_filter_bear
+  filter_column_bull: opening_range_dmi_filter_bull
+  integration_mode: both
+  name: opening_range_dmi_filter
+  technique: opening_range
+- category: trend
+  default_params:
+    atr_mult: 1.8
+    atr_period: 5
+    range_bars: 5
+  description: Opening range break aligns with a Supertrend direction change or continuation
+  filter_column_bear: opening_range_supertrend_flip_bear
+  filter_column_bull: opening_range_supertrend_flip_bull
+  integration_mode: both
+  name: opening_range_supertrend_flip
+  technique: opening_range
+- category: trend
+  default_params:
+    max_step: 0.2
+    range_bars: 5
+    step: 0.02
+  description: Parabolic SAR confirms early-session directional expansion out of opening
+    range
+  filter_column_bear: opening_range_parabolic_launch_bear
+  filter_column_bull: opening_range_parabolic_launch_bull
+  integration_mode: both
+  name: opening_range_parabolic_launch
+  technique: opening_range

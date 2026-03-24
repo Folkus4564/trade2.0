@@ -298,7 +298,9 @@ def run_pipeline(
     # Model filename encodes regime_tf + n_states so each combo has its own file.
     # e.g. hmm_1h_3states.pkl, hmm_4h_3states.pkl, hmm_1h_2states.pkl
     _model_tf_key = regime_tf.lower().replace(" ", "")   # "1H" -> "1h", "4H" -> "4h"
-    model_path = dirs["models"] / f"hmm_{_model_tf_key}_{p['hmm_states']}states.pkl"
+    _model_id     = config.get("hmm", {}).get("model_id", "")
+    _model_suffix = f"_{_model_id}" if _model_id else ""
+    model_path = dirs["models"] / f"hmm_{_model_tf_key}_{p['hmm_states']}states{_model_suffix}.pkl"
 
     if model_path_override:
         override_p = Path(model_path_override)

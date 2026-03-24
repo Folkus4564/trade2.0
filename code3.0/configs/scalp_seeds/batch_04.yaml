@@ -1,0 +1,125 @@
+indicators:
+- category: momentum
+  default_params:
+    long_period: 8
+    short_period: 4
+    signal_period: 3
+  description: Directional breakout supported by a fast True Strength Index impulse
+  filter_column_bear: tsi_impulse_breakout_bear
+  filter_column_bull: tsi_impulse_breakout_bull
+  integration_mode: both
+  name: tsi_impulse_breakout
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    cci_period: 8
+  description: Breakout confirmed when CCI crosses above +100 or below -100 with follow-through
+  filter_column_bear: cci_plusminus_100_break_bear
+  filter_column_bull: cci_plusminus_100_break_bull
+  integration_mode: both
+  name: cci_plusminus_100_break
+  technique: momentum_breakout
+- category: trend
+  default_params:
+    max_step: 0.2
+    step: 0.02
+  description: Breakout aligns with Parabolic SAR flip and accelerating directional
+    candles
+  filter_column_bear: parabolic_sar_launch_bear
+  filter_column_bull: parabolic_sar_launch_bull
+  integration_mode: both
+  name: parabolic_sar_launch
+  technique: momentum_breakout
+- category: trend
+  default_params:
+    confirm_bars: 2
+  description: Breakout is validated by consecutive Heikin Ashi trend candles without
+    opposing wicks
+  filter_column_bear: heikin_ashi_break_drive_bear
+  filter_column_bull: heikin_ashi_break_drive_bull
+  integration_mode: both
+  name: heikin_ashi_break_drive
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    confirm_bars: 1
+    fractal_span: 2
+  description: Break through the most recent bullish or bearish fractal with continuation
+    bias
+  filter_column_bear: fractal_break_continuation_bear
+  filter_column_bull: fractal_break_continuation_bull
+  integration_mode: both
+  name: fractal_break_continuation
+  technique: momentum_breakout
+- category: trend
+  default_params:
+    period: 8
+    slope_threshold: 0.03
+  description: Price breaks range as linear regression slope sharply inflects in the
+    same direction
+  filter_column_bear: linreg_slope_breakout_bear
+  filter_column_bull: linreg_slope_breakout_bull
+  integration_mode: both
+  name: linreg_slope_breakout
+  technique: momentum_breakout
+- category: trend
+  default_params:
+    expansion_threshold: 0.05
+    periods:
+    - 3
+    - 5
+    - 8
+    - 13
+  description: Breakout accompanied by expanding distance between short EMA ribbon
+    components
+  filter_column_bear: ema_ribbon_expansion_break_bear
+  filter_column_bull: ema_ribbon_expansion_break_bull
+  integration_mode: both
+  name: ema_ribbon_expansion_break
+  technique: momentum_breakout
+- category: volatility
+  default_params:
+    atr_mult: 1.5
+    atr_period: 5
+    lookback: 7
+  description: Directional break occurs as price exits a volatility stop compression
+    zone
+  filter_column_bear: volatility_stop_release_bear
+  filter_column_bull: volatility_stop_release_bull
+  integration_mode: both
+  name: volatility_stop_release
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    lookback_bars: 20
+    retest_bars: 2
+  description: Break of session extreme followed by a quick retest and continuation
+    entry
+  filter_column_bear: session_high_low_break_retest_bear
+  filter_column_bull: session_high_low_break_retest_bull
+  integration_mode: both
+  name: session_high_low_break_retest
+  technique: momentum_breakout
+- category: volatility
+  default_params:
+    bb_mult: 2.0
+    bb_period: 10
+    kc_mult: 1.5
+    kc_period: 10
+  description: Momentum scalp triggered when squeeze releases and price exits the
+    compression range
+  filter_column_bear: ttm_squeeze_release_scalp_bear
+  filter_column_bull: ttm_squeeze_release_scalp_bull
+  integration_mode: both
+  name: ttm_squeeze_release_scalp
+  technique: momentum_breakout
+- category: volatility
+  default_params:
+    percentile_threshold: 25
+    range_period: 20
+  description: Breakout from a low percentile intrabar range regime into expansion
+  filter_column_bear: range_percentile_breakout_bear
+  filter_column_bull: range_percentile_breakout_bull
+  integration_mode: both
+  name: range_percentile_breakout
+  technique: momentum_breakout

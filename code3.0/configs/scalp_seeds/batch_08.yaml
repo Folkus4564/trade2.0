@@ -1,0 +1,110 @@
+indicators:
+- category: trend
+  default_params:
+    impulse_bars: 3
+    max_pullbacks: 1
+  description: Only the first retrace to VWAP after an impulse is considered valid
+    for continuation
+  filter_column_bear: vwap_first_pullback_only_bear
+  filter_column_bull: vwap_first_pullback_only_bull
+  integration_mode: both
+  name: vwap_first_pullback_only
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    adx_period: 7
+    max_tests: 2
+  description: Second test of VWAP becomes valid only if the first test held and trend
+    remains intact
+  filter_column_bear: vwap_second_chance_entry_bear
+  filter_column_bull: vwap_second_chance_entry_bull
+  integration_mode: both
+  name: vwap_second_chance_entry
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    breakout_lookback: 10
+    tolerance: 0.15
+  description: Breakout level retests into VWAP confluence, then continuation in breakout
+    direction
+  filter_column_bear: vwap_retest_breakout_support_bear
+  filter_column_bull: vwap_retest_breakout_support_bull
+  integration_mode: both
+  name: vwap_retest_breakout_support
+  technique: vwap_pullback
+- category: volatility
+  default_params:
+    compression_threshold: 0.35
+    std_period: 20
+  description: Price compresses around VWAP within tight sigma bands before directional
+    resumption
+  filter_column_bear: vwap_sigma_compression_release_bear
+  filter_column_bull: vwap_sigma_compression_release_bull
+  integration_mode: both
+  name: vwap_sigma_compression_release
+  technique: vwap_pullback
+- category: volatility
+  default_params:
+    atr_period: 5
+    max_atr_pullback: 0.8
+  description: Pullback is valid only if retracement stays within a fraction of ATR
+    around VWAP
+  filter_column_bear: vwap_atr_pullback_limit_bear
+  filter_column_bull: vwap_atr_pullback_limit_bull
+  integration_mode: both
+  name: vwap_atr_pullback_limit
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    period: 12
+    std_mult: 1.0
+  description: VWAP pullback aligns with lower or upper regression channel before
+    resumption
+  filter_column_bear: vwap_regression_channel_bounce_bear
+  filter_column_bull: vwap_regression_channel_bounce_bull
+  integration_mode: both
+  name: vwap_regression_channel_bounce
+  technique: vwap_pullback
+- category: momentum
+  default_params:
+    long_period: 8
+    short_period: 4
+    signal_period: 3
+  description: True Strength Index turns back with trend as price reacts off VWAP
+  filter_column_bear: vwap_tsi_resume_bear
+  filter_column_bull: vwap_tsi_resume_bull
+  integration_mode: both
+  name: vwap_tsi_resume
+  technique: vwap_pullback
+- category: momentum
+  default_params:
+    rvi_period: 6
+    signal_period: 3
+  description: Relative Vigor Index confirms trend continuation after a VWAP pullback
+  filter_column_bear: vwap_rvi_resume_bear
+  filter_column_bull: vwap_rvi_resume_bull
+  integration_mode: both
+  name: vwap_rvi_resume
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    period: 10
+    slope_threshold: 0.02
+  description: Linear regression slope remains positive or negative while price finds
+    VWAP support or resistance
+  filter_column_bear: vwap_linreg_slope_hold_bear
+  filter_column_bull: vwap_linreg_slope_hold_bull
+  integration_mode: both
+  name: vwap_linreg_slope_hold
+  technique: vwap_pullback
+- category: micro_structure
+  default_params:
+    period: 5
+    threshold: 0.15
+  description: Intrabar pressure proxy flips back in trend direction as price rejects
+    VWAP
+  filter_column_bear: vwap_delta_proxy_reversal_bear
+  filter_column_bull: vwap_delta_proxy_reversal_bull
+  integration_mode: both
+  name: vwap_delta_proxy_reversal
+  technique: vwap_pullback

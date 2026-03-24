@@ -1,0 +1,111 @@
+indicators:
+- category: micro_structure
+  default_params:
+    lookback: 10
+    reclaim_bars: 1
+  description: Price sweeps a local high or low then sharply reclaims, signaling trapped
+    breakout traders
+  filter_column_bear: sweep_and_reclaim_proxy_bear
+  filter_column_bull: sweep_and_reclaim_proxy_bull
+  integration_mode: both
+  name: sweep_and_reclaim_proxy
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    period: 5
+    weakness_threshold: 0.2
+  description: Short pullback with weak opposing pressure resolves back in prevailing
+    direction
+  filter_column_bear: micro_pullback_pressure_resume_bear
+  filter_column_bull: micro_pullback_pressure_resume_bull
+  integration_mode: both
+  name: micro_pullback_pressure_resume
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    clv_threshold: 0.6
+    sequence_bars: 4
+  description: Multiple strong closes in the same direction suggest persistent order-flow
+    dominance
+  filter_column_bear: stacked_closes_momentum_bear
+  filter_column_bull: stacked_closes_momentum_bull
+  integration_mode: both
+  name: stacked_closes_momentum
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    overlap_threshold: 0.35
+    period: 6
+  description: Reduced overlap implies directional acceptance; increased overlap implies
+    absorption and chop
+  filter_column_bear: bar_overlap_drain_bear
+  filter_column_bull: bar_overlap_drain_bull
+  integration_mode: both
+  name: bar_overlap_drain
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    efficiency_threshold: 0.55
+    period: 6
+  description: High directional efficiency ratio over a short window signals one-way
+    auction behavior
+  filter_column_bear: range_efficiency_burst_bear
+  filter_column_bull: range_efficiency_burst_bull
+  integration_mode: both
+  name: range_efficiency_burst
+  technique: order_flow
+- category: momentum
+  default_params:
+    period: 7
+    threshold: 0.4
+  description: Accumulated signed returns create a short-term pressure oscillator
+    for buyer or seller control
+  filter_column_bear: signed_return_pressure_bear
+  filter_column_bull: signed_return_pressure_bull
+  integration_mode: both
+  name: signed_return_pressure
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    period: 10
+    threshold: 4
+  description: Short cumulative tick movement indicates whether market orders are
+    dominating one side
+  filter_column_bear: cumulative_tick_pressure_bear
+  filter_column_bull: cumulative_tick_pressure_bull
+  integration_mode: both
+  name: cumulative_tick_pressure
+  technique: order_flow
+- category: volume
+  default_params:
+    period: 8
+    ratio_threshold: 1.3
+  description: Compares volume on advancing bars versus declining bars to estimate
+    directional dominance
+  filter_column_bear: updown_volume_delta_proxy_bear
+  filter_column_bull: updown_volume_delta_proxy_bull
+  integration_mode: both
+  name: updown_volume_delta_proxy
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    period: 5
+    ratio_threshold: 1.6
+  description: Long opposing wicks versus body size estimate whether aggressive flow
+    is being absorbed
+  filter_column_bear: wick_absorption_ratio_bear
+  filter_column_bull: wick_absorption_ratio_bull
+  integration_mode: both
+  name: wick_absorption_ratio
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    cluster_threshold: 0.7
+    period: 5
+  description: Cluster of closes near highs or lows suggests sustained pressure from
+    one side
+  filter_column_bear: close_near_extreme_cluster_bear
+  filter_column_bull: close_near_extreme_cluster_bull
+  integration_mode: both
+  name: close_near_extreme_cluster
+  technique: order_flow

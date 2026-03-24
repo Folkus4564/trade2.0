@@ -1,0 +1,111 @@
+indicators:
+- category: trend
+  default_params:
+    range_bars: 5
+    tolerance: 0.12
+  description: After breakout, price retraces roughly halfway and resumes away from
+    opening range
+  filter_column_bear: opening_range_halfback_continuation_bear
+  filter_column_bull: opening_range_halfback_continuation_bull
+  integration_mode: both
+  name: opening_range_halfback_continuation
+  technique: opening_range
+- category: trend
+  default_params:
+    fib_level: 0.382
+    range_bars: 5
+    tolerance: 0.1
+  description: Shallow 38.2% retrace after opening break resumes continuation
+  filter_column_bear: opening_range_fib_382_hold_bear
+  filter_column_bull: opening_range_fib_382_hold_bull
+  integration_mode: both
+  name: opening_range_fib_382_hold
+  technique: opening_range
+- category: trend
+  default_params:
+    fib_level: 0.618
+    range_bars: 5
+    tolerance: 0.12
+  description: Deeper 61.8% retrace after opening break rejects and relaunches
+  filter_column_bear: opening_range_fib_618_relaunch_bear
+  filter_column_bull: opening_range_fib_618_relaunch_bull
+  integration_mode: both
+  name: opening_range_fib_618_relaunch
+  technique: opening_range
+- category: mean_reversion
+  default_params:
+    confirm_bars: 1
+    range_bars: 5
+  description: Price fails beyond one side of the opening range and rotates around
+    the midpoint
+  filter_column_bear: opening_range_midpoint_reject_bear
+  filter_column_bull: opening_range_midpoint_reject_bull
+  integration_mode: both
+  name: opening_range_midpoint_reject
+  technique: opening_range
+- category: momentum
+  default_params:
+    confirm_bars: 1
+    range_bars: 5
+  description: Inside bar forms just outside opening range and breaks in continuation
+    direction
+  filter_column_bear: opening_range_inside_bar_break_bear
+  filter_column_bull: opening_range_inside_bar_break_bull
+  integration_mode: both
+  name: opening_range_inside_bar_break
+  technique: opening_range
+- category: mean_reversion
+  default_params:
+    range_bars: 5
+    wick_body_ratio: 1.8
+  description: Pin bar at opening range boundary signals rejection and short counter
+    move
+  filter_column_bear: opening_range_pinbar_reversal_bear
+  filter_column_bull: opening_range_pinbar_reversal_bull
+  integration_mode: both
+  name: opening_range_pinbar_reversal
+  technique: opening_range
+- category: momentum
+  default_params:
+    min_body_mult: 1.2
+    range_bars: 5
+  description: Engulfing candle after opening range break confirms follow-through
+  filter_column_bear: opening_range_engulf_follow_bear
+  filter_column_bull: opening_range_engulf_follow_bull
+  integration_mode: both
+  name: opening_range_engulf_follow
+  technique: opening_range
+- category: volatility
+  default_params:
+    period: 10
+    range_bars: 5
+    std_dev: 2.0
+  description: Volatility bands expand as price escapes opening range compression
+  filter_column_bear: opening_range_band_expansion_bear
+  filter_column_bull: opening_range_band_expansion_bull
+  integration_mode: both
+  name: opening_range_band_expansion
+  technique: opening_range
+- category: volatility
+  default_params:
+    compression_threshold: 0.35
+    range_bars: 5
+    std_period: 15
+  description: Tight early-session sigma compression releases with directional range
+    expansion
+  filter_column_bear: opening_range_sigma_squeeze_release_bear
+  filter_column_bull: opening_range_sigma_squeeze_release_bull
+  integration_mode: both
+  name: opening_range_sigma_squeeze_release
+  technique: opening_range
+- category: volume
+  default_params:
+    range_bars: 5
+    vol_mult: 1.8
+    vol_period: 10
+  description: Breakout requires a high relative-volume burst in the first minutes
+  filter_column_bear: opening_range_relative_volume_burst_bear
+  filter_column_bull: opening_range_relative_volume_burst_bull
+  integration_mode: both
+  name: opening_range_relative_volume_burst
+  technique: opening_range

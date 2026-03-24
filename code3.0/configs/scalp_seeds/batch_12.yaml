@@ -1,0 +1,106 @@
+indicators:
+- category: mean_reversion
+  default_params:
+    band_mult: 1.3
+    period: 12
+  description: Price tags the outer median channel and rotates back toward channel
+    median
+  filter_column_bear: median_reversion_channel_bear
+  filter_column_bull: median_reversion_channel_bull
+  integration_mode: both
+  name: median_reversion_channel
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    period: 10
+    std_dev: 2.0
+  description: Percent-B reaches outer band extreme and reverses back inside the Bollinger
+    range
+  filter_column_bear: percent_b_band_reversal_bear
+  filter_column_bull: percent_b_band_reversal_bull
+  integration_mode: both
+  name: percent_b_band_reversal
+  technique: range_mean_reversion
+- category: trend
+  default_params:
+    adx_period: 7
+    adx_threshold: 16
+  description: Low and declining ADX identifies non-trending conditions suitable for
+    range fades
+  filter_column_bear: range_adx_decay_fade_bear
+  filter_column_bull: range_adx_decay_fade_bull
+  integration_mode: both
+  name: range_adx_decay_fade
+  technique: range_mean_reversion
+- category: volatility
+  default_params:
+    lookback: 6
+    range_threshold: 0.5
+  description: Price repeatedly mean-reverts inside a compressed narrow-range regime
+  filter_column_bear: narrow_range_revert_bear
+  filter_column_bull: narrow_range_revert_bull
+  integration_mode: both
+  name: narrow_range_revert
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    range_period: 10
+    tolerance: 0.12
+  description: Failed directional push beyond halfback retraces to the range midpoint
+  filter_column_bear: halfback_range_return_bear
+  filter_column_bull: halfback_range_return_bull
+  integration_mode: both
+  name: halfback_range_return
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    fill_target_pct: 0.8
+    gap_threshold: 0.2
+  description: Small intraday gap or impulse pocket gets filled as price mean-reverts
+  filter_column_bear: micro_gap_fill_reversion_bear
+  filter_column_bull: micro_gap_fill_reversion_bull
+  integration_mode: both
+  name: micro_gap_fill_reversion
+  technique: range_mean_reversion
+- category: volume
+  default_params:
+    climax_mult: 1.7
+    vol_period: 8
+  description: Volume spikes at range edge but price fails to expand, signaling exhaustion
+  filter_column_bear: range_volume_exhaustion_bear
+  filter_column_bull: range_volume_exhaustion_bull
+  integration_mode: both
+  name: range_volume_exhaustion
+  technique: range_mean_reversion
+- category: micro_structure
+  default_params:
+    period: 5
+    threshold: 0.2
+  description: Intrabar pressure proxy abruptly flips at range edge, favoring mean
+    reversion
+  filter_column_bear: delta_proxy_range_flip_bear
+  filter_column_bull: delta_proxy_range_flip_bull
+  integration_mode: both
+  name: delta_proxy_range_flip
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    std_mult: 1.2
+  description: Price rejects a VWAP deviation band and reverts toward VWAP in a sideways
+    session
+  filter_column_bear: vwap_band_range_reject_bear
+  filter_column_bull: vwap_band_range_reject_bull
+  integration_mode: both
+  name: vwap_band_range_reject
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    deviation_threshold: 0.35
+    period: 12
+  description: Price stretches away from a rolling TWAP and rotates back as momentum
+    cools
+  filter_column_bear: twap_reversion_ping_bear
+  filter_column_bull: twap_reversion_ping_bull
+  integration_mode: both
+  name: twap_reversion_ping
+  technique: range_mean_reversion

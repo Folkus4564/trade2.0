@@ -1,0 +1,110 @@
+indicators:
+- category: micro_structure
+  default_params:
+    failure_bars: 1
+    lookback: 8
+  description: Extension beyond a local extreme that immediately fails indicates unfinished
+    auction reversal
+  filter_column_bear: failed_auction_proxy_bear
+  filter_column_bull: failed_auction_proxy_bull
+  integration_mode: both
+  name: failed_auction_proxy
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    confirm_bars: 1
+    lookback: 8
+  description: Acceptance outside a level followed by rejection back inside measures
+    short-lived imbalance
+  filter_column_bear: acceptance_rejection_flip_bear
+  filter_column_bull: acceptance_rejection_flip_bull
+  integration_mode: both
+  name: acceptance_rejection_flip
+  technique: order_flow
+- category: volume
+  default_params:
+    climax_mult: 1.8
+    vol_period: 8
+  description: Climactic volume without follow-through estimates absorption by passive
+    liquidity
+  filter_column_bear: volume_spike_no_progress_bear
+  filter_column_bull: volume_spike_no_progress_bull
+  integration_mode: both
+  name: volume_spike_no_progress
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    pullback_bars: 2
+    response_mult: 1.5
+  description: Weak retracement met by outsized continuation move implies strong side
+    control
+  filter_column_bear: small_pullback_large_response_bear
+  filter_column_bull: small_pullback_large_response_bull
+  integration_mode: both
+  name: small_pullback_large_response
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    pace_threshold: 1.4
+    period: 5
+  description: Acceleration in directional range and body size acts as a proxy for
+    trading pace
+  filter_column_bear: pace_of_trade_proxy_bear
+  filter_column_bull: pace_of_trade_proxy_bull
+  integration_mode: both
+  name: pace_of_trade_proxy
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    flip_threshold: 4
+    period: 6
+  description: Frequent bar flips with limited progress indicate two-sided trade and
+    rotation
+  filter_column_bear: auction_rotation_intensity_bear
+  filter_column_bull: auction_rotation_intensity_bull
+  integration_mode: both
+  name: auction_rotation_intensity
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    period: 5
+    score_threshold: 0.6
+  description: Composite score from body size, close location, and overlap estimates
+    conviction
+  filter_column_bear: directional_conviction_score_bear
+  filter_column_bull: directional_conviction_score_bull
+  integration_mode: both
+  name: directional_conviction_score
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    balance_period: 6
+    clv_threshold: 0.65
+  description: Short balance area breaks with strong close location and range expansion
+  filter_column_bear: micro_balance_break_bear
+  filter_column_bull: micro_balance_break_bull
+  integration_mode: both
+  name: micro_balance_break
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    reversal_confirm: 1
+    sequence_bars: 3
+  description: Exhaustive directional bars followed by opposite close near extreme
+    imply flow reversal
+  filter_column_bear: micro_exhaustion_then_shift_bear
+  filter_column_bull: micro_exhaustion_then_shift_bull
+  integration_mode: both
+  name: micro_exhaustion_then_shift
+  technique: order_flow
+- category: volume
+  default_params:
+    period: 6
+    ratio_threshold: 0.8
+  description: Spread-to-volume relationship estimates whether volume is producing
+    efficient price movement
+  filter_column_bear: candle_spread_volume_ratio_bear
+  filter_column_bull: candle_spread_volume_ratio_bull
+  integration_mode: both
+  name: candle_spread_volume_ratio
+  technique: order_flow

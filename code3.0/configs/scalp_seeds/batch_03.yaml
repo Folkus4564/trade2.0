@@ -1,0 +1,118 @@
+indicators:
+- category: momentum
+  default_params:
+    lookback_bars: 30
+    vol_period: 5
+  description: Bull signal on reclaim and break of intraday high; bear on loss and
+    break of intraday low
+  filter_column_bear: high_of_day_retake_surge_bear
+  filter_column_bull: high_of_day_retake_surge_bull
+  integration_mode: both
+  name: high_of_day_retake_surge
+  technique: momentum_breakout
+- category: volume
+  default_params:
+    climax_mult: 1.8
+    vol_period: 8
+  description: Breakout following a local volume climax and directional close continuation
+  filter_column_bear: volume_climax_break_follow_bear
+  filter_column_bull: volume_climax_break_follow_bull
+  integration_mode: both
+  name: volume_climax_break_follow
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    gap_threshold: 0.3
+    pullback_bars: 3
+  description: Gap direction continuation triggers when price clears the first pullback
+    pivot
+  filter_column_bear: gap_go_followthrough_bear
+  filter_column_bull: gap_go_followthrough_bull
+  integration_mode: both
+  name: gap_go_followthrough
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    lookback: 8
+    min_swings: 3
+  description: Breakout from a short contracting triangle structure with rising range
+    expansion
+  filter_column_bear: compression_triangle_break_bear
+  filter_column_bull: compression_triangle_break_bull
+  integration_mode: both
+  name: compression_triangle_break
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    flag_bars: 5
+    impulse_bars: 3
+  description: Bullish or bearish continuation from a compact flag or pennant consolidation
+  filter_column_bear: flag_pennant_resolution_bear
+  filter_column_bull: flag_pennant_resolution_bull
+  integration_mode: both
+  name: flag_pennant_resolution
+  technique: momentum_breakout
+- category: volume
+  default_params:
+    box_period: 6
+    cmf_period: 8
+  description: Range break supported by positive or negative Chaikin Money Flow momentum
+  filter_column_bear: chaikin_money_flow_break_bear
+  filter_column_bull: chaikin_money_flow_break_bull
+  integration_mode: both
+  name: chaikin_money_flow_break
+  technique: momentum_breakout
+- category: volume
+  default_params:
+    obv_lookback: 10
+    price_box_period: 6
+  description: Breakout favored when OBV leads price by making a new local extreme
+    first
+  filter_column_bear: on_balance_volume_lead_break_bear
+  filter_column_bull: on_balance_volume_lead_break_bull
+  integration_mode: both
+  name: on_balance_volume_lead_break
+  technique: momentum_breakout
+- category: volume
+  default_params:
+    box_period: 6
+    vol_mult: 1.7
+    vol_period: 10
+  description: Breakout only qualifies when current volume exceeds recent average
+    by a threshold
+  filter_column_bear: relative_volume_breakout_bear
+  filter_column_bull: relative_volume_breakout_bull
+  integration_mode: both
+  name: relative_volume_breakout
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    body_mult: 1.5
+    body_period: 6
+  description: Large real-body candle exits a micro range and closes near its extreme
+  filter_column_bear: candle_body_expansion_break_bear
+  filter_column_bull: candle_body_expansion_break_bull
+  integration_mode: both
+  name: candle_body_expansion_break
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    lookback: 7
+    min_rejections: 2
+  description: Breakout after repeated wick rejections at one side of a short consolidation
+  filter_column_bear: wick_rejection_breakout_bear
+  filter_column_bull: wick_rejection_breakout_bull
+  integration_mode: both
+  name: wick_rejection_breakout
+  technique: momentum_breakout
+- category: momentum
+  default_params:
+    rvi_period: 6
+    signal_period: 3
+  description: Range break confirmed by Relative Vigor Index thrust in the breakout
+    direction
+  filter_column_bear: rvi_thrust_breakout_bear
+  filter_column_bull: rvi_thrust_breakout_bull
+  integration_mode: both
+  name: rvi_thrust_breakout
+  technique: momentum_breakout

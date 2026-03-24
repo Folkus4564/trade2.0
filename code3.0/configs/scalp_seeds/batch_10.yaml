@@ -1,0 +1,103 @@
+indicators:
+- category: mean_reversion
+  default_params:
+    deviation_mult: 0.8
+    period: 8
+  description: Price mean-reverts from short rolling high-low midpoint deviations
+  filter_column_bear: rolling_midpoint_bounce_bear
+  filter_column_bull: rolling_midpoint_bounce_bull
+  integration_mode: both
+  name: rolling_midpoint_bounce
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    band_tolerance: 0.15
+    pivot_period: 10
+  description: Price rejects a short-term pivot band and returns toward center range
+  filter_column_bear: pivot_band_reversal_bear
+  filter_column_bull: pivot_band_reversal_bull
+  integration_mode: both
+  name: pivot_band_reversal
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    fractal_span: 2
+    sweep_tolerance: 0.1
+  description: Recent fractal high or low is swept and rejected back into the prior
+    range
+  filter_column_bear: fractal_range_fade_bear
+  filter_column_bull: fractal_range_fade_bull
+  integration_mode: both
+  name: fractal_range_fade
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    period: 10
+    std_dev: 1.8
+  description: Price pokes outside a volatility band and finishes back inside the
+    envelope
+  filter_column_bear: inside_band_reversal_bear
+  filter_column_bull: inside_band_reversal_bull
+  integration_mode: both
+  name: inside_band_reversal
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    confirm_bars: 1
+    lookback: 8
+  description: A failed breakout re-enters the prior range and targets the middle
+  filter_column_bear: false_break_range_return_bear
+  filter_column_bull: false_break_range_return_bull
+  integration_mode: both
+  name: false_break_range_return
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    range_period: 10
+    wick_body_ratio: 2.0
+  description: Long wick at range edge suggests exhaustion and reversion toward mean
+  filter_column_bear: wick_exhaustion_fade_bear
+  filter_column_bull: wick_exhaustion_fade_bull
+  integration_mode: both
+  name: wick_exhaustion_fade
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    min_body_mult: 1.2
+    range_period: 10
+  description: Reversal engulfing candle forms at range edge and points back to midpoint
+  filter_column_bear: engulfing_range_turn_bear
+  filter_column_bull: engulfing_range_turn_bull
+  integration_mode: both
+  name: engulfing_range_turn
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    body_threshold: 0.15
+    confirm_bars: 1
+  description: Indecision doji at range boundary followed by opposite-direction confirmation
+  filter_column_bear: doji_range_reversal_bear
+  filter_column_bull: doji_range_reversal_bull
+  integration_mode: both
+  name: doji_range_reversal
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    confirm_bars: 1
+  description: Heikin Ashi trend stalls at range extreme and flips back toward mean
+  filter_column_bear: heikin_ashi_exhaustion_bear
+  filter_column_bull: heikin_ashi_exhaustion_bull
+  integration_mode: both
+  name: heikin_ashi_exhaustion
+  technique: range_mean_reversion
+- category: trend
+  default_params:
+    max_step: 0.2
+    step: 0.02
+  description: Parabolic SAR flips against the prior short trend at a range edge,
+    favoring reversion
+  filter_column_bear: parabolic_sar_fade_bear
+  filter_column_bull: parabolic_sar_fade_bull
+  integration_mode: both
+  name: parabolic_sar_fade
+  technique: range_mean_reversion

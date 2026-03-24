@@ -1,0 +1,109 @@
+indicators:
+- category: volume
+  default_params:
+    climax_mult: 1.7
+    vol_period: 8
+  description: One-sided climax followed by opposite directional close suggests rotational
+    scalp setup
+  filter_column_bear: buy_sell_climax_rotation_bear
+  filter_column_bull: buy_sell_climax_rotation_bull
+  integration_mode: both
+  name: buy_sell_climax_rotation
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    divergence_lookback: 8
+    period: 6
+  description: Pressure proxy diverges from price at local extremes, signaling fading
+    aggression
+  filter_column_bear: delta_proxy_divergence_bear
+  filter_column_bull: delta_proxy_divergence_bull
+  integration_mode: both
+  name: delta_proxy_divergence
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    period: 5
+    ratio_threshold: 0.6
+  description: Large bodies relative to total range repeated across bars imply persistent
+    initiative
+  filter_column_bear: body_to_range_persistence_bear
+  filter_column_bull: body_to_range_persistence_bull
+  integration_mode: both
+  name: body_to_range_persistence
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    period: 4
+    threshold: 0.2
+  description: Shrinking opposing wick sizes across bars indicate the counterparty
+    side is weakening
+  filter_column_bear: opposing_wick_failure_bear
+  filter_column_bull: opposing_wick_failure_bull
+  integration_mode: both
+  name: opposing_wick_failure
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    period: 5
+    weight_close: 0.5
+    weight_range: 0.2
+    weight_wick: 0.3
+  description: Synthetic order-book pressure proxy from range, wick, and close location
+    behavior
+  filter_column_bear: short_term_lob_proxy_bear
+  filter_column_bull: short_term_lob_proxy_bull
+  integration_mode: both
+  name: short_term_lob_proxy
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    lookback: 7
+    reversal_bars: 1
+  description: Breakout fails and reverses quickly, implying trapped aggressive participation
+  filter_column_bear: micro_trap_breaker_bear
+  filter_column_bull: micro_trap_breaker_bull
+  integration_mode: both
+  name: micro_trap_breaker
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    min_absorption_bars: 2
+    period: 6
+  description: Series of absorption-style bars resolves into a short reversal impulse
+  filter_column_bear: reversal_after_absorption_cluster_bear
+  filter_column_bull: reversal_after_absorption_cluster_bull
+  integration_mode: both
+  name: reversal_after_absorption_cluster
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    period: 7
+    slope_period: 3
+  description: Slope change in a composite pressure series signals buyer or seller
+    control handoff
+  filter_column_bear: pressure_slope_shift_bear
+  filter_column_bull: pressure_slope_shift_bull
+  integration_mode: both
+  name: pressure_slope_shift
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    period: 5
+  description: Pressure index from bar position within range smooths directional order-flow
+    inference
+  filter_column_bear: high_low_close_pressure_index_bear
+  filter_column_bull: high_low_close_pressure_index_bull
+  integration_mode: both
+  name: high_low_close_pressure_index
+  technique: order_flow
+- category: micro_structure
+  default_params:
+    min_streak: 3
+    period: 6
+  description: Streak count of one-sided bars measures sustained short-term imbalance
+  filter_column_bear: bar_by_bar_imbalance_streak_bear
+  filter_column_bull: bar_by_bar_imbalance_streak_bull
+  integration_mode: both
+  name: bar_by_bar_imbalance_streak
+  technique: order_flow

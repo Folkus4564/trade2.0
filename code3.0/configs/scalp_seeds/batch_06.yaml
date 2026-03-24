@@ -1,0 +1,110 @@
+indicators:
+- category: trend
+  default_params:
+    fast_period: 5
+    slow_period: 9
+  description: Bull when fast EMA re-crosses above slow EMA near VWAP; bear on opposite
+    cross near VWAP
+  filter_column_bear: vwap_ema_cross_resume_bear
+  filter_column_bull: vwap_ema_cross_resume_bull
+  integration_mode: both
+  name: vwap_ema_cross_resume
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    adx_period: 7
+    adx_threshold: 20
+  description: VWAP pullback favored only while ADX indicates trend strength remains
+    intact
+  filter_column_bear: vwap_adx_trend_pullback_bear
+  filter_column_bull: vwap_adx_trend_pullback_bull
+  integration_mode: both
+  name: vwap_adx_trend_pullback
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    dmi_period: 7
+    min_spread: 3
+  description: Trend continuation near VWAP confirmed by DI dominance remaining in
+    trend direction
+  filter_column_bear: vwap_dmi_support_bear
+  filter_column_bull: vwap_dmi_support_bull
+  integration_mode: both
+  name: vwap_dmi_support
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    confirm_bars: 1
+  description: After a VWAP pullback, continuation triggers on a clean Heikin Ashi
+    trend candle
+  filter_column_bear: vwap_heikin_ashi_resume_bear
+  filter_column_bull: vwap_heikin_ashi_resume_bull
+  integration_mode: both
+  name: vwap_heikin_ashi_resume
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    atr_mult: 1.8
+    atr_period: 5
+  description: Session VWAP pullback that holds while Supertrend remains aligned with
+    direction
+  filter_column_bear: vwap_supertrend_bounce_bear
+  filter_column_bull: vwap_supertrend_bounce_bull
+  integration_mode: both
+  name: vwap_supertrend_bounce
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    max_step: 0.2
+    step: 0.02
+  description: Price tags VWAP and resumes as Parabolic SAR stays on the trend side
+    of price
+  filter_column_bear: vwap_parabolic_sar_resume_bear
+  filter_column_bull: vwap_parabolic_sar_resume_bull
+  integration_mode: both
+  name: vwap_parabolic_sar_resume
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    period: 10
+  description: Pullback finds support or resistance near VWAP and Donchian midline
+    before continuing
+  filter_column_bear: vwap_donchian_midline_hold_bear
+  filter_column_bull: vwap_donchian_midline_hold_bull
+  integration_mode: both
+  name: vwap_donchian_midline_hold
+  technique: vwap_pullback
+- category: mean_reversion
+  default_params:
+    impulse_lookback: 8
+    tolerance: 0.12
+  description: Continuation from the 50% retracement of the prior impulse move near
+    VWAP
+  filter_column_bear: vwap_halfback_rejection_bear
+  filter_column_bull: vwap_halfback_rejection_bull
+  integration_mode: both
+  name: vwap_halfback_rejection
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    fib_level: 0.382
+    impulse_lookback: 8
+    tolerance: 0.1
+  description: Trend resumes after a shallow 38.2% retrace into the VWAP zone
+  filter_column_bear: vwap_fib_382_resume_bear
+  filter_column_bull: vwap_fib_382_resume_bull
+  integration_mode: both
+  name: vwap_fib_382_resume
+  technique: vwap_pullback
+- category: trend
+  default_params:
+    fib_level: 0.618
+    impulse_lookback: 8
+    tolerance: 0.12
+  description: Deeper 61.8% retrace into VWAP area followed by rejection back with
+    trend
+  filter_column_bear: vwap_fib_618_resume_bear
+  filter_column_bull: vwap_fib_618_resume_bull
+  integration_mode: both
+  name: vwap_fib_618_resume
+  technique: vwap_pullback

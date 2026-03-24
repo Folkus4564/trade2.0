@@ -1,0 +1,115 @@
+indicators:
+- category: mean_reversion
+  default_params:
+    lower_band: 20
+    rsi_period: 5
+    upper_band: 80
+  description: RSI reaches a short-term extreme at range edge and snaps back toward
+    the middle
+  filter_column_bear: rsi_extreme_snapback_bear
+  filter_column_bull: rsi_extreme_snapback_bull
+  integration_mode: both
+  name: rsi_extreme_snapback
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    d_period: 3
+    k_period: 5
+    lower_band: 15
+    upper_band: 85
+  description: Fast stochastic turns down from overbought or up from oversold near
+    established range boundaries
+  filter_column_bear: stoch_range_reversal_bear
+  filter_column_bull: stoch_range_reversal_bull
+  integration_mode: both
+  name: stoch_range_reversal
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    cci_period: 7
+    threshold: 120
+  description: CCI extreme at a range edge reverts as price closes back inside the
+    local range
+  filter_column_bear: cci_range_fade_bear
+  filter_column_bull: cci_range_fade_bull
+  integration_mode: both
+  name: cci_range_fade
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    lower_band: -90
+    period: 7
+    upper_band: -10
+  description: Williams %R reaches exhaustion at range extremes and reverses back
+    inward
+  filter_column_bear: williams_r_snapback_bear
+  filter_column_bull: williams_r_snapback_bull
+  integration_mode: both
+  name: williams_r_snapback
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    atr_mult: 1.5
+    atr_period: 5
+    period: 10
+  description: Price stretches to outer Keltner band and reverts toward the midline
+  filter_column_bear: keltner_band_reversion_bear
+  filter_column_bull: keltner_band_reversion_bull
+  integration_mode: both
+  name: keltner_band_reversion
+  technique: range_mean_reversion
+- category: volatility
+  default_params:
+    atr_period: 5
+    mean_period: 10
+    stretch_mult: 1.6
+  description: A short-term ATR stretch from the local mean is faded when momentum
+    stalls
+  filter_column_bear: atr_stretch_revert_bear
+  filter_column_bull: atr_stretch_revert_bull
+  integration_mode: both
+  name: atr_stretch_revert
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    entry_z: 1.5
+    period: 12
+  description: Price z-score reaches a local extreme and reverts back toward its rolling
+    mean
+  filter_column_bear: zscore_mean_revert_bear
+  filter_column_bull: zscore_mean_revert_bull
+  integration_mode: both
+  name: zscore_mean_revert
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    ema_period: 8
+    pct_band: 0.25
+  description: Price tags a tight EMA envelope and closes back toward the envelope
+    center
+  filter_column_bear: ema_envelope_reversion_bear
+  filter_column_bull: ema_envelope_reversion_bull
+  integration_mode: both
+  name: ema_envelope_reversion
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    period: 10
+  description: Price fails at Donchian channel boundary and rotates back toward the
+    channel middle
+  filter_column_bear: donchian_edge_fade_bear
+  filter_column_bull: donchian_edge_fade_bull
+  integration_mode: both
+  name: donchian_edge_fade
+  technique: range_mean_reversion
+- category: mean_reversion
+  default_params:
+    lookback_bars: 20
+    threshold_pct: 0.35
+  description: Range extension away from session midpoint reverts after rejection
+    at extremes
+  filter_column_bear: session_midpoint_reversion_bear
+  filter_column_bull: session_midpoint_reversion_bull
+  integration_mode: both
+  name: session_midpoint_reversion
+  technique: range_mean_reversion

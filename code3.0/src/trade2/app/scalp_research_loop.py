@@ -441,7 +441,7 @@ def _write_module(code: str, name: str, tv_indicators_dir: Path) -> Path:
     else:
         full_code = header + code
 
-    with open(module_path, "w") as f:
+    with open(module_path, "w", encoding="utf-8") as f:
         f.write(full_code)
     return module_path
 
@@ -977,11 +977,21 @@ def main() -> None:
                         help="Indicator source: seed=use seed list, llm=LLM discovery, both=seed first then LLM")
     parser.add_argument("--technique",          default=None, choices=list(SCALP_TECHNIQUES.keys()),
                         help="Filter to one scalping technique only")
+    parser.add_argument("--seed-path",          default=None,
+                        help="Path to a custom seed list yaml (overrides default scalp_seed_list.yaml)")
+    parser.add_argument("--output-dir",         default=None,
+                        help="Custom output directory for log/best/stack files (default: artefacts/scalp_research)")
+    parser.add_argument("--base-model-id",      default="hmm_15m_3states",
+                        help="Model filename stem for this instance (default: hmm_15m_3states). "
+                             "Use unique values per parallel batch to avoid file collisions.")
+    parser.add_argument("--module-prefix",      default="",
+                        help="Prefix for generated module filenames to avoid collisions between "
+                             "parallel runs (e.g. ds_ for DeepSeek, llm_ for LLM discovery).")
     args = parser.parse_args()
 
     # ---- Paths ----
     base_cfg_path      = PROJECT_ROOT / args.base_config
-    scalp_research_dir = PROJECT_ROOT / "artefacts" / "scalp_research"
+    scalp_research_dir = Path(args.output_dir) if args.output_dir else PROJECT_ROOT / "artefacts" / "scalp_research"
     tv_indicators_dir  = PROJECT_ROOT / "src" / "trade2" / "features" / "tv_indicators"
     scalp_research_dir.mkdir(parents=True, exist_ok=True)
     tv_indicators_dir.mkdir(parents=True, exist_ok=True)
@@ -990,8 +1000,9 @@ def main() -> None:
     stack_path = scalp_research_dir / "scalp_research_stack.json"
 
     # ---- Load seed list ----
-    seed_list = _load_seed_list(SCALP_SEED_LIST_PATH)
-    print(f"[scalp] Seed list: {len(seed_list)} indicators from {SCALP_SEED_LIST_PATH.name}")
+    seed_path = Path(args.seed_path) if args.seed_path else SCALP_SEED_LIST_PATH
+    seed_list = _load_seed_list(seed_path)
+    print(f"[scalp] Seed list: {len(seed_list)} indicators from {seed_path.name}")
 
     # ---- Load config: base.yaml merged with scalp.yaml overlay ----
     from trade2.config.loader import load_config
@@ -1000,6 +1011,10 @@ def main() -> None:
         print(f"[scalp] Config: {base_cfg_path.name} + {SCALP_CONFIG_PATH.name}")
     else:
         base_config = load_config(str(base_cfg_path))
+
+    # Inject model_id so parallel batches write to isolated model files
+    if args.base_model_id and args.base_model_id != "hmm_15m_3states":
+        base_config.setdefault("hmm", {})["model_id"] = args.base_model_id
         print(f"[scalp] WARNING: scalp.yaml not found, using base.yaml only")
 
     scalp_cfg = base_config.get("scalp_research", {})
@@ -1084,7 +1099,7 @@ def main() -> None:
             # Strip any TV indicators so the base model trains on clean features only
             base_cfg_clean.pop("tv_indicators", None)
             _run_pipeline(base_cfg_clean, n_trials=0, walk_forward=False, retrain_model=True)
-            base_model_path = str(PROJECT_ROOT / "artefacts" / "models" / "hmm_15m_3states.pkl")
+            base_model_path = str(PROJECT_ROOT / "artefacts" / "models" / f"{args.base_model_id}.pkl")
             print(f"[scalp] Base model trained and saved to {Path(base_model_path).name}")
         except Exception as _e:
             print(f"[scalp] WARNING: base model training failed ({_e}), signal_source will reuse whatever is on disk")
@@ -1152,7 +1167,7 @@ def main() -> None:
             print("[scalp] Discovery failed after 3 attempts. Skipping iteration.")
             continue
 
-        name = indicator["name"]
+        name = args.module_prefix + indicator["name"]
         tried.add(name)
         tech = indicator.get("technique", "unknown")
         print(f"[scalp] Indicator: {name} | technique={tech} | category={indicator.get('category', '?')}")
