@@ -13,6 +13,7 @@ strategy:
 data:
   raw_1m_csv:  code3.0/data/raw/XAUUSD_1M_2019_2026.csv
   raw_15m_csv: data/raw/XAUUSD_15M_2019_2026.csv
+  missing_bar_policy: none   # skip fill_gaps on 1M -- too many bars, causes OOM
 
 splits:
   test_end: "2026-03-10"
@@ -22,6 +23,7 @@ risk:
   atr_tp_mult: 1.5          # 1:1.5 R:R
   base_allocation_frac: 0.50
   max_hold_bars: 0          # no timeout - exits via SL/TP/signal only
+  use_signal_atr: true       # scalping: use signal-TF ATR (1M/5M) instead of 1H ATR for stops
 
 features:
   bb_period_5m: 300         # 300 x 1M bars = 5 hours (was 60 x 5M = 5 hours)
@@ -79,3 +81,5 @@ strategies:
     allowed_hours_utc: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
   cdc:
     enabled: false
+  cdc_retest:
+    enabled: true

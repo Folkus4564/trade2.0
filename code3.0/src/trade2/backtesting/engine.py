@@ -521,7 +521,8 @@ def run_walk_forward(
                     val_sig = compute_stops_regime_aware(val_sig, config)
                 else:
                     val_sig = generate_signals(val_sig_df, config)
-                    val_sig = compute_stops(val_sig, config["risk"]["atr_stop_mult"], config["risk"]["atr_tp_mult"])
+                    val_sig = compute_stops(val_sig, config["risk"]["atr_stop_mult"], config["risk"]["atr_tp_mult"],
+                                           use_signal_atr=config["risk"]["use_signal_atr"])
             elif wf_strategy_mode == "regime_specialized":
                 val_sig = route_signals(
                     val_feat, config,
@@ -543,6 +544,7 @@ def run_walk_forward(
                     val_sig,
                     config["risk"]["atr_stop_mult"],
                     config["risk"]["atr_tp_mult"],
+                    use_signal_atr=config["risk"]["use_signal_atr"],
                 )
 
             n_sigs = val_sig["signal_long"].sum() + val_sig["signal_short"].sum()

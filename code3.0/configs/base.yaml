@@ -131,6 +131,7 @@ risk:
   daily_loss_pct:       0.03
   max_dd_limit:         0.25
   base_allocation_frac: 0.633   # base * sizing_max(1.5) = ~0.95 max equity allocation
+  use_signal_atr: false          # if true, always use signal-TF atr_14 (for scalping; avoids over-wide 1H ATR stops)
 
 # ---- Drawdown suppression filter (Improvement #2) ---------
 drawdown_filter:
@@ -225,6 +226,23 @@ strategies:
     sizing_max: 1.00
     session_enabled: true
     allowed_hours_utc: [7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
+  cdc_retest:
+    enabled: false
+    regime_gated: true
+    ap_period: 2
+    fast_period: 12
+    slow_period: 26
+    retest_proximity_atr: 0.3   # price must approach within 0.3*ATR of Fast EMA
+    retest_overshoot_atr: 0.5   # max allowed overshoot through Fast EMA
+    zone_filter: "strong"        # "strong"=green/red only, "any"=all bull/bear zones
+    atr_stop_mult: 1.0
+    atr_tp_mult: 1.5
+    sizing_base: 0.50
+    sizing_max: 1.00
+    min_prob: 0.60
+    session_enabled: true
+    allowed_hours_utc: [8,9,10,11,12,13,14,15,16,17]
 
 # ---- Acceptance criteria -----------------------------------
 acceptance:

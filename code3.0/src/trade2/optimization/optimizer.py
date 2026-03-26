@@ -78,7 +78,7 @@ def _run_val_trial(
                 transition_cooldown_bars = transition_cooldown_bars,
             )
             sig = compute_stops(sig, atr_stop_mult, atr_tp_mult,
-                                use_signal_atr=config.get("risk", {}).get("use_signal_atr", False))
+                                use_signal_atr=config["risk"]["use_signal_atr"])
 
         if sig["signal_long"].sum() + sig["signal_short"].sum() == 0:
             return -999.0

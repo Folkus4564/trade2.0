@@ -11,6 +11,9 @@ _LONDON_HOURS = set(range(7, 17))
 _NY_HOURS     = set(range(13, 22))
 _ACTIVE_HOURS = _LONDON_HOURS | _NY_HOURS
 
+# Bars-per-hour for each regime timeframe (used to scale persistence windows)
+_REGIME_BPH = {"5M": 12, "15M": 4, "30M": 2, "1H": 1, "4H": 1}
+
 
 def _session_mask(index: pd.DatetimeIndex, allowed_hours: set) -> pd.Series:
     hours = index.hour if index.tz is None else index.tz_convert("UTC").hour
@@ -122,7 +125,6 @@ def generate_signals(
         # e.g. persistence=4 on 15M regime + 1M signal -> 4 * (60/4) = 60 signal bars.
         signal_bph = _get_bars_per_hour(out)
         regime_tf  = cfg.get("strategy", {}).get("regime_timeframe", "1H")
-        _REGIME_BPH = {"5M": 12, "15M": 4, "30M": 2, "1H": 1, "4H": 1}
         regime_bph = _REGIME_BPH.get(regime_tf.upper(), 1)
         ratio      = signal_bph / max(regime_bph, 1)
         win_long   = max(int(round(max(persistence,       1) * ratio)), 1)
@@ -130,6 +132,7 @@ def generate_signals(
         bull_regime = bull_raw.rolling(win_long).sum()  == win_long
         bear_regime = bear_raw.rolling(win_short).sum() == win_short
     else:
+        # persistence == 1: a single signal-TF bar of confirmed regime is sufficient; no rolling window needed.
         bull_regime = bull_raw
         bear_regime = bear_raw
 
@@ -286,7 +289,7 @@ def compute_stops_regime_aware(
     strat_cfg = config["strategies"]
     risk_cfg  = config["risk"]
 
-    use_signal_atr = risk_cfg.get("use_signal_atr", False)
+    use_signal_atr = risk_cfg["use_signal_atr"]
     if use_signal_atr:
         atr = out["atr_14"]
     else:
@@ -324,7 +327,7 @@ def compute_stops_regime_aware(
     # ---- Trailing stop multipliers (per-bar, 0 = disabled) ----
     # Consumed by _simulate_trades() to update frozen_sl dynamically.
     trail_mults = np.zeros(len(out), dtype=float)
-    for src_name in ("trend", "range", "volatile", "cdc"):
+    for src_name in ("trend", "range", "volatile", "cdc", "cdc_retest"):
         mask = (source == src_name).values
         if mask.any():
             scfg = strat_cfg.get(src_name, {})

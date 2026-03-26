@@ -437,7 +437,7 @@ def run_pipeline(
                 test_sig_df, **sig_kwargs,
                 hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg,
             )
-        _use_sig_atr = config.get("risk", {}).get("use_signal_atr", False)
+        _use_sig_atr = config["risk"]["use_signal_atr"]
         train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
         val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
         test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
@@ -509,7 +509,7 @@ def run_pipeline(
                         hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_reg)
                     test_sig  = generate_signals(test_sig_df,  **sig_kwargs_opt,
                         hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg)
-                _use_sig_atr = config.get("risk", {}).get("use_signal_atr", False)
+                _use_sig_atr = config["risk"]["use_signal_atr"]
                 train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
                 val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
                 test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
