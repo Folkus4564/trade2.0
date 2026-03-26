@@ -88,6 +88,7 @@ def _run_val_trial(
         slippage   = compute_slippage_array(sig["Close"].astype(float), config).values
         tf_scale   = _get_tf_scale(config)
         max_hold   = risk_cfg["max_hold_bars"] * tf_scale
+        be_trigger = risk_cfg.get("break_even_atr_trigger", 0.0)
 
         equity, trades_df = _simulate_trades(
             df                   = sig,
@@ -96,6 +97,7 @@ def _run_val_trial(
             slippage             = slippage,
             commission_rt        = costs_cfg["commission_rt"],
             max_hold_bars        = max_hold,
+            be_atr_trigger       = be_trigger,
         )
 
         if len(trades_df) < 10:
@@ -202,6 +204,27 @@ def run_optimization(
             trial_kwargs["range_rsi_long_max"]    = trial.suggest_float("range_rsi_long_max",    r_rsi_lo,     r_rsi_hi)
             trial_kwargs["range_atr_stop_mult"]   = trial.suggest_float("range_atr_stop_mult",   r_stop_lo,    r_stop_hi)
             trial_kwargs["range_atr_tp_mult"]     = trial.suggest_float("range_atr_tp_mult",     r_tp_lo,      r_tp_hi)
+
+        # ---- Scalp-specific params: patch config when present in search_space ----
+        _SCALP_PARAMS = ("session_start_hour", "session_end_hour",
+                         "persistence_bars_short", "break_even_atr_trigger")
+        if any(k in search for k in _SCALP_PARAMS):
+            trial_config = copy.deepcopy(config)
+            if "session_start_hour" in search or "session_end_hour" in search:
+                ss_lo, ss_hi = _bounds("session_start_hour", 6, 10)
+                se_lo, se_hi = _bounds("session_end_hour", 16, 22)
+                sess_start = trial.suggest_int("session_start_hour", int(ss_lo), int(ss_hi))
+                sess_end   = trial.suggest_int("session_end_hour",   int(se_lo), int(se_hi))
+                trial_config["session"]["allowed_hours_utc"] = list(range(sess_start, sess_end + 1))
+            if "persistence_bars_short" in search:
+                pb_lo, pb_hi = _bounds("persistence_bars_short", 1, 6)
+                pb_short = trial.suggest_int("persistence_bars_short", int(pb_lo), int(pb_hi))
+                trial_config["regime"]["persistence_bars_short"] = pb_short
+            if "break_even_atr_trigger" in search:
+                be_lo, be_hi = _bounds("break_even_atr_trigger", 0.0, 1.5)
+                be_val = trial.suggest_float("break_even_atr_trigger", be_lo, be_hi)
+                trial_config["risk"]["break_even_atr_trigger"] = be_val
+            trial_kwargs["config"] = trial_config
 
         trial_kwargs["optuna_target"] = optuna_target
         val_score = _run_val_trial(val_sig_df=val_sig_df, **trial_kwargs)

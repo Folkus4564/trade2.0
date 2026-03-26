@@ -57,6 +57,22 @@ session:
 scalp_research:
   min_trades_per_day: 2.0
 
+optimization:
+  n_trials: 200
+  target: val_sharpe
+  search_space:
+    atr_stop_mult:            [0.5, 3.0]
+    atr_tp_mult:              [1.0, 4.0]
+    hmm_min_prob:             [0.40, 0.75]
+    regime_persistence:       [1, 4]
+    adx_threshold:            [10.0, 30.0]
+    hmm_min_confidence:       [0.25, 0.55]
+    transition_cooldown_bars: [0, 2]
+    session_start_hour:       [6, 10]
+    session_end_hour:         [16, 22]
+    persistence_bars_short:   [1, 6]
+    break_even_atr_trigger:   [0.0, 1.5]
+
 strategies:
   trend:
     enabled: true
