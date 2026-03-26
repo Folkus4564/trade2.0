@@ -102,6 +102,15 @@ def _llm_complete(
                 wait = min(60 * (2 ** attempt), 600)  # 60s, 120s, 240s ... max 600s
                 print(f"[scalp] Claude rate limit hit (attempt {attempt+1}/{_max_retries}), waiting {wait}s...")
                 time.sleep(wait)
+            except _anthropic.APIStatusError as e:
+                # Overload (529) or other server-side errors — back off and retry
+                wait = min(30 * (2 ** attempt), 300)
+                print(f"[scalp] Claude API status error {e.status_code} (attempt {attempt+1}/{_max_retries}), waiting {wait}s: {e}")
+                time.sleep(wait)
+            except _anthropic.APIConnectionError as e:
+                wait = min(15 * (2 ** attempt), 120)
+                print(f"[scalp] Claude connection error (attempt {attempt+1}/{_max_retries}), waiting {wait}s: {e}")
+                time.sleep(wait)
         # final attempt (raises if still failing)
         with client.messages.stream(**kwargs) as stream:
             response = stream.get_final_message()
@@ -676,6 +685,9 @@ def _test_three_modes(
                 best_return  = cur_return
                 best_mode    = mode
                 best_metrics = tm
+        except MemoryError as e:
+            all_results[mode] = {"error": f"MemoryError: {e}", "status": "OOM"}
+            print(f"[scalp]     -> OOM on mode {mode}: skipping")
         except Exception as e:
             all_results[mode] = {"error": str(e)}
             print(f"[scalp]     -> FAILED: {e}")
@@ -986,6 +998,8 @@ def main() -> None:
     parser.add_argument("--top-pairs",          type=int, default=30,
                         help="Take top N individual performers for pair testing (default: 30)")
     parser.add_argument("--base-config",        default="configs/base.yaml")
+    parser.add_argument("--scalp-config",       default="configs/scalp.yaml",
+                        help="Path to scalp config overlay (e.g. configs/scalp_5m.yaml). Default: configs/scalp.yaml")
     parser.add_argument("--base-model-path",    default=None,
                         help="Path to HMM model used for signal_filter mode (default: artefacts/models/hmm_1h_3states.pkl)")
     parser.add_argument("--source",             default="both", choices=["seed", "llm", "both"],
@@ -1019,18 +1033,19 @@ def main() -> None:
     seed_list = _load_seed_list(seed_path)
     print(f"[scalp] Seed list: {len(seed_list)} indicators from {seed_path.name}")
 
-    # ---- Load config: base.yaml merged with scalp.yaml overlay ----
+    # ---- Load config: base.yaml merged with scalp config overlay ----
     from trade2.config.loader import load_config
-    if SCALP_CONFIG_PATH.exists():
-        base_config = load_config(str(base_cfg_path), str(SCALP_CONFIG_PATH))
-        print(f"[scalp] Config: {base_cfg_path.name} + {SCALP_CONFIG_PATH.name}")
+    scalp_config_path = (PROJECT_ROOT / args.scalp_config) if not Path(args.scalp_config).is_absolute() else Path(args.scalp_config)
+    if scalp_config_path.exists():
+        base_config = load_config(str(base_cfg_path), str(scalp_config_path))
+        print(f"[scalp] Config: {base_cfg_path.name} + {scalp_config_path.name}")
     else:
         base_config = load_config(str(base_cfg_path))
+        print(f"[scalp] WARNING: scalp config not found at {scalp_config_path}, using base.yaml only")
 
     # Inject model_id so parallel batches write to isolated model files
     if args.base_model_id and args.base_model_id != "hmm_15m_3states":
         base_config.setdefault("hmm", {})["model_id"] = args.base_model_id
-        print(f"[scalp] WARNING: scalp.yaml not found, using base.yaml only")
 
     scalp_cfg = base_config.get("scalp_research", {})
 
@@ -1103,7 +1118,11 @@ def main() -> None:
     # and use it as the reference model for all signal_filter runs in this session.
     if args.base_model_path:
         base_model_path = str(PROJECT_ROOT / args.base_model_path) if not Path(args.base_model_path).is_absolute() else args.base_model_path
-        print(f"[scalp] Base model for signal_filter: {Path(base_model_path).name} (from --base-model-path)")
+        if not Path(base_model_path).exists():
+            print(f"[scalp] WARNING: --base-model-path not found at {base_model_path}, will retrain")
+            base_model_path = None
+        else:
+            print(f"[scalp] Base model for signal_filter: {Path(base_model_path).name} (from --base-model-path)")
     elif args.dry_run:
         base_model_path = None  # dry-run skips pipeline entirely
     else:
