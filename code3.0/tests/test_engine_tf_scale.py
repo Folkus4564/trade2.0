@@ -61,6 +61,24 @@ EXPECTED_BARS_PER_YEAR = {
 }
 
 
+@pytest.mark.parametrize("alias", ["1m", "1M"])
+def test_1min_aliases_correct_bars_per_year(alias):
+    """'1m' and '1M' are _TF_SCALE aliases for 1-minute — verify same bars_per_year as '1min'.
+
+    We build the dataframe with freq='1min' (pandas-safe) but pass the alias to run_backtest,
+    which looks it up in _TF_SCALE internally.
+    """
+    expected_bpy = 252 * 24 * 60  # 362880
+    n_bars = expected_bpy
+    df = _make_signal_df(n_bars, "1min")  # pandas-safe freq for df construction
+    cfg = _minimal_config()
+    metrics, _ = run_backtest(df, "test_strategy", period_label="test", config=cfg, freq=alias)
+    assert abs(metrics["n_years"] - 1.0) < 0.01, (
+        f"freq={alias!r}: expected n_years~1.0, got {metrics['n_years']:.4f} "
+        f"(bars_per_year was {n_bars / metrics['n_years']:.0f}, expected {expected_bpy})"
+    )
+
+
 @pytest.mark.parametrize("freq,expected_bpy", list(EXPECTED_BARS_PER_YEAR.items()))
 def test_n_years_matches_bars_per_year(freq, expected_bpy):
     """n_years = n_bars / bars_per_year — verify bars_per_year is correct for each freq."""
