@@ -19,11 +19,12 @@ splits:
   test_end: "2026-03-10"
 
 risk:
-  atr_stop_mult: 1.0        # tight stop for scalping
-  atr_tp_mult: 1.5          # 1:1.5 R:R
+  atr_stop_mult: 1.5        # wider stop to reduce churn (was 1.0)
+  atr_tp_mult: 2.0          # 1:2 R:R - more achievable with costs (was 1.5)
   base_allocation_frac: 0.50
   max_hold_bars: 0          # no timeout - exits via SL/TP/signal only
   use_signal_atr: true       # scalping: use signal-TF ATR (1M/5M) instead of 1H ATR for stops
+  break_even_atr_trigger: 0.8  # move SL to entry after 0.8*ATR favorable move
 
 features:
   bb_period_5m: 300         # 300 x 1M bars = 5 hours (was 60 x 5M = 5 hours)
@@ -39,20 +40,20 @@ smc_5m:
   require_pin_bar: false
 
 regime:
-  persistence_bars: 4             # 4 x 15M bars = 1 hour (was 1 x 1H = 1 hour)
-  persistence_bars_short: 8       # 8 x 15M bars = 2 hours
+  persistence_bars: 2             # 2 x 15M bars = 30 min (with persistence fix, 2 regime bars = 30 1M signal bars)
+  persistence_bars_short: 3       # 3 x 15M bars = 45 min (was 8, extremely conservative)
   transition_cooldown_bars: 0
 
 hmm:
-  min_prob_hard: 0.60
-  min_prob_hard_short: 0.60
-  min_prob_entry: 0.60
+  min_prob_hard: 0.55        # slightly looser for more signals (was 0.60)
+  min_prob_hard_short: 0.55  # slightly looser for more signals (was 0.60)
+  min_prob_entry: 0.55
   min_prob_exit: 0.45
   min_confidence: 0.40
 
 session:
   enabled: true
-  allowed_hours_utc: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+  allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
 scalp_research:
   min_trades_per_day: 2.0   # lowered from 5.0 - realistic for 15M-gated 1M signals
@@ -60,25 +61,26 @@ scalp_research:
 strategies:
   trend:
     enabled: true
-    persistence_bars: 4
-    atr_stop_mult: 1.0
-    atr_tp_mult: 1.5
-    trailing_enabled: false
+    persistence_bars: 2
+    atr_stop_mult: 1.5      # match global risk (was 1.0)
+    atr_tp_mult: 2.0        # match global risk (was 1.5)
+    trailing_enabled: true
+    trailing_atr_mult: 0.8
     session_enabled: true
-    allowed_hours_utc: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
   range:
     enabled: false          # needs SMC OBs
-    persistence_bars: 4
+    persistence_bars: 2
     atr_stop_mult: 0.8
     atr_tp_mult: 1.2
     session_enabled: true
-    allowed_hours_utc: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
   volatile:
     enabled: false          # needs triple SMC confluence
     atr_stop_mult: 0.8
     atr_tp_mult: 1.2
     session_enabled: true
-    allowed_hours_utc: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
   cdc:
     enabled: false
   cdc_retest:

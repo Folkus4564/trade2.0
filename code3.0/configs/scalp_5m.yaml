@@ -1,0 +1,86 @@
+# ============================================================
+#  trade2 - Scalping Research Loop - Config Overlay (5M)
+#  Overlaid on top of base.yaml for scalp_research runs.
+#  5M signal TF + 1H regime TF. Tighter than base, proven combo.
+# ============================================================
+
+strategy:
+  name: xauusd_scalp_5m_research
+  mode: multi_tf
+  signal_timeframe: 5M
+  regime_timeframe: 1H
+
+data:
+  raw_5m_csv: data/raw/XAUUSD_5M_2019_2026.csv
+  missing_bar_policy: none
+
+splits:
+  test_end: "2026-03-10"
+
+risk:
+  atr_stop_mult: 1.5
+  atr_tp_mult: 2.5
+  use_signal_atr: true
+  base_allocation_frac: 0.50
+  max_hold_bars: 0
+  break_even_atr_trigger: 0.8
+
+features:
+  bb_period_5m: 60   # 60 x 5M bars = 5 hours
+
+smc_5m:
+  enabled: true
+  ob_validity_bars: 36    # 36 x 5M = 3 hours
+  fvg_validity_bars: 24   # 24 x 5M = 2 hours
+  swing_lookback_bars: 36 # 36 x 5M = 3 hours
+  ob_impulse_bars: 2
+  ob_impulse_mult: 1.2
+  require_confluence: false
+  require_pin_bar: false
+
+regime:
+  persistence_bars: 3
+  persistence_bars_short: 5
+  transition_cooldown_bars: 0
+
+hmm:
+  min_prob_hard: 0.55
+  min_prob_hard_short: 0.55
+  min_prob_entry: 0.55
+  min_prob_exit: 0.40
+  min_confidence: 0.40
+
+session:
+  enabled: true
+  allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+scalp_research:
+  min_trades_per_day: 2.0
+
+strategies:
+  trend:
+    enabled: true
+    persistence_bars: 3
+    atr_stop_mult: 1.5
+    atr_tp_mult: 2.5
+    trailing_enabled: true
+    trailing_atr_mult: 0.8
+    session_enabled: true
+    allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+  range:
+    enabled: false
+    persistence_bars: 3
+    atr_stop_mult: 1.0
+    atr_tp_mult: 1.5
+    session_enabled: true
+    allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+  volatile:
+    enabled: false
+    atr_stop_mult: 1.0
+    atr_tp_mult: 1.5
+    session_enabled: true
+    allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+  cdc:
+    enabled: false
+  cdc_retest:
+    enabled: true
