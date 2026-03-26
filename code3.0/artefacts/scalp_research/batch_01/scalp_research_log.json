@@ -1,0 +1,149 @@
+[
+  {
+    "id": 1,
+    "name": "donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T18:03:54",
+    "duration_seconds": 9460,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\donchian_breakout_momentum.py",
+    "config_override": {
+      "tv_indicators": {
+        "donchian_breakout_momentum": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "period": 8,
+          "vol_mult": 1.5,
+          "vol_period": 6,
+          "filter_column_bull": "donchian_breakout_momentum_bull",
+          "filter_column_bear": "donchian_breakout_momentum_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0,
+      "sharpe_ratio": 0.0,
+      "max_drawdown": 0.0,
+      "total_trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 0.0,
+        "annualized_return": 0.0,
+        "max_drawdown": 0.0
+      }
+    },
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "signal_source": {
+        "error": "[pipeline] --model-path not found: C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\artefacts\\models\\batch_01.pkl"
+      },
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": 0.0,
+          "sharpe_ratio": 0.0,
+          "max_drawdown": 0.0,
+          "total_trades": 0,
+          "win_rate": 0.0,
+          "profit_factor": 0.0,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.0,
+            "annualized_return": 0.0,
+            "max_drawdown": 0.0
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 0.0,
+        "config": {
+          "tv_indicators": {
+            "donchian_breakout_momentum": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 8,
+              "vol_mult": 1.5,
+              "vol_period": 6,
+              "filter_column_bull": "donchian_breakout_momentum_bull",
+              "filter_column_bear": "donchian_breakout_momentum_bear"
+            }
+          }
+        }
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 351. MiB for an array with shape (26, 1767957) and data type float64"
+      }
+    }
+  },
+  {
+    "id": 2,
+    "name": "vwap_deviation_bounce",
+    "category": "mean_reversion",
+    "technique": "vwap_pullback",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T20:41:35",
+    "duration_seconds": 3336,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\vwap_deviation_bounce.py",
+    "config_override": null,
+    "test_metrics": {},
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "[pipeline] --model-path not found: C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\artefacts\\models\\batch_01.pkl"
+      },
+      "hmm": {
+        "error": "Unable to allocate 216. MiB for an array with shape (16, 1767957) and data type float64"
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 67.4 MiB for an array with shape (5, 1767957) and data type float64"
+      }
+    }
+  },
+  {
+    "id": 3,
+    "name": "bollinger_band_mean_reversion",
+    "category": "mean_reversion",
+    "technique": "range_mean_reversion",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T21:37:11",
+    "duration_seconds": 124,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\bollinger_band_mean_reversion.py",
+    "config_override": null,
+    "test_metrics": {},
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "Unable to allocate 1.00 MiB for an array with shape (131072,) and data type int64"
+      },
+      "hmm": {
+        "error": "Unable to allocate 175. MiB for an array with shape (13, 1767957) and data type float64"
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 175. MiB for an array with shape (13, 1767957) and data type float64"
+      }
+    }
+  }
+]

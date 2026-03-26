@@ -58,5 +58,121 @@
     "verdict": null,
     "is_best": false,
     "error": "Validation: SyntaxError: '(' was never closed (<unknown>, line 144)"
+  },
+  {
+    "id": 4,
+    "name": "opening_range_midpoint_reject",
+    "category": "mean_reversion",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T18:04:17",
+    "duration_seconds": 10418,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\opening_range_midpoint_reject.py",
+    "config_override": null,
+    "test_metrics": {},
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "[pipeline] --model-path not found: C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\artefacts\\models\\batch_19.pkl"
+      },
+      "hmm": {
+        "error": "Unable to allocate 3.24 MiB for an array with shape (424702,) and data type float64"
+      },
+      "hmm_signal_source": {
+        "error": "'covars' must be symmetric, positive-definite"
+      }
+    }
+  },
+  {
+    "id": 5,
+    "name": "opening_range_inside_bar_break",
+    "category": "momentum",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T20:57:55",
+    "duration_seconds": 3121,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\opening_range_inside_bar_break.py",
+    "config_override": null,
+    "test_metrics": {},
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "[pipeline] --model-path not found: C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\artefacts\\models\\batch_19.pkl"
+      },
+      "hmm": {
+        "error": "Unable to allocate 42.1 MiB for an array with shape (13, 424702) and data type float64"
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 21.0 MiB for an array with shape (2755260,) and data type object"
+      }
+    }
+  },
+  {
+    "id": 6,
+    "name": "opening_range_pinbar_reversal",
+    "category": "mean_reversion",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T21:49:57",
+    "duration_seconds": 104,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\opening_range_pinbar_reversal.py",
+    "config_override": null,
+    "test_metrics": {},
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "Unable to allocate 1.00 MiB for an array with shape (131072,) and data type int64"
+      },
+      "hmm": {
+        "error": "Unable to allocate 13.5 MiB for an array with shape (1, 1767957) and data type float64"
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 21.0 MiB for an array with shape (2755260,) and data type int64"
+      }
+    }
+  },
+  {
+    "id": 7,
+    "name": "opening_range_engulf_follow",
+    "category": "momentum",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-24T21:51:41",
+    "duration_seconds": 192,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: invalid syntax (<unknown>, line 152)"
   }
 ]

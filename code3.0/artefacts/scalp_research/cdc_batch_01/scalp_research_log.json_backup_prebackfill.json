@@ -1,0 +1,381 @@
+[
+  {
+    "id": 1,
+    "name": "cdc_donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-24T22:26:34",
+    "duration_seconds": 5199,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\cdc_donchian_breakout_momentum.py",
+    "config_override": {
+      "tv_indicators": {
+        "donchian_breakout_momentum": {
+          "enabled": true,
+          "integration_mode": "signal_source",
+          "period": 8,
+          "vol_mult": 1.5,
+          "vol_period": 6,
+          "filter_column_bull": "donchian_breakout_momentum_bull",
+          "filter_column_bear": "donchian_breakout_momentum_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.0014,
+      "total_return": -0.0965,
+      "annualized_volatility": 0.0032,
+      "sharpe_ratio": -12.8461,
+      "sortino_ratio": -4.7832,
+      "max_drawdown": -0.098,
+      "calmar_ratio": -0.0147,
+      "n_years": 70.22,
+      "total_trades": 719,
+      "win_rate": 0.4019,
+      "profit_factor": 0.7393,
+      "avg_win_loss_ratio": 1.1,
+      "avg_trade_pnl": -13.4191,
+      "avg_trade_duration_bars": 41.97,
+      "benchmark_return": 0.0082,
+      "alpha_vs_benchmark": -0.0096,
+      "information_ratio": -0.3045,
+      "exit_reasons": {
+        "sl": 377,
+        "tp": 254,
+        "signal": 88
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.191,
+        "random_median_return": 0.0038,
+        "random_p95_sharpe": 0.33,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -12.9462,
+        "annualized_return": -0.0029,
+        "max_drawdown": -0.1836
+      }
+    },
+    "trades_per_day": 2.377645502645503,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "test_metrics": {
+          "annualized_return": -0.0014,
+          "total_return": -0.0965,
+          "annualized_volatility": 0.0032,
+          "sharpe_ratio": -12.8461,
+          "sortino_ratio": -4.7832,
+          "max_drawdown": -0.098,
+          "calmar_ratio": -0.0147,
+          "n_years": 70.22,
+          "total_trades": 719,
+          "win_rate": 0.4019,
+          "profit_factor": 0.7393,
+          "avg_win_loss_ratio": 1.1,
+          "avg_trade_pnl": -13.4191,
+          "avg_trade_duration_bars": 41.97,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0096,
+          "information_ratio": -0.3045,
+          "exit_reasons": {
+            "sl": 377,
+            "tp": 254,
+            "signal": 88
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.191,
+            "random_median_return": 0.0038,
+            "random_p95_sharpe": 0.33,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -12.9462,
+            "annualized_return": -0.0029,
+            "max_drawdown": -0.1836
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 2.377645502645503,
+        "config": {
+          "tv_indicators": {
+            "donchian_breakout_momentum": {
+              "enabled": true,
+              "integration_mode": "signal_source",
+              "period": 8,
+              "vol_mult": 1.5,
+              "vol_period": 6,
+              "filter_column_bull": "donchian_breakout_momentum_bull",
+              "filter_column_bear": "donchian_breakout_momentum_bear"
+            }
+          }
+        }
+      },
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.0014,
+          "total_return": -0.0965,
+          "annualized_volatility": 0.0032,
+          "sharpe_ratio": -12.8455,
+          "sortino_ratio": -4.7835,
+          "max_drawdown": -0.098,
+          "calmar_ratio": -0.0147,
+          "n_years": 70.22,
+          "total_trades": 720,
+          "win_rate": 0.4014,
+          "profit_factor": 0.7392,
+          "avg_win_loss_ratio": 1.1025,
+          "avg_trade_pnl": -13.4068,
+          "avg_trade_duration_bars": 41.92,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0096,
+          "information_ratio": -0.3045,
+          "exit_reasons": {
+            "sl": 377,
+            "tp": 254,
+            "signal": 89
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1818,
+            "random_median_return": 0.0036,
+            "random_p95_sharpe": 0.3233,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -12.9456,
+            "annualized_return": -0.0029,
+            "max_drawdown": -0.1837
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 2.380952380952381,
+        "config": {
+          "tv_indicators": {
+            "donchian_breakout_momentum": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 8,
+              "vol_mult": 1.5,
+              "vol_period": 6,
+              "filter_column_bull": "donchian_breakout_momentum_bull",
+              "filter_column_bear": "donchian_breakout_momentum_bear"
+            }
+          }
+        }
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 13.5 MiB for an array with shape (1766833,) and data type float64"
+      }
+    }
+  },
+  {
+    "id": 2,
+    "name": "cdc_donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-24T23:53:14",
+    "duration_seconds": 1,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNFepLsSQ9zM3UDLGvF5'}"
+  },
+  {
+    "id": 3,
+    "name": "cdc_donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-24T23:53:15",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNFerGxKwnvknrnvpkHE'}"
+  },
+  {
+    "id": 4,
+    "name": "cdc_donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-24T23:53:16",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNFesfJ4WaYxqbPJsPW7'}"
+  },
+  {
+    "id": 5,
+    "name": "cdc_donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-24T23:53:16",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNFeuoHP2BXThD2C3fsD'}"
+  },
+  {
+    "id": 6,
+    "name": "cdc_donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-24T23:53:17",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNFewfePtYvnV8oavGHa'}"
+  },
+  {
+    "id": 7,
+    "name": "cdc_donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-24T23:53:17",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNFey4jYpr2UsZJnvURw'}"
+  },
+  {
+    "id": 8,
+    "name": "cdc_donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-24T23:53:17",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNFf17WzdAVucrVWNvxd'}"
+  },
+  {
+    "id": 9,
+    "name": "cdc_donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-24T23:53:18",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNFf2b4oByhTSKgJngdD'}"
+  },
+  {
+    "id": 10,
+    "name": "cdc_donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-24T23:53:18",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNFf47LsF67UQ2MJQevZ'}"
+  },
+  {
+    "id": 11,
+    "name": "cdc_donchian_breakout_momentum",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-24T23:53:19",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNFf5rGvfH8ZxoGoKWgR'}"
+  }
+]

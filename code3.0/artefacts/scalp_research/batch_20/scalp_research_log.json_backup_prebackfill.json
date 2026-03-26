@@ -1,0 +1,161 @@
+[
+  {
+    "id": 1,
+    "name": "opening_range_obv_confirm",
+    "category": "volume",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-24T18:04:19",
+    "duration_seconds": 10075,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\opening_range_obv_confirm.py",
+    "config_override": {
+      "tv_indicators": {
+        "opening_range_obv_confirm": {
+          "enabled": true,
+          "integration_mode": "hmm_signal_source",
+          "obv_lookback": 10,
+          "range_bars": 5,
+          "filter_column_bull": "opening_range_obv_confirm_bull",
+          "filter_column_bear": "opening_range_obv_confirm_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.0021,
+      "total_return": -0.1367,
+      "annualized_volatility": 0.0065,
+      "sharpe_ratio": -6.426,
+      "sortino_ratio": -2.5269,
+      "max_drawdown": -0.146,
+      "calmar_ratio": -0.0143,
+      "n_years": 70.22,
+      "total_trades": 768,
+      "win_rate": 0.3711,
+      "profit_factor": 0.7993,
+      "avg_win_loss_ratio": 1.3545,
+      "avg_trade_pnl": -17.8001,
+      "avg_trade_duration_bars": 38.84,
+      "benchmark_return": 0.0082,
+      "alpha_vs_benchmark": -0.0102,
+      "information_ratio": -0.325,
+      "exit_reasons": {
+        "sl": 472,
+        "tp": 269,
+        "signal": 27
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.1905,
+        "random_median_return": 0.0038,
+        "random_p95_sharpe": 0.3188,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -6.6577,
+        "annualized_return": -0.0039,
+        "max_drawdown": -0.2481
+      }
+    },
+    "trades_per_day": 2.53968253968254,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm_signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "[pipeline] --model-path not found: C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\artefacts\\models\\batch_20.pkl"
+      },
+      "hmm": {
+        "error": "Unable to allocate 337. MiB for an array with shape (25, 1767957) and data type float64"
+      },
+      "hmm_signal_source": {
+        "test_metrics": {
+          "annualized_return": -0.0021,
+          "total_return": -0.1367,
+          "annualized_volatility": 0.0065,
+          "sharpe_ratio": -6.426,
+          "sortino_ratio": -2.5269,
+          "max_drawdown": -0.146,
+          "calmar_ratio": -0.0143,
+          "n_years": 70.22,
+          "total_trades": 768,
+          "win_rate": 0.3711,
+          "profit_factor": 0.7993,
+          "avg_win_loss_ratio": 1.3545,
+          "avg_trade_pnl": -17.8001,
+          "avg_trade_duration_bars": 38.84,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0102,
+          "information_ratio": -0.325,
+          "exit_reasons": {
+            "sl": 472,
+            "tp": 269,
+            "signal": 27
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1905,
+            "random_median_return": 0.0038,
+            "random_p95_sharpe": 0.3188,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -6.6577,
+            "annualized_return": -0.0039,
+            "max_drawdown": -0.2481
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 2.53968253968254,
+        "config": {
+          "tv_indicators": {
+            "opening_range_obv_confirm": {
+              "enabled": true,
+              "integration_mode": "hmm_signal_source",
+              "obv_lookback": 10,
+              "range_bars": 5,
+              "filter_column_bull": "opening_range_obv_confirm_bull",
+              "filter_column_bear": "opening_range_obv_confirm_bear"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 2,
+    "name": "opening_range_cmf_confirm",
+    "category": "volume",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T20:52:15",
+    "duration_seconds": 4969,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\opening_range_cmf_confirm.py",
+    "config_override": null,
+    "test_metrics": {},
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "[pipeline] --model-path not found: C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\artefacts\\models\\batch_20.pkl"
+      },
+      "hmm": {
+        "error": "Unable to allocate 40.5 MiB for an array with shape (3, 1767957) and data type int64"
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 283. MiB for an array with shape (21, 1767957) and data type float64"
+      }
+    }
+  }
+]

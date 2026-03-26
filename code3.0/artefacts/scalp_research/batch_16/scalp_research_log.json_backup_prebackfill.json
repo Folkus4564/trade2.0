@@ -1,0 +1,129 @@
+[
+  {
+    "id": 1,
+    "name": "buy_sell_climax_rotation",
+    "category": "volume",
+    "technique": "order_flow",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T17:53:22",
+    "duration_seconds": 11262,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\buy_sell_climax_rotation.py",
+    "config_override": {
+      "tv_indicators": {
+        "buy_sell_climax_rotation": {
+          "enabled": true,
+          "integration_mode": "signal_source",
+          "climax_mult": 1.7,
+          "vol_period": 8,
+          "filter_column_bull": "buy_sell_climax_rotation_bull",
+          "filter_column_bear": "buy_sell_climax_rotation_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.0015,
+      "total_return": -0.1018,
+      "annualized_volatility": 0.0033,
+      "sharpe_ratio": -12.4883,
+      "sortino_ratio": -4.2036,
+      "max_drawdown": -0.1039,
+      "calmar_ratio": -0.0147,
+      "n_years": 70.22,
+      "total_trades": 588,
+      "win_rate": 0.398,
+      "profit_factor": 0.7109,
+      "avg_win_loss_ratio": 1.0755,
+      "avg_trade_pnl": -17.3072,
+      "avg_trade_duration_bars": 38.3,
+      "benchmark_return": 0.0082,
+      "alpha_vs_benchmark": -0.0097,
+      "information_ratio": -0.3071,
+      "exit_reasons": {
+        "sl": 324,
+        "tp": 204,
+        "signal": 60
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.1772,
+        "random_median_return": 0.0035,
+        "random_p95_sharpe": 0.3184,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -12.5641,
+        "annualized_return": -0.0029,
+        "max_drawdown": -0.186
+      }
+    },
+    "trades_per_day": 1.9444444444444446,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "test_metrics": {
+          "annualized_return": -0.0015,
+          "total_return": -0.1018,
+          "annualized_volatility": 0.0033,
+          "sharpe_ratio": -12.4883,
+          "sortino_ratio": -4.2036,
+          "max_drawdown": -0.1039,
+          "calmar_ratio": -0.0147,
+          "n_years": 70.22,
+          "total_trades": 588,
+          "win_rate": 0.398,
+          "profit_factor": 0.7109,
+          "avg_win_loss_ratio": 1.0755,
+          "avg_trade_pnl": -17.3072,
+          "avg_trade_duration_bars": 38.3,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0097,
+          "information_ratio": -0.3071,
+          "exit_reasons": {
+            "sl": 324,
+            "tp": 204,
+            "signal": 60
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1772,
+            "random_median_return": 0.0035,
+            "random_p95_sharpe": 0.3184,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -12.5641,
+            "annualized_return": -0.0029,
+            "max_drawdown": -0.186
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 1.9444444444444446,
+        "config": {
+          "tv_indicators": {
+            "buy_sell_climax_rotation": {
+              "enabled": true,
+              "integration_mode": "signal_source",
+              "climax_mult": 1.7,
+              "vol_period": 8,
+              "filter_column_bull": "buy_sell_climax_rotation_bull",
+              "filter_column_bear": "buy_sell_climax_rotation_bear"
+            }
+          }
+        }
+      },
+      "hmm": {
+        "error": "Unable to allocate 324. MiB for an array with shape (24, 1767957) and data type float64"
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 54.0 MiB for an array with shape (4, 1767957) and data type object"
+      }
+    }
+  }
+]

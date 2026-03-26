@@ -1,0 +1,278 @@
+[
+  {
+    "id": 1,
+    "name": "median_price_thrust_break",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T18:04:02",
+    "duration_seconds": 11232,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\median_price_thrust_break.py",
+    "config_override": {
+      "tv_indicators": {
+        "median_price_thrust_break": {
+          "enabled": true,
+          "integration_mode": "hmm_signal_source",
+          "period": 6,
+          "thrust_threshold": 0.25,
+          "filter_column_bull": "median_price_thrust_break_bull",
+          "filter_column_bear": "median_price_thrust_break_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.0003,
+      "total_return": -0.021,
+      "annualized_volatility": 0.0071,
+      "sharpe_ratio": -5.6684,
+      "sortino_ratio": -1.1714,
+      "max_drawdown": -0.0691,
+      "calmar_ratio": -0.0044,
+      "n_years": 70.22,
+      "total_trades": 240,
+      "win_rate": 0.3958,
+      "profit_factor": 0.9468,
+      "avg_win_loss_ratio": 1.4451,
+      "avg_trade_pnl": -8.7457,
+      "avg_trade_duration_bars": 39.42,
+      "benchmark_return": 0.0082,
+      "alpha_vs_benchmark": -0.0085,
+      "information_ratio": -0.2683,
+      "exit_reasons": {
+        "sl": 126,
+        "tp": 83,
+        "signal": 31
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.1843,
+        "random_median_return": 0.0036,
+        "random_p95_sharpe": 0.3589,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -5.7402,
+        "annualized_return": -0.0009,
+        "max_drawdown": -0.0994
+      }
+    },
+    "trades_per_day": 0.7936507936507937,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm_signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "[pipeline] --model-path not found: C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\artefacts\\models\\batch_05.pkl"
+      },
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.0005,
+          "total_return": -0.0357,
+          "annualized_volatility": 0.0064,
+          "sharpe_ratio": -6.3261,
+          "sortino_ratio": -1.2148,
+          "max_drawdown": -0.0745,
+          "calmar_ratio": -0.0069,
+          "n_years": 70.22,
+          "total_trades": 206,
+          "win_rate": 0.3835,
+          "profit_factor": 0.8967,
+          "avg_win_loss_ratio": 1.4415,
+          "avg_trade_pnl": -17.3284,
+          "avg_trade_duration_bars": 38.32,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0087,
+          "information_ratio": -0.2751,
+          "exit_reasons": {
+            "sl": 110,
+            "tp": 68,
+            "signal": 28
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1903,
+            "random_median_return": 0.0038,
+            "random_p95_sharpe": 0.3683,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -6.3938,
+            "annualized_return": -0.001,
+            "max_drawdown": -0.0998
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 0.6812169312169313,
+        "config": {
+          "tv_indicators": {
+            "median_price_thrust_break": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "period": 6,
+              "thrust_threshold": 0.25,
+              "filter_column_bull": "median_price_thrust_break_bull",
+              "filter_column_bear": "median_price_thrust_break_bear"
+            }
+          }
+        }
+      },
+      "hmm_signal_source": {
+        "test_metrics": {
+          "annualized_return": -0.0003,
+          "total_return": -0.021,
+          "annualized_volatility": 0.0071,
+          "sharpe_ratio": -5.6684,
+          "sortino_ratio": -1.1714,
+          "max_drawdown": -0.0691,
+          "calmar_ratio": -0.0044,
+          "n_years": 70.22,
+          "total_trades": 240,
+          "win_rate": 0.3958,
+          "profit_factor": 0.9468,
+          "avg_win_loss_ratio": 1.4451,
+          "avg_trade_pnl": -8.7457,
+          "avg_trade_duration_bars": 39.42,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0085,
+          "information_ratio": -0.2683,
+          "exit_reasons": {
+            "sl": 126,
+            "tp": 83,
+            "signal": 31
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1843,
+            "random_median_return": 0.0036,
+            "random_p95_sharpe": 0.3589,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -5.7402,
+            "annualized_return": -0.0009,
+            "max_drawdown": -0.0994
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 0.7936507936507937,
+        "config": {
+          "tv_indicators": {
+            "median_price_thrust_break": {
+              "enabled": true,
+              "integration_mode": "hmm_signal_source",
+              "period": 6,
+              "thrust_threshold": 0.25,
+              "filter_column_bull": "median_price_thrust_break_bull",
+              "filter_column_bear": "median_price_thrust_break_bear"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 2,
+    "name": "vwap_band_reclaim_trend",
+    "category": "mean_reversion",
+    "technique": "vwap_pullback",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-24T21:11:15",
+    "duration_seconds": 215,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: unterminated string literal (detected at line 161) (<unknown>, line 161)"
+  },
+  {
+    "id": 3,
+    "name": "vwap_touch_go_ema_align",
+    "category": "trend",
+    "technique": "vwap_pullback",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-24T21:14:50",
+    "duration_seconds": 15,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 429 - {'type': 'error', 'error': {'type': 'rate_limit_error', 'message': \"This request would exceed your organization's rate limit of 8,000 output tokens per minute (org: 01037001-098f-4775-b76e-3dc71cf62c14, model: claude-sonnet-4-6). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase.\"}, 'request_id': 'req_011CZN3bFSifu5VjQx62QFLi'}"
+  },
+  {
+    "id": 4,
+    "name": "anchored_vwap_pullback_resume",
+    "category": "trend",
+    "technique": "vwap_pullback",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-24T21:15:06",
+    "duration_seconds": 265,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: '[' was never closed (<unknown>, line 147)"
+  },
+  {
+    "id": 5,
+    "name": "dual_vwap_confluence_bounce",
+    "category": "trend",
+    "technique": "vwap_pullback",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-24T21:19:31",
+    "duration_seconds": 199,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "TestRun: Function must return a DataFrame"
+  },
+  {
+    "id": 6,
+    "name": "vwap_zscore_reversion_resume",
+    "category": "mean_reversion",
+    "technique": "vwap_pullback",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-24T21:22:50",
+    "duration_seconds": 184,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: invalid syntax (<unknown>, line 146)"
+  }
+]

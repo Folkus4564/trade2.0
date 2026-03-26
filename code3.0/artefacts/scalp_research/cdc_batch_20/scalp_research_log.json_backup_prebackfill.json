@@ -1,0 +1,358 @@
+[
+  {
+    "id": 1,
+    "name": "cdc_opening_range_obv_confirm",
+    "category": "volume",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-24T22:36:15",
+    "duration_seconds": 8097,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\cdc_opening_range_obv_confirm.py",
+    "config_override": {
+      "tv_indicators": {
+        "opening_range_obv_confirm": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "obv_lookback": 10,
+          "range_bars": 5,
+          "filter_column_bull": "opening_range_obv_confirm_bull",
+          "filter_column_bear": "opening_range_obv_confirm_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.0014,
+      "total_return": -0.0965,
+      "annualized_volatility": 0.0032,
+      "sharpe_ratio": -12.8455,
+      "sortino_ratio": -4.7835,
+      "max_drawdown": -0.098,
+      "calmar_ratio": -0.0147,
+      "n_years": 70.22,
+      "total_trades": 720,
+      "win_rate": 0.4014,
+      "profit_factor": 0.7392,
+      "avg_win_loss_ratio": 1.1025,
+      "avg_trade_pnl": -13.4068,
+      "avg_trade_duration_bars": 41.92,
+      "benchmark_return": 0.0082,
+      "alpha_vs_benchmark": -0.0096,
+      "information_ratio": -0.3045,
+      "exit_reasons": {
+        "sl": 377,
+        "tp": 254,
+        "signal": 89
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.1818,
+        "random_median_return": 0.0036,
+        "random_p95_sharpe": 0.3233,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -12.9456,
+        "annualized_return": -0.0029,
+        "max_drawdown": -0.1837
+      }
+    },
+    "trades_per_day": 2.380952380952381,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "signal_source": {
+        "error": "[pipeline] --model-path not found: C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\artefacts\\models\\cdc_batch_20.pkl"
+      },
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.0014,
+          "total_return": -0.0965,
+          "annualized_volatility": 0.0032,
+          "sharpe_ratio": -12.8455,
+          "sortino_ratio": -4.7835,
+          "max_drawdown": -0.098,
+          "calmar_ratio": -0.0147,
+          "n_years": 70.22,
+          "total_trades": 720,
+          "win_rate": 0.4014,
+          "profit_factor": 0.7392,
+          "avg_win_loss_ratio": 1.1025,
+          "avg_trade_pnl": -13.4068,
+          "avg_trade_duration_bars": 41.92,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0096,
+          "information_ratio": -0.3045,
+          "exit_reasons": {
+            "sl": 377,
+            "tp": 254,
+            "signal": 89
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1818,
+            "random_median_return": 0.0036,
+            "random_p95_sharpe": 0.3233,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -12.9456,
+            "annualized_return": -0.0029,
+            "max_drawdown": -0.1837
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 2.380952380952381,
+        "config": {
+          "tv_indicators": {
+            "opening_range_obv_confirm": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "obv_lookback": 10,
+              "range_bars": 5,
+              "filter_column_bull": "opening_range_obv_confirm_bull",
+              "filter_column_bear": "opening_range_obv_confirm_bear"
+            }
+          }
+        }
+      },
+      "hmm_signal_source": {
+        "test_metrics": {
+          "annualized_return": -0.0014,
+          "total_return": -0.0965,
+          "annualized_volatility": 0.0032,
+          "sharpe_ratio": -12.8455,
+          "sortino_ratio": -4.7835,
+          "max_drawdown": -0.098,
+          "calmar_ratio": -0.0147,
+          "n_years": 70.22,
+          "total_trades": 720,
+          "win_rate": 0.4014,
+          "profit_factor": 0.7392,
+          "avg_win_loss_ratio": 1.1025,
+          "avg_trade_pnl": -13.4068,
+          "avg_trade_duration_bars": 41.92,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0096,
+          "information_ratio": -0.3045,
+          "exit_reasons": {
+            "sl": 377,
+            "tp": 254,
+            "signal": 89
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1818,
+            "random_median_return": 0.0036,
+            "random_p95_sharpe": 0.3233,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -12.9456,
+            "annualized_return": -0.0029,
+            "max_drawdown": -0.1837
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 2.380952380952381,
+        "config": {
+          "tv_indicators": {
+            "opening_range_obv_confirm": {
+              "enabled": true,
+              "integration_mode": "hmm_signal_source",
+              "obv_lookback": 10,
+              "range_bars": 5,
+              "filter_column_bull": "opening_range_obv_confirm_bull",
+              "filter_column_bear": "opening_range_obv_confirm_bear"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 2,
+    "name": "cdc_opening_range_obv_confirm",
+    "category": "volume",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:51:13",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNL5CTmwuuQKDjMrj9MR'}"
+  },
+  {
+    "id": 3,
+    "name": "cdc_opening_range_obv_confirm",
+    "category": "volume",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:51:13",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNL5DvapAzuSyvdDBr3u'}"
+  },
+  {
+    "id": 4,
+    "name": "cdc_opening_range_obv_confirm",
+    "category": "volume",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:51:14",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNL5FbnpAn6K4odgAazX'}"
+  },
+  {
+    "id": 5,
+    "name": "cdc_opening_range_obv_confirm",
+    "category": "volume",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:51:14",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNL5GtgSwBUMt2p1wQBV'}"
+  },
+  {
+    "id": 6,
+    "name": "cdc_opening_range_obv_confirm",
+    "category": "volume",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:51:14",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNL5JCK4uaYnBDuNXg4w'}"
+  },
+  {
+    "id": 7,
+    "name": "cdc_opening_range_obv_confirm",
+    "category": "volume",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:51:15",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNL5KYRbt9nv1k9WmV3r'}"
+  },
+  {
+    "id": 8,
+    "name": "cdc_opening_range_obv_confirm",
+    "category": "volume",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:51:15",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNL5Lwky7egou9JkGQcJ'}"
+  },
+  {
+    "id": 9,
+    "name": "cdc_opening_range_obv_confirm",
+    "category": "volume",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:51:15",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNL5NQ4xoVtjkmyU5esb'}"
+  },
+  {
+    "id": 10,
+    "name": "cdc_opening_range_obv_confirm",
+    "category": "volume",
+    "technique": "opening_range",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:51:16",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNL5PiCZpsgw9MSRFToS'}"
+  }
+]

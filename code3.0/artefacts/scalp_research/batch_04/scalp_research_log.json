@@ -1,0 +1,297 @@
+[
+  {
+    "id": 1,
+    "name": "tsi_impulse_breakout",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T18:02:40",
+    "duration_seconds": 9570,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\tsi_impulse_breakout.py",
+    "config_override": {
+      "tv_indicators": {
+        "tsi_impulse_breakout": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "long_period": 8,
+          "short_period": 4,
+          "signal_period": 3,
+          "filter_column_bull": "tsi_impulse_breakout_bull",
+          "filter_column_bear": "tsi_impulse_breakout_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0,
+      "sharpe_ratio": 0.0,
+      "max_drawdown": 0.0,
+      "total_trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 0.0,
+        "annualized_return": 0.0,
+        "max_drawdown": 0.0
+      }
+    },
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "signal_source": {
+        "error": "[pipeline] --model-path not found: C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\artefacts\\models\\batch_04.pkl"
+      },
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": 0.0,
+          "sharpe_ratio": 0.0,
+          "max_drawdown": 0.0,
+          "total_trades": 0,
+          "win_rate": 0.0,
+          "profit_factor": 0.0,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.0,
+            "annualized_return": 0.0,
+            "max_drawdown": 0.0
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 0.0,
+        "config": {
+          "tv_indicators": {
+            "tsi_impulse_breakout": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "long_period": 8,
+              "short_period": 4,
+              "signal_period": 3,
+              "filter_column_bull": "tsi_impulse_breakout_bull",
+              "filter_column_bear": "tsi_impulse_breakout_bear"
+            }
+          }
+        }
+      },
+      "hmm_signal_source": {
+        "test_metrics": {
+          "annualized_return": 0.0,
+          "sharpe_ratio": 0.0,
+          "max_drawdown": 0.0,
+          "total_trades": 0,
+          "win_rate": 0.0,
+          "profit_factor": 0.0,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.0,
+            "annualized_return": 0.0,
+            "max_drawdown": 0.0
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 0.0,
+        "config": {
+          "tv_indicators": {
+            "tsi_impulse_breakout": {
+              "enabled": true,
+              "integration_mode": "hmm_signal_source",
+              "long_period": 8,
+              "short_period": 4,
+              "signal_period": 3,
+              "filter_column_bull": "tsi_impulse_breakout_bull",
+              "filter_column_bear": "tsi_impulse_breakout_bear"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 2,
+    "name": "cci_plusminus_100_break",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T20:42:11",
+    "duration_seconds": 3113,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\cci_plusminus_100_break.py",
+    "config_override": null,
+    "test_metrics": {},
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "[pipeline] --model-path not found: C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\artefacts\\models\\batch_04.pkl"
+      },
+      "hmm": {
+        "error": "Unable to allocate 51.8 MiB for an array with shape (16, 424702) and data type float64"
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 202. MiB for an array with shape (15, 1767957) and data type float64"
+      }
+    }
+  },
+  {
+    "id": 3,
+    "name": "parabolic_sar_launch",
+    "category": "trend",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-24T21:34:05",
+    "duration_seconds": 189,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: '(' was never closed (<unknown>, line 142)"
+  },
+  {
+    "id": 4,
+    "name": "heikin_ashi_break_drive",
+    "category": "trend",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T21:37:15",
+    "duration_seconds": 188,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\heikin_ashi_break_drive.py",
+    "config_override": null,
+    "test_metrics": {},
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "Unable to allocate 175. MiB for an array with shape (13, 1767957) and data type float64"
+      },
+      "hmm": {
+        "error": "Unable to allocate 175. MiB for an array with shape (13, 1767957) and data type float64"
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 13.5 MiB for an array with shape (1, 1767957) and data type float64"
+      }
+    }
+  },
+  {
+    "id": 5,
+    "name": "fractal_break_continuation",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-24T21:40:23",
+    "duration_seconds": 197,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: '(' was never closed (<unknown>, line 149)"
+  },
+  {
+    "id": 6,
+    "name": "linreg_slope_breakout",
+    "category": "trend",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T21:43:41",
+    "duration_seconds": 1884,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\linreg_slope_breakout.py",
+    "config_override": {
+      "tv_indicators": {
+        "linreg_slope_breakout": {
+          "enabled": true,
+          "integration_mode": "hmm_signal_source",
+          "period": 8,
+          "slope_threshold": 0.03,
+          "filter_column_bull": "linreg_slope_breakout_bull",
+          "filter_column_bear": "linreg_slope_breakout_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0,
+      "sharpe_ratio": 0.0,
+      "max_drawdown": 0.0,
+      "total_trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 0.0,
+        "annualized_return": 0.0,
+        "max_drawdown": 0.0
+      }
+    },
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm_signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "Unable to allocate 202. MiB for an array with shape (15, 1767957) and data type float64"
+      },
+      "hmm": {
+        "error": "Unable to allocate 175. MiB for an array with shape (13, 1767957) and data type float64"
+      },
+      "hmm_signal_source": {
+        "test_metrics": {
+          "annualized_return": 0.0,
+          "sharpe_ratio": 0.0,
+          "max_drawdown": 0.0,
+          "total_trades": 0,
+          "win_rate": 0.0,
+          "profit_factor": 0.0,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.0,
+            "annualized_return": 0.0,
+            "max_drawdown": 0.0
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 0.0,
+        "config": {
+          "tv_indicators": {
+            "linreg_slope_breakout": {
+              "enabled": true,
+              "integration_mode": "hmm_signal_source",
+              "period": 8,
+              "slope_threshold": 0.03,
+              "filter_column_bull": "linreg_slope_breakout_bull",
+              "filter_column_bear": "linreg_slope_breakout_bear"
+            }
+          }
+        }
+      }
+    }
+  }
+]

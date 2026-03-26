@@ -1,0 +1,83 @@
+[
+  {
+    "id": 1,
+    "name": "intrabar_delta_surge",
+    "category": "micro_structure",
+    "technique": "order_flow",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T18:02:42",
+    "duration_seconds": 9859,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\intrabar_delta_surge.py",
+    "config_override": {
+      "tv_indicators": {
+        "intrabar_delta_surge": {
+          "enabled": true,
+          "integration_mode": "hmm_signal_source",
+          "period": 3,
+          "threshold": 0.3,
+          "filter_column_bull": "intrabar_delta_surge_bull",
+          "filter_column_bear": "intrabar_delta_surge_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": 0.0,
+      "sharpe_ratio": 0.0,
+      "max_drawdown": 0.0,
+      "total_trades": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": 0.0,
+        "annualized_return": 0.0,
+        "max_drawdown": 0.0
+      }
+    },
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm_signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "[pipeline] --model-path not found: C:\\Users\\LENOVO\\Desktop\\trade2.0\\code3.0\\artefacts\\models\\batch_13.pkl"
+      },
+      "hmm": {
+        "error": "'covars' must be symmetric, positive-definite"
+      },
+      "hmm_signal_source": {
+        "test_metrics": {
+          "annualized_return": 0.0,
+          "sharpe_ratio": 0.0,
+          "max_drawdown": 0.0,
+          "total_trades": 0,
+          "win_rate": 0.0,
+          "profit_factor": 0.0,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": 0.0,
+            "annualized_return": 0.0,
+            "max_drawdown": 0.0
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 0.0,
+        "config": {
+          "tv_indicators": {
+            "intrabar_delta_surge": {
+              "enabled": true,
+              "integration_mode": "hmm_signal_source",
+              "period": 3,
+              "threshold": 0.3,
+              "filter_column_bull": "intrabar_delta_surge_bull",
+              "filter_column_bear": "intrabar_delta_surge_bear"
+            }
+          }
+        }
+      }
+    }
+  }
+]

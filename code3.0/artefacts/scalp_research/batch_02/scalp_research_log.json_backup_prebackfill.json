@@ -1,0 +1,277 @@
+[
+  {
+    "id": 1,
+    "name": "pivot_high_low_burst",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T17:53:47",
+    "duration_seconds": 11810,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\pivot_high_low_burst.py",
+    "config_override": {
+      "tv_indicators": {
+        "pivot_high_low_burst": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "confirm_bars": 1,
+          "pivot_left": 2,
+          "pivot_right": 2,
+          "filter_column_bull": "pivot_high_low_burst_bull",
+          "filter_column_bear": "pivot_high_low_burst_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.0005,
+      "total_return": -0.0315,
+      "annualized_volatility": 0.0044,
+      "sharpe_ratio": -9.2859,
+      "sortino_ratio": -2.1225,
+      "max_drawdown": -0.0517,
+      "calmar_ratio": -0.0088,
+      "n_years": 70.22,
+      "total_trades": 251,
+      "win_rate": 0.3865,
+      "profit_factor": 0.8631,
+      "avg_win_loss_ratio": 1.3702,
+      "avg_trade_pnl": -12.56,
+      "avg_trade_duration_bars": 45.76,
+      "benchmark_return": 0.0082,
+      "alpha_vs_benchmark": -0.0086,
+      "information_ratio": -0.2732,
+      "exit_reasons": {
+        "sl": 110,
+        "tp": 74,
+        "signal": 67
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.1896,
+        "random_median_return": 0.0038,
+        "random_p95_sharpe": 0.3331,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -9.3352,
+        "annualized_return": -0.0011,
+        "max_drawdown": -0.0822
+      }
+    },
+    "trades_per_day": 0.8300264550264551,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "signal_source": {
+        "test_metrics": {
+          "annualized_return": -0.0024,
+          "total_return": -0.1576,
+          "annualized_volatility": 0.0045,
+          "sharpe_ratio": -9.4338,
+          "sortino_ratio": -4.6348,
+          "max_drawdown": -0.1586,
+          "calmar_ratio": -0.0154,
+          "n_years": 70.22,
+          "total_trades": 1139,
+          "win_rate": 0.41,
+          "profit_factor": 0.7461,
+          "avg_win_loss_ratio": 1.0736,
+          "avg_trade_pnl": -13.8333,
+          "avg_trade_duration_bars": 44.16,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0106,
+          "information_ratio": -0.3361,
+          "exit_reasons": {
+            "sl": 614,
+            "tp": 417,
+            "signal": 108
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1911,
+            "random_median_return": 0.0038,
+            "random_p95_sharpe": 0.3345,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -9.7519,
+            "annualized_return": -0.0052,
+            "max_drawdown": -0.3075
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 3.7665343915343916,
+        "config": {
+          "tv_indicators": {
+            "pivot_high_low_burst": {
+              "enabled": true,
+              "integration_mode": "signal_source",
+              "confirm_bars": 1,
+              "pivot_left": 2,
+              "pivot_right": 2,
+              "filter_column_bull": "pivot_high_low_burst_bull",
+              "filter_column_bear": "pivot_high_low_burst_bear"
+            }
+          }
+        }
+      },
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.0005,
+          "total_return": -0.0315,
+          "annualized_volatility": 0.0044,
+          "sharpe_ratio": -9.2859,
+          "sortino_ratio": -2.1225,
+          "max_drawdown": -0.0517,
+          "calmar_ratio": -0.0088,
+          "n_years": 70.22,
+          "total_trades": 251,
+          "win_rate": 0.3865,
+          "profit_factor": 0.8631,
+          "avg_win_loss_ratio": 1.3702,
+          "avg_trade_pnl": -12.56,
+          "avg_trade_duration_bars": 45.76,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0086,
+          "information_ratio": -0.2732,
+          "exit_reasons": {
+            "sl": 110,
+            "tp": 74,
+            "signal": 67
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1896,
+            "random_median_return": 0.0038,
+            "random_p95_sharpe": 0.3331,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -9.3352,
+            "annualized_return": -0.0011,
+            "max_drawdown": -0.0822
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 0.8300264550264551,
+        "config": {
+          "tv_indicators": {
+            "pivot_high_low_burst": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "confirm_bars": 1,
+              "pivot_left": 2,
+              "pivot_right": 2,
+              "filter_column_bull": "pivot_high_low_burst_bull",
+              "filter_column_bear": "pivot_high_low_burst_bear"
+            }
+          }
+        }
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 310. MiB for an array with shape (23, 1767957) and data type float64"
+      }
+    }
+  },
+  {
+    "id": 2,
+    "name": "ema_stack_breakout",
+    "category": "trend",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T21:10:38",
+    "duration_seconds": 1346,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\ema_stack_breakout.py",
+    "config_override": null,
+    "test_metrics": {},
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "Unable to allocate 51.8 MiB for an array with shape (16, 424702) and data type float64"
+      },
+      "hmm": {
+        "error": "Error tokenizing data. C error: out of memory"
+      },
+      "hmm_signal_source": {
+        "error": "Error tokenizing data. C error: out of memory"
+      }
+    }
+  },
+  {
+    "id": 3,
+    "name": "macd_zero_line_pop",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T21:33:05",
+    "duration_seconds": 1805,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\macd_zero_line_pop.py",
+    "config_override": null,
+    "test_metrics": {},
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "Unable to allocate 216. MiB for an array with shape (16, 1767957) and data type float64"
+      },
+      "hmm": {
+        "error": "Unable to allocate 202. MiB for an array with shape (15, 1767957) and data type float64"
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 256. MiB for an array with shape (19, 1767957) and data type float64"
+      }
+    }
+  },
+  {
+    "id": 4,
+    "name": "roc_thrust_breakout",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED_LOW_FREQ",
+    "timestamp": "2026-03-24T22:03:10",
+    "duration_seconds": 179,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\roc_thrust_breakout.py",
+    "config_override": null,
+    "test_metrics": {},
+    "trades_per_day": 0.0,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "?",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "error": "Unable to allocate 175. MiB for an array with shape (13, 1767957) and data type float64"
+      },
+      "hmm": {
+        "error": "Unable to allocate 175. MiB for an array with shape (13, 1767957) and data type float64"
+      },
+      "hmm_signal_source": {
+        "error": "Unable to allocate 175. MiB for an array with shape (13, 1767957) and data type float64"
+      }
+    }
+  }
+]

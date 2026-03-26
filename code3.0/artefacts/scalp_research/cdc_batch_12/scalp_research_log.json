@@ -1,0 +1,362 @@
+[
+  {
+    "id": 1,
+    "name": "cdc_median_reversion_channel",
+    "category": "mean_reversion",
+    "technique": "range_mean_reversion",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-24T22:26:30",
+    "duration_seconds": 6982,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\cdc_median_reversion_channel.py",
+    "config_override": {
+      "tv_indicators": {
+        "median_reversion_channel": {
+          "enabled": true,
+          "integration_mode": "signal_source",
+          "band_mult": 1.3,
+          "period": 12,
+          "filter_column_bull": "median_reversion_channel_bull",
+          "filter_column_bear": "median_reversion_channel_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.08201618442835668,
+      "total_return": -0.0953,
+      "annualized_volatility": 0.02478709341572747,
+      "sharpe_ratio": -99.35983855361279,
+      "sortino_ratio": -1.8194577011856257,
+      "max_drawdown": -0.0968,
+      "calmar_ratio": -0.8472746325243459,
+      "n_years": 1.1703333333333332,
+      "total_trades": 722,
+      "win_rate": 0.403,
+      "profit_factor": 0.7431,
+      "avg_win_loss_ratio": 1.1006,
+      "avg_trade_pnl": -13.1966,
+      "avg_trade_duration_bars": 41.84,
+      "benchmark_return": 0.6323060343071825,
+      "alpha_vs_benchmark": -0.7143222187355391,
+      "information_ratio": null,
+      "exit_reasons": {
+        "sl": 377,
+        "tp": 255,
+        "signal": 90
+      },
+      "random_baseline": {
+        "random_median_sharpe": 1.3578679611803206,
+        "random_median_return": 0.2332258212900018,
+        "random_p95_sharpe": 2.6111653720130406,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -100.14837796290062,
+        "annualized_return": -0.15991549317628384,
+        "max_drawdown": -0.183
+      },
+      "information_ratio_backfill_skipped": true
+    },
+    "trades_per_day": 2.3875661375661377,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "signal_source",
+    "mode_results": {
+      "signal_source": {
+        "test_metrics": {
+          "annualized_return": -0.08201618442835668,
+          "total_return": -0.0953,
+          "annualized_volatility": 0.02478709341572747,
+          "sharpe_ratio": -99.35983855361279,
+          "sortino_ratio": -1.8194577011856257,
+          "max_drawdown": -0.0968,
+          "calmar_ratio": -0.8472746325243459,
+          "n_years": 1.1703333333333332,
+          "total_trades": 722,
+          "win_rate": 0.403,
+          "profit_factor": 0.7431,
+          "avg_win_loss_ratio": 1.1006,
+          "avg_trade_pnl": -13.1966,
+          "avg_trade_duration_bars": 41.84,
+          "benchmark_return": 0.6323060343071825,
+          "alpha_vs_benchmark": -0.7143222187355391,
+          "information_ratio": null,
+          "exit_reasons": {
+            "sl": 377,
+            "tp": 255,
+            "signal": 90
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.3578679611803206,
+            "random_median_return": 0.2332258212900018,
+            "random_p95_sharpe": 2.6111653720130406,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -100.14837796290062,
+            "annualized_return": -0.15991549317628384,
+            "max_drawdown": -0.183
+          },
+          "information_ratio_backfill_skipped": true
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 2.3875661375661377,
+        "config": {
+          "tv_indicators": {
+            "median_reversion_channel": {
+              "enabled": true,
+              "integration_mode": "signal_source",
+              "band_mult": 1.3,
+              "period": 12,
+              "filter_column_bull": "median_reversion_channel_bull",
+              "filter_column_bear": "median_reversion_channel_bear"
+            }
+          }
+        }
+      },
+      "hmm": {
+        "error": "Unable to allocate 16.2 MiB for an array with shape (5, 424670) and data type float64"
+      },
+      "hmm_signal_source": {
+        "test_metrics": {
+          "annualized_return": -0.08201618442835668,
+          "total_return": -0.0953,
+          "annualized_volatility": 0.02478709341572747,
+          "sharpe_ratio": -99.35519097359736,
+          "sortino_ratio": -1.8195718477195046,
+          "max_drawdown": -0.0968,
+          "calmar_ratio": -0.8472746325243459,
+          "n_years": 1.1703333333333332,
+          "total_trades": 723,
+          "win_rate": 0.4025,
+          "profit_factor": 0.743,
+          "avg_win_loss_ratio": 1.103,
+          "avg_trade_pnl": -13.1847,
+          "avg_trade_duration_bars": 41.79,
+          "benchmark_return": 0.6323060343071825,
+          "alpha_vs_benchmark": -0.7143222187355391,
+          "information_ratio": null,
+          "exit_reasons": {
+            "sl": 377,
+            "tp": 255,
+            "signal": 91
+          },
+          "random_baseline": {
+            "random_median_sharpe": 1.3865280379422553,
+            "random_median_return": 0.2406210867205929,
+            "random_p95_sharpe": 2.646796818798149,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -100.14450497955441,
+            "annualized_return": -0.15991549317628384,
+            "max_drawdown": -0.1831
+          },
+          "information_ratio_backfill_skipped": true
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 2.3908730158730163,
+        "config": {
+          "tv_indicators": {
+            "median_reversion_channel": {
+              "enabled": true,
+              "integration_mode": "hmm_signal_source",
+              "band_mult": 1.3,
+              "period": 12,
+              "filter_column_bull": "median_reversion_channel_bull",
+              "filter_column_bear": "median_reversion_channel_bear"
+            }
+          }
+        }
+      }
+    },
+    "_backfill_applied": true
+  },
+  {
+    "id": 2,
+    "name": "cdc_median_reversion_channel",
+    "category": "mean_reversion",
+    "technique": "range_mean_reversion",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:22:52",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNHup6dZVv1VNqp7jRf5'}"
+  },
+  {
+    "id": 3,
+    "name": "cdc_median_reversion_channel",
+    "category": "mean_reversion",
+    "technique": "range_mean_reversion",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:22:52",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNHuqeepWd8ezqA9q63f'}"
+  },
+  {
+    "id": 4,
+    "name": "cdc_median_reversion_channel",
+    "category": "mean_reversion",
+    "technique": "range_mean_reversion",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:22:53",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNHuruJiseyisBox93Co'}"
+  },
+  {
+    "id": 5,
+    "name": "cdc_median_reversion_channel",
+    "category": "mean_reversion",
+    "technique": "range_mean_reversion",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:22:53",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNHutLsevUJzzGCc4HMJ'}"
+  },
+  {
+    "id": 6,
+    "name": "cdc_median_reversion_channel",
+    "category": "mean_reversion",
+    "technique": "range_mean_reversion",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:22:53",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNHuujxc855VPquDMnFk'}"
+  },
+  {
+    "id": 7,
+    "name": "cdc_median_reversion_channel",
+    "category": "mean_reversion",
+    "technique": "range_mean_reversion",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:22:54",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNHuvy8agcwLEugxMgEE'}"
+  },
+  {
+    "id": 8,
+    "name": "cdc_median_reversion_channel",
+    "category": "mean_reversion",
+    "technique": "range_mean_reversion",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:22:54",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNHuxAKDJmyhbfq3qS97'}"
+  },
+  {
+    "id": 9,
+    "name": "cdc_median_reversion_channel",
+    "category": "mean_reversion",
+    "technique": "range_mean_reversion",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:22:54",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNHuzE6BMyFRp8S1pQsd'}"
+  },
+  {
+    "id": 10,
+    "name": "cdc_median_reversion_channel",
+    "category": "mean_reversion",
+    "technique": "range_mean_reversion",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:22:55",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNHv1VjfndnbrRcq272o'}"
+  }
+]

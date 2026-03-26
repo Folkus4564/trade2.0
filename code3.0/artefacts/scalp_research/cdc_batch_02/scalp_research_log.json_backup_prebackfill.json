@@ -1,0 +1,431 @@
+[
+  {
+    "id": 1,
+    "name": "cdc_pivot_high_low_burst",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "CODE_ERROR",
+    "timestamp": "2026-03-24T22:26:45",
+    "duration_seconds": 340,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Validation: SyntaxError: '(' was never closed (<unknown>, line 162)"
+  },
+  {
+    "id": 2,
+    "name": "cdc_pivot_high_low_burst",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "COMPLETED",
+    "timestamp": "2026-03-24T22:32:25",
+    "duration_seconds": 8800,
+    "python_module_path": "src\\trade2\\features\\tv_indicators\\cdc_pivot_high_low_burst.py",
+    "config_override": {
+      "tv_indicators": {
+        "pivot_high_low_burst": {
+          "enabled": true,
+          "integration_mode": "hmm",
+          "confirm_bars": 1,
+          "pivot_left": 2,
+          "pivot_right": 2,
+          "filter_column_bull": "pivot_high_low_burst_bull",
+          "filter_column_bear": "pivot_high_low_burst_bear"
+        }
+      }
+    },
+    "test_metrics": {
+      "annualized_return": -0.0014,
+      "total_return": -0.0965,
+      "annualized_volatility": 0.0032,
+      "sharpe_ratio": -12.8455,
+      "sortino_ratio": -4.7835,
+      "max_drawdown": -0.098,
+      "calmar_ratio": -0.0147,
+      "n_years": 70.22,
+      "total_trades": 720,
+      "win_rate": 0.4014,
+      "profit_factor": 0.7392,
+      "avg_win_loss_ratio": 1.1025,
+      "avg_trade_pnl": -13.4068,
+      "avg_trade_duration_bars": 41.92,
+      "benchmark_return": 0.0082,
+      "alpha_vs_benchmark": -0.0096,
+      "information_ratio": -0.3045,
+      "exit_reasons": {
+        "sl": 377,
+        "tp": 254,
+        "signal": 89
+      },
+      "random_baseline": {
+        "random_median_sharpe": 0.1818,
+        "random_median_return": 0.0036,
+        "random_p95_sharpe": 0.3233,
+        "n_simulations": 200
+      },
+      "beats_random_baseline": false,
+      "cost_sensitivity_2x": {
+        "sharpe_ratio": -12.9456,
+        "annualized_return": -0.0029,
+        "max_drawdown": -0.1837
+      }
+    },
+    "trades_per_day": 2.380952380952381,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": "HARD_REJECTED",
+    "is_best": false,
+    "error": null,
+    "best_mode": "hmm",
+    "mode_results": {
+      "signal_source": {
+        "test_metrics": {
+          "annualized_return": -0.0026,
+          "total_return": -0.1686,
+          "annualized_volatility": 0.0046,
+          "sharpe_ratio": -9.2359,
+          "sortino_ratio": -4.9582,
+          "max_drawdown": -0.1692,
+          "calmar_ratio": -0.0155,
+          "n_years": 70.22,
+          "total_trades": 1358,
+          "win_rate": 0.4094,
+          "profit_factor": 0.753,
+          "avg_win_loss_ratio": 1.0861,
+          "avg_trade_pnl": -12.4138,
+          "avg_trade_duration_bars": 45.84,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0108,
+          "information_ratio": -0.342,
+          "exit_reasons": {
+            "sl": 711,
+            "tp": 494,
+            "signal": 153
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1803,
+            "random_median_return": 0.0036,
+            "random_p95_sharpe": 0.3105,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -9.6019,
+            "annualized_return": -0.0057,
+            "max_drawdown": -0.3309
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 4.490740740740741,
+        "config": {
+          "tv_indicators": {
+            "pivot_high_low_burst": {
+              "enabled": true,
+              "integration_mode": "signal_source",
+              "confirm_bars": 1,
+              "pivot_left": 2,
+              "pivot_right": 2,
+              "filter_column_bull": "pivot_high_low_burst_bull",
+              "filter_column_bear": "pivot_high_low_burst_bear"
+            }
+          }
+        }
+      },
+      "hmm": {
+        "test_metrics": {
+          "annualized_return": -0.0014,
+          "total_return": -0.0965,
+          "annualized_volatility": 0.0032,
+          "sharpe_ratio": -12.8455,
+          "sortino_ratio": -4.7835,
+          "max_drawdown": -0.098,
+          "calmar_ratio": -0.0147,
+          "n_years": 70.22,
+          "total_trades": 720,
+          "win_rate": 0.4014,
+          "profit_factor": 0.7392,
+          "avg_win_loss_ratio": 1.1025,
+          "avg_trade_pnl": -13.4068,
+          "avg_trade_duration_bars": 41.92,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0096,
+          "information_ratio": -0.3045,
+          "exit_reasons": {
+            "sl": 377,
+            "tp": 254,
+            "signal": 89
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1818,
+            "random_median_return": 0.0036,
+            "random_p95_sharpe": 0.3233,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -12.9456,
+            "annualized_return": -0.0029,
+            "max_drawdown": -0.1837
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 2.380952380952381,
+        "config": {
+          "tv_indicators": {
+            "pivot_high_low_burst": {
+              "enabled": true,
+              "integration_mode": "hmm",
+              "confirm_bars": 1,
+              "pivot_left": 2,
+              "pivot_right": 2,
+              "filter_column_bull": "pivot_high_low_burst_bull",
+              "filter_column_bear": "pivot_high_low_burst_bear"
+            }
+          }
+        }
+      },
+      "hmm_signal_source": {
+        "test_metrics": {
+          "annualized_return": -0.0026,
+          "total_return": -0.1686,
+          "annualized_volatility": 0.0046,
+          "sharpe_ratio": -9.2355,
+          "sortino_ratio": -4.9582,
+          "max_drawdown": -0.1693,
+          "calmar_ratio": -0.0155,
+          "n_years": 70.22,
+          "total_trades": 1359,
+          "win_rate": 0.4091,
+          "profit_factor": 0.7529,
+          "avg_win_loss_ratio": 1.0874,
+          "avg_trade_pnl": -12.4077,
+          "avg_trade_duration_bars": 45.81,
+          "benchmark_return": 0.0082,
+          "alpha_vs_benchmark": -0.0108,
+          "information_ratio": -0.342,
+          "exit_reasons": {
+            "sl": 711,
+            "tp": 494,
+            "signal": 154
+          },
+          "random_baseline": {
+            "random_median_sharpe": 0.1646,
+            "random_median_return": 0.0032,
+            "random_p95_sharpe": 0.3254,
+            "n_simulations": 200
+          },
+          "beats_random_baseline": false,
+          "cost_sensitivity_2x": {
+            "sharpe_ratio": -9.6017,
+            "annualized_return": -0.0057,
+            "max_drawdown": -0.331
+          }
+        },
+        "verdict": "HARD_REJECTED",
+        "trades_per_day": 4.4940476190476195,
+        "config": {
+          "tv_indicators": {
+            "pivot_high_low_burst": {
+              "enabled": true,
+              "integration_mode": "hmm_signal_source",
+              "confirm_bars": 1,
+              "pivot_left": 2,
+              "pivot_right": 2,
+              "filter_column_bull": "pivot_high_low_burst_bull",
+              "filter_column_bear": "pivot_high_low_burst_bear"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 3,
+    "name": "cdc_pivot_high_low_burst",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:59:05",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNLfze6j3gYdYTzYeYX3'}"
+  },
+  {
+    "id": 4,
+    "name": "cdc_pivot_high_low_burst",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:59:05",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNLg2QGY36C2dy5hS6L4'}"
+  },
+  {
+    "id": 5,
+    "name": "cdc_pivot_high_low_burst",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:59:06",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNLg3cCAwU1g8gAj4PZs'}"
+  },
+  {
+    "id": 6,
+    "name": "cdc_pivot_high_low_burst",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:59:06",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNLg4tLRRybdPvWgMPeD'}"
+  },
+  {
+    "id": 7,
+    "name": "cdc_pivot_high_low_burst",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:59:06",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNLg6wN6pBug6esMkaCg'}"
+  },
+  {
+    "id": 8,
+    "name": "cdc_pivot_high_low_burst",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:59:07",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNLg8LD4S6GSxmhQ12y6'}"
+  },
+  {
+    "id": 9,
+    "name": "cdc_pivot_high_low_burst",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:59:07",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNLg9Ydfv7jAQmgNRsDc'}"
+  },
+  {
+    "id": 10,
+    "name": "cdc_pivot_high_low_burst",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:59:07",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNLgAjKcwTXhdVJtGHvZ'}"
+  },
+  {
+    "id": 11,
+    "name": "cdc_pivot_high_low_burst",
+    "category": "momentum",
+    "technique": "momentum_breakout",
+    "source": "seed",
+    "integration_mode": "both",
+    "status": "TRANSLATION_FAILED",
+    "timestamp": "2026-03-25T00:59:08",
+    "duration_seconds": 0,
+    "python_module_path": null,
+    "config_override": null,
+    "test_metrics": null,
+    "trades_per_day": null,
+    "baseline_metrics": {},
+    "delta_vs_baseline": null,
+    "verdict": null,
+    "is_best": false,
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZNLgC7RF38s7CxfibGMt'}"
+  }
+]
