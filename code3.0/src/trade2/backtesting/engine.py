@@ -294,6 +294,7 @@ def run_backtest(
     # Scale max_hold_bars and bars_per_year to match the data frequency.
     # Config value is expressed in 1H-equivalent bars.
     _TF_SCALE = {
+        "1min": 60, "1m": 60, "1M": 60,  # 1-minute: 60x more bars than 1H
         "5min": 12, "5m": 12, "5M": 12,
         "15min": 4, "15m": 4, "15M": 4,
         "30min": 2, "30m": 2, "30M": 2,
@@ -452,7 +453,7 @@ def run_walk_forward(
     strategy_mode_pipeline = config.get("strategy", {}).get("mode", "single_tf")
     use_5m = (raw_signal_path is not None) and (strategy_mode_pipeline == "multi_tf")
 
-    _TF_TO_FREQ_WF = {"5M": "5min", "15M": "15min", "30M": "30min", "1H": "1h", "4H": "4h"}
+    _TF_TO_FREQ_WF = {"1M": "1min", "5M": "5min", "15M": "15min", "30M": "30min", "1H": "1h", "4H": "4h"}
     if freq is None:
         if use_5m:
             signal_tf = config.get("strategy", {}).get("signal_timeframe", "5M")
