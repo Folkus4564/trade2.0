@@ -369,6 +369,17 @@ def run_pipeline(
         train_sig_df = ffill_tv_cols_to_5m(train_sig_df, train_reg_feat)
         val_sig_df   = ffill_tv_cols_to_5m(val_sig_df,   val_reg_feat)
         test_sig_df  = ffill_tv_cols_to_5m(test_sig_df,  test_reg_feat)
+        # Forward-fill CDC levels from regime TF + compute retest features (cdc_retest strategy)
+        if config.get("strategies", {}).get("cdc_retest", {}).get("enabled", False):
+            from trade2.signals.regime import forward_fill_cdc_levels
+            from trade2.features.cdc_retest import add_cdc_retest_features
+            print(f"[pipeline] Forward-filling CDC levels ({regime_tf} -> {signal_tf}) for cdc_retest...")
+            train_sig_df = forward_fill_cdc_levels(train_sig_df, train_reg_feat)
+            val_sig_df   = forward_fill_cdc_levels(val_sig_df,   val_reg_feat)
+            test_sig_df  = forward_fill_cdc_levels(test_sig_df,  test_reg_feat)
+            train_sig_df = add_cdc_retest_features(train_sig_df, config)
+            val_sig_df   = add_cdc_retest_features(val_sig_df,   config)
+            test_sig_df  = add_cdc_retest_features(test_sig_df,  config)
         freq = _TF_TO_FREQ.get(signal_tf, "5min")
     else:
         train_sig_df = train_reg_feat
@@ -426,9 +437,10 @@ def run_pipeline(
                 test_sig_df, **sig_kwargs,
                 hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg,
             )
-        train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"])
-        val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"])
-        test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"])
+        _use_sig_atr = config.get("risk", {}).get("use_signal_atr", False)
+        train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
+        val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
+        test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
 
     print(f"  Train: long={int(train_sig['signal_long'].sum())} | short={int(train_sig['signal_short'].sum())}")
     print(f"  Test : long={int(test_sig['signal_long'].sum())}  | short={int(test_sig['signal_short'].sum())}")
@@ -497,9 +509,10 @@ def run_pipeline(
                         hmm_labels=val_labels,   hmm_bull_prob=val_bull,   hmm_bear_prob=val_bear,   hmm_index=idx_val_reg)
                     test_sig  = generate_signals(test_sig_df,  **sig_kwargs_opt,
                         hmm_labels=test_labels,  hmm_bull_prob=test_bull,  hmm_bear_prob=test_bear,  hmm_index=idx_test_reg)
-                train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"])
-                val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"])
-                test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"])
+                _use_sig_atr = config.get("risk", {}).get("use_signal_atr", False)
+                train_sig = compute_stops(train_sig, p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
+                val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
+                test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
             print(f"  Optimized: long={int(test_sig['signal_long'].sum())} | short={int(test_sig['signal_short'].sum())} (test)")
 
     # ---- 6. Backtests ----

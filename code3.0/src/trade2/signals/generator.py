@@ -118,10 +118,15 @@ def generate_signals(
     persistence_short = reg_cfg.get("persistence_bars_short", persistence)
 
     if persistence > 1 or persistence_short > 1:
-        # For multi-TF 5M: persistence is in 1H bars, so x12 on 5M
-        freq_mult = _get_bars_per_hour(out)
-        win_long  = max(persistence,       1) * freq_mult
-        win_short = max(persistence_short, 1) * freq_mult
+        # persistence_bars is specified in regime-TF bars; scale to signal-TF bars.
+        # e.g. persistence=4 on 15M regime + 1M signal -> 4 * (60/4) = 60 signal bars.
+        signal_bph = _get_bars_per_hour(out)
+        regime_tf  = cfg.get("strategy", {}).get("regime_timeframe", "1H")
+        _REGIME_BPH = {"5M": 12, "15M": 4, "30M": 2, "1H": 1, "4H": 1}
+        regime_bph = _REGIME_BPH.get(regime_tf.upper(), 1)
+        ratio      = signal_bph / max(regime_bph, 1)
+        win_long   = max(int(round(max(persistence,       1) * ratio)), 1)
+        win_short  = max(int(round(max(persistence_short, 1) * ratio)), 1)
         bull_regime = bull_raw.rolling(win_long).sum()  == win_long
         bear_regime = bear_raw.rolling(win_short).sum() == win_short
     else:
@@ -236,6 +241,7 @@ def compute_stops(
     df: pd.DataFrame,
     atr_stop_mult: float,
     atr_tp_mult: float,
+    use_signal_atr: bool = False,
 ) -> pd.DataFrame:
     """
     Compute ATR-based stop loss and take profit levels.
@@ -243,14 +249,25 @@ def compute_stops(
     In multi-TF mode (5M signals, 1H regime), uses 'atr_1h' if present.
     This prevents the 5M noise from immediately triggering SL/TP.
     Falls back to 'atr_14' for single-TF mode.
+
+    use_signal_atr: if True, always use signal-TF 'atr_14' (useful for scalping
+    where 1H ATR would produce stops far too wide relative to 1M/5M moves).
     """
     out   = df.copy()
-    atr   = out["atr_1h"] if "atr_1h" in out.columns else out["atr_14"]
+    if use_signal_atr:
+        atr = out["atr_14"]
+    else:
+        atr = out["atr_1h"] if "atr_1h" in out.columns else out["atr_14"]
     close = out["Close"]
     out["stop_long"]  = close - atr_stop_mult * atr
     out["stop_short"] = close + atr_stop_mult * atr
     out["tp_long"]    = close + atr_tp_mult   * atr
     out["tp_short"]   = close - atr_tp_mult   * atr
+    # Ensure trailing columns exist (engine expects them; 0 = disabled)
+    if "trailing_atr_mult_long" not in out.columns:
+        out["trailing_atr_mult_long"]  = 0.0
+    if "trailing_atr_mult_short" not in out.columns:
+        out["trailing_atr_mult_short"] = 0.0
     return out
 
 
@@ -266,11 +283,15 @@ def compute_stops_regime_aware(
     Untagged bars fall back to global risk.atr_stop_mult / risk.atr_tp_mult.
     """
     out   = df.copy()
-    atr   = out["atr_1h"] if "atr_1h" in out.columns else out["atr_14"]
-    close = out["Close"]
-
     strat_cfg = config["strategies"]
     risk_cfg  = config["risk"]
+
+    use_signal_atr = risk_cfg.get("use_signal_atr", False)
+    if use_signal_atr:
+        atr = out["atr_14"]
+    else:
+        atr = out["atr_1h"] if "atr_1h" in out.columns else out["atr_14"]
+    close = out["Close"]
 
     default_stop_mult = risk_cfg["atr_stop_mult"]
     default_tp_mult   = risk_cfg["atr_tp_mult"]
@@ -281,9 +302,9 @@ def compute_stops_regime_aware(
     stop_mults = np.full(len(out), default_stop_mult, dtype=float)
     tp_mults   = np.full(len(out), default_tp_mult,   dtype=float)
 
-    for src_name in ("trend", "range", "volatile", "cdc"):
+    for src_name in ("trend", "range", "volatile", "cdc", "cdc_retest"):
         mask = (source == src_name).values
-        if mask.any():
+        if mask.any() and src_name in strat_cfg:
             scfg = strat_cfg[src_name]
             stop_mults[mask] = scfg["atr_stop_mult"]
             tp_mults[mask]   = scfg["atr_tp_mult"]
@@ -333,7 +354,8 @@ def _get_bars_per_hour(df: pd.DataFrame) -> int:
         return 1
     try:
         delta_sec = (df.index[1] - df.index[0]).total_seconds()
-        if delta_sec <= 360:    return 12  # 5M
+        if delta_sec <= 90:     return 60  # 1M
+        elif delta_sec <= 360:  return 12  # 5M
         elif delta_sec <= 960:  return 4   # 15M
         elif delta_sec <= 1920: return 2   # 30M
         return 1                           # 1H or coarser
