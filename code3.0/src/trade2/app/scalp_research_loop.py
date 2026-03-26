@@ -81,13 +81,28 @@ def _llm_complete(
     user_msg: str,
     system: str = "",
     max_tokens: int = 2048,
+    _max_retries: int = 8,
 ) -> str:
-    """Unified LLM call: returns response text for Claude or DeepSeek."""
+    """Unified LLM call: returns response text for Claude or DeepSeek.
+
+    Retries on rate-limit errors with exponential backoff (up to _max_retries).
+    """
     if provider == "claude":
+        import anthropic as _anthropic
         kwargs = dict(model=model, max_tokens=max_tokens,
                       messages=[{"role": "user", "content": user_msg}])
         if system:
             kwargs["system"] = system
+        for attempt in range(_max_retries):
+            try:
+                with client.messages.stream(**kwargs) as stream:
+                    response = stream.get_final_message()
+                return next((b.text for b in response.content if b.type == "text"), "")
+            except _anthropic.RateLimitError as e:
+                wait = min(60 * (2 ** attempt), 600)  # 60s, 120s, 240s ... max 600s
+                print(f"[scalp] Claude rate limit hit (attempt {attempt+1}/{_max_retries}), waiting {wait}s...")
+                time.sleep(wait)
+        # final attempt (raises if still failing)
         with client.messages.stream(**kwargs) as stream:
             response = stream.get_final_message()
         return next((b.text for b in response.content if b.type == "text"), "")
@@ -1099,7 +1114,10 @@ def main() -> None:
             # Strip any TV indicators so the base model trains on clean features only
             base_cfg_clean.pop("tv_indicators", None)
             _run_pipeline(base_cfg_clean, n_trials=0, walk_forward=False, retrain_model=True)
-            base_model_path = str(PROJECT_ROOT / "artefacts" / "models" / f"{args.base_model_id}.pkl")
+            _regime_tf   = base_cfg_clean.get("strategy", {}).get("regime_timeframe", "15M").lower()
+            _n_states    = base_cfg_clean.get("hmm", {}).get("n_states", 3)
+            _model_fname = f"hmm_{_regime_tf}_{_n_states}states_{args.base_model_id}.pkl"
+            base_model_path = str(PROJECT_ROOT / "artefacts" / "models" / _model_fname)
             print(f"[scalp] Base model trained and saved to {Path(base_model_path).name}")
         except Exception as _e:
             print(f"[scalp] WARNING: base model training failed ({_e}), signal_source will reuse whatever is on disk")
