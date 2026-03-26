@@ -30,7 +30,9 @@ def _run_sweep(base_config_path: Path, scalp_config_path: Path, trials: int,
     from trade2.config.loader import load_config
     from trade2.app.run_pipeline import run_pipeline
 
+    import copy as _copy
     config = load_config(str(base_config_path), str(scalp_config_path))
+    config = _copy.deepcopy(config)  # avoid mutating the loaded config in-place
 
     # Override n_trials from CLI if provided
     config.setdefault("optimization", {})["n_trials"] = trials
@@ -49,6 +51,8 @@ def _run_sweep(base_config_path: Path, scalp_config_path: Path, trials: int,
         legacy_signals      = False,
         model_path_override = None,
     )
+    # Attach signal TF so callers can label results correctly
+    results["signal_timeframe"] = tf
     return results
 
 
@@ -170,8 +174,8 @@ def main() -> None:
     else:
         # Run single sweep with provided scalp config
         scalp_cfg = PROJECT_ROOT / args.scalp_config if not Path(args.scalp_config).is_absolute() else Path(args.scalp_config)
-        tf_label  = "5m" if "5m" in scalp_cfg.name.lower() else "1m"
         results   = _run_sweep(base_cfg, scalp_cfg, args.trials, retrain, skip_wf)
+        tf_label  = results.get("signal_timeframe", "?M").lower().replace("m", "m")
         _save_sweep_result(results, out_dir, tf_label)
 
     sys.exit(0)

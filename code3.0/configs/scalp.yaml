@@ -57,6 +57,9 @@ session:
 
 scalp_research:
   min_trades_per_day: 2.0   # lowered from 5.0 - realistic for 15M-gated 1M signals
+  goal_return:        0.30   # 30% annualized return target
+  goal_sharpe:        1.5
+  goal_max_dd:       -0.20   # drawdown no worse than -20%
 
 optimization:
   n_trials: 200

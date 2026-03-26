@@ -48,7 +48,6 @@ _DEFAULT_MODEL = {
     "deepseek": "deepseek-reasoner",
 }
 
-SCALP_CONFIG_PATH    = PROJECT_ROOT / "configs" / "scalp.yaml"
 SCALP_SEED_LIST_PATH = PROJECT_ROOT / "configs" / "scalp_seed_list.yaml"
 
 SCALP_TECHNIQUES = {

@@ -12,7 +12,7 @@ _NY_HOURS     = set(range(13, 22))
 _ACTIVE_HOURS = _LONDON_HOURS | _NY_HOURS
 
 # Bars-per-hour for each regime timeframe (used to scale persistence windows)
-_REGIME_BPH = {"5M": 12, "15M": 4, "30M": 2, "1H": 1, "4H": 1}
+_REGIME_BPH = {"5M": 12, "15M": 4, "30M": 2, "1H": 1, "4H": 0.25}
 
 
 def _session_mask(index: pd.DatetimeIndex, allowed_hours: set) -> pd.Series:
