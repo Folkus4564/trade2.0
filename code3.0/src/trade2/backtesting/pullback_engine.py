@@ -122,9 +122,9 @@ def simulate(
     runaway_mult = float(pb_cfg["runaway_atr_mult"])
     atr_stop_mult  = float(risk_cfg["atr_stop_mult"])
     atr_tp_mult    = float(risk_cfg["atr_tp_mult"])
-    trail_mult     = float(risk_cfg.get("trailing_atr_mult", 0.8))
-    trail_enabled  = bool(risk_cfg.get("trailing_enabled", True))
-    be_trigger     = float(risk_cfg.get("break_even_atr_trigger", 0.8))
+    trail_mult     = float(risk_cfg["trailing_atr_mult"])
+    trail_enabled  = bool(risk_cfg["trailing_enabled"])
+    be_trigger     = float(risk_cfg["break_even_atr_trigger"])
     base_alloc     = float(risk_cfg["base_allocation_frac"])
 
     n = len(df_1m)
