@@ -29,7 +29,8 @@ from trade2.data.validation import audit_missing_bars
 from trade2.features.builder import add_1h_features, add_5m_features
 from trade2.features.hmm_features import get_hmm_feature_matrix
 from trade2.models.hmm import XAUUSDRegimeModel
-from trade2.signals.regime import forward_fill_1h_regime
+from trade2.signals.regime import forward_fill_1h_regime, forward_fill_5m_to_1m
+from trade2.backtesting import pullback_engine
 from trade2.signals.generator import generate_signals, compute_stops, compute_stops_regime_aware
 from trade2.signals.router import route_signals, apply_tv_signal_filter, ffill_tv_cols_to_5m
 from trade2.backtesting.engine import run_backtest, run_backtest_2x_costs, run_walk_forward
@@ -182,6 +183,66 @@ def _save_golden_model(model_path: Path, models_dir: Path, test_metrics: dict, s
     }
     (golden_dir / f"{name}_metrics.json").write_text(json.dumps(sidecar, indent=2, default=str))
     print(f"[pipeline] Golden model saved -> {golden_path}")
+
+
+def _run_3tf_split(
+    df_1m: "pd.DataFrame",
+    df_5m_signals: "pd.DataFrame",
+    config: dict,
+    period_label: str,
+    strategy_name: str,
+    backtests_dir: Path,
+) -> dict:
+    """
+    Run one train/val/test split of the 3-TF pullback backtest.
+
+    Args:
+        df_1m:          1M OHLCV split (date-sliced to match df_5m_signals period)
+        df_5m_signals:  5M df after generate_signals + compute_stops (same period)
+        config:         full config dict
+        period_label:   'train', 'val', or 'test'
+        strategy_name:  used for output file naming
+        backtests_dir:  where to save CSV / JSON
+
+    Returns:
+        metrics dict
+    """
+    import pandas as pd
+    from trade2.backtesting.metrics import compute_metrics
+    from trade2.backtesting.costs import compute_slippage_array
+
+    risk_cfg = config["risk"]
+    costs    = config["costs"]
+    pb_cfg   = config["pullback"]
+
+    df_1m_ready = forward_fill_5m_to_1m(df_1m, df_5m_signals)
+
+    slippage_arr = compute_slippage_array(df_1m_ready["Close"], config).values
+
+    commission_rt = costs["commission_rt_bps"] / 10000.0 * 2
+
+    init_cash = risk_cfg["init_cash"]
+
+    equity, trades_df = pullback_engine.simulate(
+        df_1m_ready, pb_cfg, risk_cfg, init_cash, commission_rt, slippage_arr,
+    )
+
+    # 1M bars: 252 trading days * 390 minutes/day
+    metrics = compute_metrics(equity, trades_df, bars_per_year=98280)
+
+    if backtests_dir is not None:
+        trades_path = backtests_dir / f"{strategy_name}_{period_label}_trades.csv"
+        trades_df.to_csv(trades_path, index=False)
+        metrics_path = backtests_dir / f"{strategy_name}_{period_label}.json"
+        metrics_path.write_text(json.dumps(metrics, indent=2, default=str))
+
+    ret  = metrics.get("annualized_return", 0) * 100
+    sh   = metrics.get("sharpe_ratio", 0)
+    dd   = metrics.get("max_drawdown", 0) * 100
+    n    = metrics.get("total_trades", 0)
+    wr   = metrics.get("win_rate", 0) * 100
+    print(f"  [{period_label}] return={ret:.1f}% sharpe={sh:.2f} dd={dd:.1f}% trades={n} wr={wr:.1f}%")
+    return metrics
 
 
 def run_pipeline(
@@ -514,6 +575,27 @@ def run_pipeline(
                 val_sig   = compute_stops(val_sig,   p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
                 test_sig  = compute_stops(test_sig,  p["atr_stop_mult"], p["atr_tp_mult"], use_signal_atr=_use_sig_atr)
             print(f"  Optimized: long={int(test_sig['signal_long'].sum())} | short={int(test_sig['signal_short'].sum())} (test)")
+
+    # ---- 3-TF Pullback mode ----
+    entry_tf = config.get("strategy", {}).get("entry_timeframe", None)
+    if entry_tf == "1M" and mode == "multi_tf":
+        print(f"\n[pipeline] 3-TF mode: loading 1M entry bars...")
+        train_1m, val_1m, test_1m = load_split_tf("1M", config)
+        print(f"  1M train={len(train_1m)} | val={len(val_1m)} | test={len(test_1m)}")
+
+        print(f"[pipeline] Running 3-TF pullback backtests...")
+        train_metrics = _run_3tf_split(train_1m, train_sig, config, "train", strategy_name, dirs["backtests"])
+        val_metrics   = _run_3tf_split(val_1m,   val_sig,   config, "val",   strategy_name, dirs["backtests"])
+        test_metrics  = _run_3tf_split(test_1m,  test_sig,  config, "test",  strategy_name, dirs["backtests"])
+
+        result = {
+            "train": train_metrics,
+            "val":   val_metrics,
+            "test":  test_metrics,
+            "strategy_name": strategy_name,
+        }
+        print(f"\n[pipeline] 3-TF run complete.")
+        return result
 
     # ---- 6. Backtests ----
     print("\n[pipeline] Running TRAIN backtest...")
