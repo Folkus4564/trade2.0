@@ -49,32 +49,53 @@ Three-layer pipeline:
 
 ## Entry Logic — PullbackEngine
 
-### Level Definition
-Computed at 5M signal bar close using 5M ATR:
+### Adaptive Level Definition
+Tier multipliers are **regime-aware and Optuna-optimized** — not hardcoded.
+Computed at 5M signal bar close:
 
 ```
+# Step 1: pick per-regime base multipliers (from optimized config)
+if regime == Bull:
+    base_t1, base_t2 = bull_tier1_mult, bull_tier2_mult
+elif regime == Bear:
+    base_t1, base_t2 = bear_tier1_mult, bear_tier2_mult
+else:  # Neutral/ranging
+    base_t1, base_t2 = neutral_tier1_mult, neutral_tier2_mult
+
+# Step 2: scale by volume ratio (high volume → deeper expected pullback)
+vol_ratio = 5M_bar_volume / rolling_avg_volume(20 bars)
+vol_factor = clamp(vol_ratio, 0.5, 2.0)
+
+# Step 3: compute limits
+effective_t1 = base_t1 × ATR_5m × vol_factor
+effective_t2 = base_t2 × ATR_5m × vol_factor
+
 Long signal:
-  tier1_limit = signal_close - 0.30 × ATR_5m   # meaningful pullback
-  tier2_limit = signal_close - 0.10 × ATR_5m   # shallow pullback
+  tier1_limit = signal_close - effective_t1
+  tier2_limit = signal_close - effective_t2
 
 Short signal:
-  tier1_limit = signal_close + 0.30 × ATR_5m
-  tier2_limit = signal_close + 0.10 × ATR_5m
+  tier1_limit = signal_close + effective_t1
+  tier2_limit = signal_close + effective_t2
 ```
+
+**Constraint enforced**: `tier2_mult < tier1_mult` always (tier2 is shallower = easier fill).
 
 ### Per-1M-Bar Evaluation (strict order)
 1. **Check invalidation** → if triggered, cancel order, stop processing
 2. **Check tier1** → fill if `1M_low <= tier1_limit` (long) or `1M_high >= tier1_limit` (short)
 3. **Check tier2** → fill if `1M_low <= tier2_limit` (long) or `1M_high >= tier2_limit` (short)
-4. **Cancel** if bar count > 6 with no fill
+4. **Cancel** if bar count > `max_wait_bars` with no fill
 
 Both tiers active from bar 1. Tier1 always checked first (better price). Whichever is hit first wins. Fill price is always the limit price (tier1_limit or tier2_limit), not the 1M bar low/high.
 
 ### Invalidation Conditions (cancel immediately)
 - 1H regime flips away from signal direction (checked at each 1H close)
-- Runaway: `1M_close > signal_close + 1.0 × ATR_5m` for longs (price left without us)
-- Runaway: `1M_close < signal_close - 1.0 × ATR_5m` for shorts
+- Runaway: `1M_close > signal_close + runaway_atr_mult × ATR_5m` for longs (price left without us)
+- Runaway: `1M_close < signal_close - runaway_atr_mult × ATR_5m` for shorts
 - New 5M signal in **opposite** direction
+
+`runaway_atr_mult` is Optuna-optimized in range [0.5, 2.0].
 
 ### Same-Direction Signal Update
 New 5M signal in same direction while waiting → refresh tier1/tier2 levels and reset bar counter to 0. Do not open a second position.
@@ -143,8 +164,14 @@ data:
   raw_1m_csv:  code3.0/data/raw/XAUUSD_1M_2019_2026.csv
 
 pullback:
-  tier1_atr_mult: 0.30
-  tier2_atr_mult: 0.10
+  # Per-regime multipliers — all Optuna-optimized
+  bull_tier1_mult: 0.25
+  bull_tier2_mult: 0.10
+  bear_tier1_mult: 0.25
+  bear_tier2_mult: 0.10
+  neutral_tier1_mult: 0.15
+  neutral_tier2_mult: 0.07
+  # Volume scaling: effective_mult = base_mult × clamp(vol/avg_vol_20, 0.5, 2.0)
   max_wait_bars: 6
   runaway_atr_mult: 1.0
 
@@ -172,10 +199,36 @@ session:
 
 ---
 
+## Optimization Search Space
+
+```yaml
+optimization:
+  n_trials: 200
+  target: val_sharpe
+  search_space:
+    bull_tier1_mult:    [0.10, 0.50]
+    bull_tier2_mult:    [0.05, 0.20]
+    bear_tier1_mult:    [0.10, 0.50]
+    bear_tier2_mult:    [0.05, 0.20]
+    neutral_tier1_mult: [0.05, 0.30]
+    neutral_tier2_mult: [0.02, 0.15]
+    max_wait_bars:      [3, 10]
+    runaway_atr_mult:   [0.5, 2.0]
+    atr_stop_mult:      [1.0, 3.0]
+    atr_tp_mult:        [1.5, 4.0]
+    hmm_min_prob:       [0.35, 0.65]
+    trailing_atr_mult:  [0.5, 1.5]
+```
+
+Constraint: `tiern_tier2_mult < tiern_tier1_mult` enforced per-trial (Optuna suggests, engine validates).
+
+---
+
 ## Verification Steps
 
 1. Run backtest on train set — confirm 2+ trades/day, no lookahead bias
 2. Check fill distribution: what % fill at tier1 vs tier2 vs cancel
 3. Check instant exits (0-bar trades) — should be near zero with pullback entries
-4. Run on val set — confirm Sharpe > 1.0
-5. Run on test set — confirm Sharpe > 1.5, return > 30%, DD > -20%
+4. Check vol_factor distribution — confirm it varies meaningfully (not always clamped)
+5. Run Optuna optimization on val set — confirm best params improve over defaults
+6. Run on test set — confirm Sharpe > 1.5, return > 30%, DD > -20%
