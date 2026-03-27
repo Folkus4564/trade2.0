@@ -1,0 +1,128 @@
+# ============================================================
+#  trade2 - Scalp 3TF Pullback Strategy
+#  1H HMM regime / 5M signals / 1M pullback entry
+# ============================================================
+
+strategy:
+  name: xauusd_scalp_3tf
+  mode: multi_tf
+  regime_timeframe: 1H
+  signal_timeframe: 5M
+  entry_timeframe: 1M      # triggers 3-TF path in run_pipeline
+
+data:
+  raw_1h_csv: data/raw/XAUUSD_1H_2019_2026_full.csv
+  raw_5m_csv: data/raw/XAUUSD_5M_2019_2026.csv
+  raw_1m_csv: code3.0/data/raw/XAUUSD_1M_2019_2026.csv
+  missing_bar_policy: none
+
+splits:
+  test_end: "2026-03-10"
+
+pullback:
+  bull_tier1_mult: 0.25
+  bull_tier2_mult: 0.10
+  bear_tier1_mult: 0.25
+  bear_tier2_mult: 0.10
+  neutral_tier1_mult: 0.15
+  neutral_tier2_mult: 0.07
+  max_wait_bars: 6
+  runaway_atr_mult: 1.0
+
+risk:
+  atr_stop_mult: 1.5
+  atr_tp_mult: 2.5
+  use_signal_atr: true
+  trailing_enabled: true
+  trailing_atr_mult: 0.8
+  break_even_atr_trigger: 0.8
+  max_hold_bars: 0
+  base_allocation_frac: 0.50
+  init_cash: 10000.0
+
+hmm:
+  n_states: 3
+  random_seed: 42
+  min_prob_hard: 0.45
+  min_prob_hard_short: 0.45
+  min_prob_entry: 0.45
+  min_prob_exit: 0.40
+  min_confidence: 0.40
+
+regime:
+  persistence_bars: 3
+  persistence_bars_short: 5
+  transition_cooldown_bars: 0
+  adx_threshold: 20.0
+
+session:
+  enabled: true
+  allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+features:
+  hma_period: 55
+  ema_period: 21
+  atr_period: 14
+  rsi_period: 14
+  adx_period: 14
+  dc_period: 20
+  bb_period_5m: 60
+
+smc:
+  require_confluence: false
+  require_pin_bar: false
+
+smc_5m:
+  enabled: true
+  ob_validity_bars: 36
+  fvg_validity_bars: 24
+  swing_lookback_bars: 36
+  ob_impulse_bars: 2
+  ob_impulse_mult: 1.2
+  require_confluence: false
+  require_pin_bar: false
+
+strategies:
+  trend:
+    enabled: true
+    persistence_bars: 3
+    atr_stop_mult: 1.5
+    atr_tp_mult: 2.5
+    trailing_enabled: true
+    trailing_atr_mult: 0.8
+    session_enabled: true
+    allowed_hours_utc: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+  range:
+    enabled: false
+  volatile:
+    enabled: false
+  cdc:
+    enabled: false
+  cdc_retest:
+    enabled: false
+
+optimization:
+  n_trials: 200
+  target: val_sharpe
+  search_space:
+    bull_tier1_mult:    [0.10, 0.50]
+    bull_tier2_mult:    [0.05, 0.20]
+    bear_tier1_mult:    [0.10, 0.50]
+    bear_tier2_mult:    [0.05, 0.20]
+    neutral_tier1_mult: [0.05, 0.30]
+    neutral_tier2_mult: [0.02, 0.15]
+    max_wait_bars:      [3, 10]
+    runaway_atr_mult:   [0.5, 2.0]
+    atr_stop_mult:      [1.0, 3.0]
+    atr_tp_mult:        [1.5, 4.0]
+    hmm_min_prob:       [0.35, 0.65]
+    trailing_atr_mult:  [0.5, 1.5]
+
+costs:
+  spread_pips: 3
+  slippage_pips: 1
+  commission_rt_bps: 2
+
+pipeline:
+  golden_model_threshold: 0.20
+  cache_features: false
