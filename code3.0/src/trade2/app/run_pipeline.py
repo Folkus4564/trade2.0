@@ -19,6 +19,7 @@ import pickle
 import shutil
 import sys
 import numpy as np
+import pandas as pd
 from datetime import date, datetime
 from pathlib import Path
 
@@ -26,7 +27,7 @@ from trade2.config.loader import load_config
 from trade2.data.splits import load_split_tf
 from trade2.data.loader import dataset_version
 from trade2.data.validation import audit_missing_bars
-from trade2.features.builder import add_1h_features, add_5m_features
+from trade2.features.builder import add_1h_features, add_5m_features, add_5m_full_features
 from trade2.features.hmm_features import get_hmm_feature_matrix
 from trade2.models.hmm import XAUUSDRegimeModel
 from trade2.signals.regime import forward_fill_1h_regime, forward_fill_5m_to_1m
@@ -336,10 +337,16 @@ def run_pipeline(
         print(f"  {regime_tf} train={len(train_reg)} | val={len(val_reg)} | test={len(test_reg)}")
 
     # ---- 2. Build features (optionally cached) ----
-    print(f"[pipeline] Engineering {regime_tf} regime features...")
-    train_reg_feat = _load_features_cached(train_reg, regime_tf, "train", config, dirs, add_1h_features)
-    val_reg_feat   = _load_features_cached(val_reg,   regime_tf, "val",   config, dirs, add_1h_features)
-    test_reg_feat  = _load_features_cached(test_reg,  regime_tf, "test",  config, dirs, add_1h_features)
+    # For single-TF mode with sub-hourly regime TF (5M, 15M), use add_5m_full_features
+    # which combines 5M signal features (SMC, SD mean, etc.) with HMM input features.
+    # For 1H or 4H (or multi-TF where regime_tf != signal_tf), use add_1h_features.
+    _SUB_HOUR_TFS = {"5M", "15M", "1M", "30M"}
+    _regime_feat_fn = add_5m_full_features if (mode == "single_tf" and regime_tf in _SUB_HOUR_TFS) else add_1h_features
+    _regime_feat_label = "5M signal+HMM" if _regime_feat_fn is add_5m_full_features else regime_tf
+    print(f"[pipeline] Engineering {_regime_feat_label} regime features...")
+    train_reg_feat = _load_features_cached(train_reg, regime_tf, "train", config, dirs, _regime_feat_fn)
+    val_reg_feat   = _load_features_cached(val_reg,   regime_tf, "val",   config, dirs, _regime_feat_fn)
+    test_reg_feat  = _load_features_cached(test_reg,  regime_tf, "test",  config, dirs, _regime_feat_fn)
 
     if mode == "multi_tf":
         smc_label = "" if not config.get("smc_5m", {}).get("enabled", True) else " (SMC)"
@@ -512,24 +519,72 @@ def run_pipeline(
     # ---- 5b. Optional: Optuna optimization on val ----
     if optimize:
         print(f"\n[pipeline] Running Optuna optimization ({n_trials} trials) targeting {optuna_target}...")
-        # When legacy_signals=True, optimizer must also use legacy mode (consistent objective)
         import copy as _copy
-        opt_config = config
-        if legacy_signals and config.get("strategies", {}).get("mode") != "legacy":
-            opt_config = _copy.deepcopy(config)
-            opt_config.setdefault("strategies", {})["mode"] = "legacy"
-        best_params, best_val_sharpe = run_optimization(
-            val_sig_df   = val_sig_df,
-            config       = opt_config,
-            n_trials     = n_trials,
-            train_sig_df = train_sig_df,  # combined train+val objective avoids overfitting
-            optuna_target = optuna_target,
-        )
+
+        # smc_sd_mean: use dedicated optimizer (SD params require feature recomputation)
+        _smc_sd_mean_active = config.get("strategies", {}).get("smc_sd_mean", {}).get("enabled", False)
+        if _smc_sd_mean_active:
+            from trade2.optimization.optimizer import run_optimization_smc_sd_mean
+            # In single_tf mode the feature dfs don't have regime/bull_prob/bear_prob columns
+            # yet -- they get passed as separate kwargs in route_signals(). The optimizer calls
+            # route_signals() without those kwargs, so we merge them in here.
+            if mode == "multi_tf":
+                _val_feat   = val_sig_df
+                _train_feat = train_sig_df
+            else:
+                _val_feat   = val_reg_feat.copy()
+                _train_feat = train_reg_feat.copy()
+                # Merge HMM probabilities so the optimizer's _run_split can call route_signals()
+                _val_feat["regime"]    = pd.Series(val_labels,   index=idx_val_reg).reindex(_val_feat.index).fillna("sideways")
+                _val_feat["bull_prob"] = pd.Series(val_bull,     index=idx_val_reg).reindex(_val_feat.index).fillna(0.0)
+                _val_feat["bear_prob"] = pd.Series(val_bear,     index=idx_val_reg).reindex(_val_feat.index).fillna(0.0)
+                _train_feat["regime"]    = pd.Series(train_labels, index=idx_train_reg).reindex(_train_feat.index).fillna("sideways")
+                _train_feat["bull_prob"] = pd.Series(train_bull,   index=idx_train_reg).reindex(_train_feat.index).fillna(0.0)
+                _train_feat["bear_prob"] = pd.Series(train_bear,   index=idx_train_reg).reindex(_train_feat.index).fillna(0.0)
+            best_result = run_optimization_smc_sd_mean(
+                val_feat_df   = _val_feat,
+                train_feat_df = _train_feat,
+                config        = config,
+                n_trials      = n_trials,
+                optuna_target = optuna_target,
+            )
+            best_params    = best_result["best_params"]
+            best_val_sharpe = best_result["best_value"]
+        else:
+            # Default optimizer for all other strategies
+            opt_config = config
+            if legacy_signals and config.get("strategies", {}).get("mode") != "legacy":
+                opt_config = _copy.deepcopy(config)
+                opt_config.setdefault("strategies", {})["mode"] = "legacy"
+            best_params, best_val_sharpe = run_optimization(
+                val_sig_df    = val_sig_df,
+                config        = opt_config,
+                n_trials      = n_trials,
+                train_sig_df  = train_sig_df,
+                optuna_target = optuna_target,
+            )
 
         # Override p with best params
         if best_val_sharpe > -990:
             p.update(best_params)
             print(f"[pipeline] Applying best params (val_sharpe={best_val_sharpe:.4f})")
+
+            # For smc_sd_mean: patch config["strategies"]["smc_sd_mean"] with best params
+            # (optimizer returns flat params; route_signals reads from nested config)
+            if _smc_sd_mean_active:
+                _smc_cfg = config.get("strategies", {}).get("smc_sd_mean", {})
+                _smc_param_keys = [
+                    "sd_length_short", "sd_length_long", "sd_atr_threshold",
+                    "sd_smooth_length", "sd_smooth_sd_length", "sd_entry_threshold",
+                    "atr_stop_mult", "atr_tp_mult", "min_prob", "min_prob_short",
+                    "wick_ratio", "cooldown_bars", "bb_zone_threshold", "rsi_upper",
+                ]
+                for _k in _smc_param_keys:
+                    if _k in best_params:
+                        _smc_cfg[_k] = best_params[_k]
+                if "hmm_min_prob" in best_params:
+                    _smc_cfg["min_prob"] = best_params["hmm_min_prob"]
+                    _smc_cfg["min_prob_short"] = best_params["hmm_min_prob"]
 
             # Regenerate signals + stops with best params
             sig_kwargs_opt = dict(
@@ -540,6 +595,17 @@ def run_pipeline(
                 require_smc_confluence  = p.get("require_smc_confluence",  p["require_smc_confluence"]),
                 require_pin_bar         = p.get("require_pin_bar",         p["require_pin_bar"]),
             )
+            # Re-compute SD features if smc_sd_mean is active (SD params may have changed)
+            if _smc_sd_mean_active and any(k in best_params for k in [
+                "sd_length_short", "sd_length_long", "sd_atr_threshold",
+                "sd_smooth_length", "sd_smooth_sd_length",
+            ]):
+                from trade2.features.sd_adaptive_mean import compute_sd_adaptive_mean
+                print("[pipeline] Re-computing SD Adaptive Mean features with optimized params...")
+                train_sig_df = compute_sd_adaptive_mean(train_sig_df, config)
+                val_sig_df   = compute_sd_adaptive_mean(val_sig_df,   config)
+                test_sig_df  = compute_sd_adaptive_mean(test_sig_df,  config)
+
             if strategy_mode == "regime_specialized":
                 if mode == "multi_tf":
                     train_sig = route_signals(train_sig_df, config, hmm_model=hmm)
@@ -625,7 +691,11 @@ def run_pipeline(
             raw_signal_path = DATA_ROOT / config["data"].get(_sig_raw_key, _sig_default)
         else:
             raw_signal_path = None
-        _wf_freq = _TF_TO_FREQ.get(signal_tf, "5min") if mode == "multi_tf" else _TF_TO_FREQ.get(regime_tf, "1h")
+        # For single-TF on 5M: use 5M freq. For multi-TF: use signal_tf freq. Else 1h.
+        if mode == "multi_tf":
+            _wf_freq = _TF_TO_FREQ.get(signal_tf, "5min")
+        else:
+            _wf_freq = _TF_TO_FREQ.get(regime_tf, "1h")
         wf_results = run_walk_forward(
             strategy_name, config, raw_regime_path, dirs["backtests"],
             freq=_wf_freq,

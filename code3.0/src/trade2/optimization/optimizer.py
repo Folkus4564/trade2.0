@@ -12,9 +12,11 @@ from typing import Any, Dict, Tuple
 import copy
 from trade2.signals.generator import generate_signals, compute_stops, compute_stops_regime_aware
 from trade2.signals.router import route_signals
+from trade2.signals.regime import forward_fill_5m_to_1m
 from trade2.backtesting.engine import _simulate_trades
 from trade2.backtesting.costs import compute_slippage_array
 from trade2.backtesting.metrics import compute_metrics
+from trade2.backtesting import pullback_engine
 
 
 def _get_tf_scale(config: Dict[str, Any]) -> int:
@@ -252,3 +254,452 @@ def run_optimization(
         print(f"  {k}: {v}")
 
     return best_params, best_sharpe
+
+
+def run_optimization_smc_pr(
+    val_5m_raw: pd.DataFrame,
+    train_5m_raw: pd.DataFrame,
+    config: Dict[str, Any],
+    n_trials: int = 200,
+    optuna_target: str = "val_sharpe",
+) -> Dict[str, Any]:
+    """
+    Two-tier optimization for the SMC Pullback Reversal strategy.
+
+    Outer grid: swing_structure_size values [20, 30, 40, 50, 60] -- requires feature
+    recomputation because the swing structure detection window changes the feature columns.
+
+    Inner Optuna: fast signal/risk params that can be varied without re-running features:
+    - atr_stop_mult, atr_tp_mult, entry_cooldown_bars, trailing params
+    - require_premium_discount, require_internal_choch, first_retest_only, zone_edge_prox
+    - min_wick_body_ratio, min_engulf_body_atr
+
+    Args:
+        val_5m_raw:   Raw (no-signal) val 5M DataFrame with regime columns attached.
+        train_5m_raw: Same for train split (for anti-overfit scoring).
+        config:       Full merged config dict.
+        n_trials:     Total Optuna trials (split evenly across swing sizes).
+        optuna_target: 'val_sharpe' | 'val_return'.
+
+    Returns:
+        dict with best_params, best_value, best_swing_size.
+    """
+    try:
+        import optuna
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+    except ImportError:
+        raise ImportError("optuna required: pip install optuna")
+
+    from trade2.features.builder import add_5m_features
+    from trade2.signals.router import route_signals
+    from trade2.signals.generator import compute_stops_regime_aware
+    from trade2.backtesting.engine import _simulate_trades
+    from trade2.backtesting.costs import compute_slippage_array
+    from trade2.backtesting.metrics import compute_metrics
+
+    opt_cfg = config.get("optimization", {})
+    ss      = opt_cfg.get("search_space", {})
+
+    swing_sizes = [20, 30, 40, 50, 60]
+    trials_per  = max(10, n_trials // len(swing_sizes))
+    best_overall = {"best_value": -999.0, "best_params": {}, "best_swing_size": 50}
+
+    def _run_split(feat_df: pd.DataFrame, trial_cfg: Dict[str, Any]) -> float:
+        try:
+            sig = route_signals(feat_df, trial_cfg)
+            sig = compute_stops_regime_aware(sig, trial_cfg)
+            if sig["signal_long"].sum() + sig["signal_short"].sum() < 10:
+                return -999.0
+            risk_cfg   = trial_cfg["risk"]
+            costs_cfg  = trial_cfg["costs"]
+            slippage   = compute_slippage_array(sig["Close"].astype(float), trial_cfg).values
+            tf_scale   = _get_tf_scale(trial_cfg)
+            equity, trades_df = _simulate_trades(
+                df                   = sig,
+                init_cash            = trial_cfg["backtest"]["init_cash"],
+                base_allocation_frac = risk_cfg["base_allocation_frac"],
+                slippage             = slippage,
+                commission_rt        = costs_cfg["commission_rt"],
+                max_hold_bars        = risk_cfg["max_hold_bars"] * tf_scale,
+                be_atr_trigger       = risk_cfg.get("break_even_atr_trigger", 0.0),
+            )
+            if len(trades_df) < 10:
+                return -999.0
+            bh = trial_cfg["backtest"]["init_cash"] * (sig["Close"] / sig["Close"].iloc[0])
+            metrics = compute_metrics(equity, trades_df[["pnl", "duration_bars"]], bh,
+                                      bars_per_year=252 * 12)
+            v = metrics.get("sharpe_ratio" if optuna_target == "val_sharpe" else "annualized_return", -999.0)
+            return float(v) if np.isfinite(v) else -999.0
+        except Exception:
+            return -999.0
+
+    for swing_size in swing_sizes:
+        # Build features for this swing size
+        swing_cfg = copy.deepcopy(config)
+        swing_cfg["smc_luxalgo_5m"]["swing_structure_size"] = swing_size
+
+        print(f"[optuna-smc-pr] swing_size={swing_size} -- building features ...")
+        val_feat   = add_5m_features(val_5m_raw,   swing_cfg)
+        train_feat = add_5m_features(train_5m_raw, swing_cfg) if train_5m_raw is not None else None
+
+        def objective(trial: "optuna.Trial") -> float:
+            trial_cfg = copy.deepcopy(swing_cfg)
+            smc_pr    = trial_cfg["strategies"]["smc_pullback_reversal"]
+            lux_5m    = trial_cfg["smc_luxalgo_5m"]
+
+            def _fb(key, lo, hi):
+                r = ss.get(key, [lo, hi])
+                return trial.suggest_float(key, r[0], r[1])
+            def _ib(key, lo, hi):
+                r = ss.get(key, [lo, hi])
+                return trial.suggest_int(key, int(r[0]), int(r[1]))
+            def _cb(key, choices):
+                r = ss.get(key, choices)
+                return trial.suggest_categorical(key, r if isinstance(r, list) else choices)
+
+            smc_pr["atr_stop_mult"]           = _fb("smc_pr_atr_stop_mult",    0.8,  2.5)
+            smc_pr["atr_tp_mult"]             = _fb("smc_pr_atr_tp_mult",      1.5,  5.0)
+            smc_pr["entry_cooldown_bars"]     = _ib("smc_pr_entry_cooldown",   0,    5)
+            smc_pr["trailing_enabled"]        = _cb("smc_pr_trailing_enabled", [True, False])
+            smc_pr["trailing_atr_mult"]       = _fb("smc_pr_trailing_atr_mult",0.5,  1.5)
+            smc_pr["require_premium_discount"]= _cb("smc_pr_require_premium_discount", [True, False])
+            smc_pr["require_internal_choch"]  = _cb("smc_pr_require_internal_choch",   [True, False])
+            smc_pr["internal_choch_lookback"] = _ib("smc_pr_internal_choch_lookback",  3, 10)
+            smc_pr["first_retest_only"]       = _cb("smc_pr_first_retest_only",        [True, False])
+            smc_pr["zone_edge_atr_proximity"] = _fb("smc_pr_zone_edge_prox",    0.0,  0.5)
+            smc_pr["min_wick_body_ratio"]     = _fb("smc_pr_min_wick_ratio",    2.0,  3.5)
+            smc_pr["min_engulf_body_atr"]     = _fb("smc_pr_min_engulf_body",   0.0,  0.5)
+            lux_5m["confluence_filter"]       = _cb("smc_pr_confluence_filter", [True, False])
+
+            val_score = _run_split(val_feat, trial_cfg)
+            if train_feat is not None and val_score > -990:
+                train_score = _run_split(train_feat, trial_cfg)
+                if train_score <= -990:
+                    return val_score * 0.5
+                return min(val_score, train_score)
+            return val_score
+
+        study = optuna.create_study(
+            direction="maximize",
+            sampler=optuna.samplers.TPESampler(seed=42),
+        )
+        study.optimize(objective, n_trials=trials_per, show_progress_bar=False)
+
+        print(f"[optuna-smc-pr] swing={swing_size} best {optuna_target}={study.best_value:.4f}")
+
+        if study.best_value > best_overall["best_value"]:
+            best_overall["best_value"]     = study.best_value
+            best_overall["best_params"]    = dict(study.best_params)
+            best_overall["best_swing_size"] = swing_size
+
+    print(f"\n[optuna-smc-pr] Overall best {optuna_target}: {best_overall['best_value']:.4f}")
+    print(f"[optuna-smc-pr] Best swing_size: {best_overall['best_swing_size']}")
+    print(f"[optuna-smc-pr] Best params: {best_overall['best_params']}")
+
+    return best_overall
+
+
+def run_optimization_3tf(
+    val_5m_signals: pd.DataFrame,
+    val_1m: pd.DataFrame,
+    config: Dict[str, Any],
+    n_trials: int = 200,
+    optuna_target: str = "val_sharpe",
+) -> Dict[str, Any]:
+    """
+    Optuna optimization for the 3-TF pullback strategy.
+
+    Pre-computes forward-filled 1M base once. Each trial varies pullback + risk
+    params, re-runs pullback_engine.simulate(), returns target metric.
+
+    Args:
+        val_5m_signals: val 5M df with signals + stops already computed
+        val_1m:         val 1M OHLCV (raw, not yet forward-filled)
+        config:         full config dict
+        n_trials:       number of Optuna trials
+        optuna_target:  'val_sharpe', 'val_return', or 'val_calmar'
+
+    Returns:
+        dict with keys: best_params, best_value, study
+    """
+    import optuna
+    optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+    costs_cfg = config["costs"]
+    risk_cfg  = config["risk"]
+    ss        = config.get("optimization", {}).get("search_space", {})
+
+    # Pre-compute forward-fill once -- doesn't change between trials
+    val_1m_base = forward_fill_5m_to_1m(val_1m, val_5m_signals)
+
+    # Pre-compute slippage once
+    slippage_arr = compute_slippage_array(val_1m_base["Close"], config)
+    commission_rt = costs_cfg["commission_rt_bps"] / 10000.0 * 2
+    init_cash     = risk_cfg["init_cash"]
+
+    def objective(trial: "optuna.Trial") -> float:
+        pb_trial   = copy.deepcopy(config["pullback"])
+        risk_trial = copy.deepcopy(risk_cfg)
+
+        # Sample pullback params from search space
+        _float_pb_keys = [
+            "bull_tier1_mult", "bull_tier2_mult",
+            "bear_tier1_mult", "bear_tier2_mult",
+            "neutral_tier1_mult", "neutral_tier2_mult",
+            "runaway_atr_mult",
+        ]
+        for key in _float_pb_keys:
+            if key in ss:
+                pb_trial[key] = trial.suggest_float(key, ss[key][0], ss[key][1])
+
+        if "max_wait_bars" in ss:
+            pb_trial["max_wait_bars"] = trial.suggest_int(
+                "max_wait_bars", int(ss["max_wait_bars"][0]), int(ss["max_wait_bars"][1])
+            )
+
+        # Enforce tier2 < tier1 per regime
+        for prefix in ("bull_", "bear_", "neutral_"):
+            t1_key = f"{prefix}tier1_mult"
+            t2_key = f"{prefix}tier2_mult"
+            if pb_trial[t2_key] >= pb_trial[t1_key]:
+                pb_trial[t2_key] = pb_trial[t1_key] * 0.5
+
+        # Sample risk params
+        if "atr_stop_mult" in ss:
+            risk_trial["atr_stop_mult"] = trial.suggest_float(
+                "atr_stop_mult", ss["atr_stop_mult"][0], ss["atr_stop_mult"][1]
+            )
+        if "atr_tp_mult" in ss:
+            risk_trial["atr_tp_mult"] = trial.suggest_float(
+                "atr_tp_mult", ss["atr_tp_mult"][0], ss["atr_tp_mult"][1]
+            )
+        if "trailing_atr_mult" in ss:
+            risk_trial["trailing_atr_mult"] = trial.suggest_float(
+                "trailing_atr_mult", ss["trailing_atr_mult"][0], ss["trailing_atr_mult"][1]
+            )
+
+        try:
+            equity, trades_df = pullback_engine.simulate(
+                val_1m_base, pb_trial, risk_trial, init_cash, commission_rt, slippage_arr,
+            )
+            if len(trades_df) < 10:
+                return -999.0
+            metrics = compute_metrics(equity, trades_df, bars_per_year=98280)
+            target_map = {
+                "val_sharpe": metrics.get("sharpe_ratio",       -999.0),
+                "val_return": metrics.get("annualized_return",  -999.0),
+                "val_calmar": metrics.get("calmar_ratio",       -999.0),
+            }
+            return float(target_map.get(optuna_target, metrics.get("sharpe_ratio", -999.0)))
+        except Exception:
+            return -999.0
+
+    study = optuna.create_study(direction="maximize")
+    study.optimize(objective, n_trials=n_trials, show_progress_bar=False)
+
+    print(f"[optuna-3tf] Best {optuna_target}: {study.best_value:.4f}")
+    print(f"[optuna-3tf] Best params: {study.best_params}")
+
+    return {
+        "best_params": study.best_params,
+        "best_value":  study.best_value,
+        "study":       study,
+    }
+
+
+def run_optimization_smc_sd_mean(
+    val_feat_df: pd.DataFrame,
+    train_feat_df: pd.DataFrame,
+    config: Dict[str, Any],
+    n_trials: int = 200,
+    optuna_target: str = "val_sharpe",
+) -> Dict[str, Any]:
+    """
+    Optuna optimization for the SMC + SD Adaptive Mean strategy.
+
+    SD Adaptive Mean parameters (sd_length_short, sd_length_long, sd_entry_threshold, etc.)
+    require feature recomputation because they change rolling window sizes. This function
+    re-computes sd_adaptive_mean features inside each trial (cheap -- just rolling ops).
+
+    Other parameters (atr_stop_mult, atr_tp_mult, min_prob, cooldown, wick_ratio) are
+    applied directly to the signal generation config without feature recomputation.
+
+    Args:
+        val_feat_df:   val 5M DataFrame with all features EXCEPT sd_adaptive_mean columns.
+                       (sd_smoothed, sd_band_*, sd_zone will be recomputed per trial)
+        train_feat_df: train split (same format), used for anti-overfitting scoring.
+        config:        Full merged config dict.
+        n_trials:      Number of Optuna trials.
+        optuna_target: 'val_sharpe' | 'val_return'.
+
+    Returns:
+        dict with best_params, best_value, study.
+    """
+    try:
+        import optuna
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+    except ImportError:
+        raise ImportError("optuna required: pip install optuna")
+
+    from trade2.features.sd_adaptive_mean import compute_sd_adaptive_mean
+    from trade2.features.hmm_features import add_hmm_features
+    from trade2.signals.router import route_signals
+    from trade2.signals.generator import compute_stops_regime_aware
+    from trade2.backtesting.engine import run_backtest
+    from trade2.backtesting.costs import compute_slippage_array
+    from trade2.backtesting.metrics import compute_metrics
+
+    opt_cfg = config.get("optimization", {})
+    ss      = opt_cfg.get("search_space", {})
+
+    def _b(key, lo, hi, is_int=False):
+        r = ss.get(key, [lo, hi])
+        if is_int:
+            return trial.suggest_int(key, int(r[0]), int(r[1]))
+        return trial.suggest_float(key, r[0], r[1])
+
+    def _run_split(feat_df: pd.DataFrame, trial_cfg: Dict[str, Any]) -> float:
+        try:
+            # Re-compute SD Adaptive Mean with trial params
+            df_sd = compute_sd_adaptive_mean(feat_df, trial_cfg)
+            # Re-compute HMM feature columns that depend on sd_smoothed
+            # (hmm_feat_sd_distance = sd_smoothed since both already lagged)
+            if "sd_smoothed" in df_sd.columns:
+                df_sd["hmm_feat_sd_distance"] = df_sd["sd_smoothed"]
+            # Generate signals
+            sig = route_signals(df_sd, trial_cfg)
+            sig = compute_stops_regime_aware(sig, trial_cfg)
+            n_signals = sig["signal_long"].sum() + sig["signal_short"].sum()
+            if n_signals < 10:
+                return -999.0
+            # Run backtest (uses partial TP engine from config)
+            risk_cfg  = trial_cfg["risk"]
+            costs_cfg = trial_cfg["costs"]
+            slippage  = compute_slippage_array(sig["Close"].astype(float), trial_cfg).values
+            tf_scale  = 12  # 5M = 12 bars per hour
+            bars_per_year = 252 * 24 * tf_scale
+
+            from trade2.backtesting.engine import _simulate_trades_partial_tp, _simulate_trades_multi, _simulate_trades
+
+            max_concurrent = int(risk_cfg.get("max_concurrent_positions", 1))
+            partial_tp_cfg = risk_cfg.get("partial_tp", None)
+            use_partial_tp = partial_tp_cfg is not None and partial_tp_cfg.get("levels", 1) > 1
+
+            init_cash  = trial_cfg["backtest"]["init_cash"]
+            base_alloc = risk_cfg["base_allocation_frac"]
+            comm       = costs_cfg["commission_rt"]
+            max_hold   = risk_cfg["max_hold_bars"] * tf_scale
+            be_trigger = risk_cfg.get("break_even_atr_trigger", 0.0)
+            contract_oz = trial_cfg["backtest"]["contract_size_oz"]
+
+            if use_partial_tp:
+                tp_factors  = partial_tp_cfg["tp_factors"]
+                size_fracs  = partial_tp_cfg["size_fracs"]
+                be_after_tp1 = partial_tp_cfg.get("be_after_tp1", True)
+                n_levels    = len(tp_factors)
+                eff_conc    = max_concurrent * n_levels
+                equity, trades_df = _simulate_trades_partial_tp(
+                    sig, init_cash, base_alloc, slippage, comm, max_hold, be_trigger,
+                    contract_oz, eff_conc, tp_factors, size_fracs, be_after_tp1,
+                )
+            elif max_concurrent > 1:
+                equity, trades_df = _simulate_trades_multi(
+                    sig, init_cash, base_alloc, slippage, comm, max_hold, be_trigger,
+                    contract_oz, max_concurrent,
+                )
+            else:
+                equity, trades_df = _simulate_trades(
+                    sig, init_cash, base_alloc, slippage, comm, max_hold, be_trigger,
+                    contract_oz,
+                )
+
+            if len(trades_df) < 10:
+                return -999.0
+
+            bh = init_cash * (sig["Close"] / sig["Close"].iloc[0])
+            metrics = compute_metrics(equity, trades_df[["pnl", "duration_bars"]], bh,
+                                      bars_per_year=bars_per_year)
+            if optuna_target == "val_return":
+                v = metrics.get("annualized_return", -999.0)
+            else:
+                v = metrics.get("sharpe_ratio", -999.0)
+            return float(v) if np.isfinite(v) else -999.0
+        except Exception as _e:
+            import traceback as _tb
+            if not hasattr(_run_split, "_logged"):
+                _run_split._logged = True
+                print(f"[optuna-smc-sd-mean] _run_split error (first occurrence): {_e}")
+                _tb.print_exc()
+            return -999.0
+
+    def objective(trial: "optuna.Trial") -> float:
+        trial_cfg = copy.deepcopy(config)
+        smc_sd = trial_cfg["strategies"]["smc_sd_mean"]
+        risk   = trial_cfg["risk"]
+
+        # SD Adaptive Mean params (require feature recomputation)
+        smc_sd["sd_length_short"]     = trial.suggest_int("sd_length_short",
+                                            *[int(v) for v in ss.get("sd_length_short", [8, 30])])
+        smc_sd["sd_length_long"]      = trial.suggest_int("sd_length_long",
+                                            *[int(v) for v in ss.get("sd_length_long", [30, 100])])
+        # Ensure short < long
+        if smc_sd["sd_length_short"] >= smc_sd["sd_length_long"]:
+            smc_sd["sd_length_long"] = smc_sd["sd_length_short"] + 10
+        smc_sd["sd_atr_threshold"]    = trial.suggest_float("sd_atr_threshold",
+                                            *ss.get("sd_atr_threshold", [0.5, 3.0]))
+        smc_sd["sd_smooth_length"]    = trial.suggest_int("sd_smooth_length",
+                                            *[int(v) for v in ss.get("sd_smooth_length", [10, 40])])
+        smc_sd["sd_smooth_sd_length"] = trial.suggest_int("sd_smooth_sd_length",
+                                            *[int(v) for v in ss.get("sd_smooth_sd_length", [20, 80])])
+        smc_sd["sd_entry_threshold"]  = trial.suggest_float("sd_entry_threshold",
+                                            *ss.get("sd_entry_threshold", [0.5, 2.5]))
+
+        # Signal params (no feature recomputation)
+        smc_sd["atr_stop_mult"] = trial.suggest_float("atr_stop_mult",
+                                      *ss.get("atr_stop_mult", [0.8, 2.0]))
+        smc_sd["atr_tp_mult"]   = trial.suggest_float("atr_tp_mult",
+                                      *ss.get("atr_tp_mult", [0.8, 2.0]))
+        smc_sd["min_prob"]      = trial.suggest_float("min_prob",
+                                      *ss.get("hmm_min_prob", [0.45, 0.80]))
+        smc_sd["min_prob_short"] = smc_sd["min_prob"]
+        smc_sd["wick_ratio"]    = trial.suggest_float("wick_ratio",
+                                      *ss.get("wick_ratio", [0.1, 0.5]))
+        smc_sd["cooldown_bars"] = trial.suggest_int("cooldown_bars",
+                                      *[int(v) for v in ss.get("cooldown_bars", [3, 15])])
+        # Optional: bb_zone_threshold (if use_bb_zone=True)
+        if smc_sd.get("use_bb_zone", False) and "bb_zone_threshold" in ss:
+            smc_sd["bb_zone_threshold"] = trial.suggest_float("bb_zone_threshold",
+                                              *ss["bb_zone_threshold"])
+        # Optional: rsi_upper filter
+        if "rsi_upper" in ss:
+            smc_sd["rsi_upper"] = trial.suggest_float("rsi_upper", *ss["rsi_upper"])
+
+        val_score = _run_split(val_feat_df, trial_cfg)
+        if train_feat_df is not None and val_score > -990:
+            train_score = _run_split(train_feat_df, trial_cfg)
+            if train_score <= -990:
+                return val_score * 0.5
+            # Soft penalty: allow moderate train losses but reward val improvement.
+            # val_score + 0.2 * min(0, train_score):
+            #   train=-6, val=+1.0 -> 1.0 - 1.2 = -0.2 (just below zero, optimizer keeps searching)
+            #   train=-2, val=+0.5 -> 0.5 - 0.4 = +0.1 (positive! optimizer converges here)
+            #   train=+0.3, val=+0.8 -> 0.8 + 0 = +0.8 (best case)
+            return val_score + min(0.0, train_score) * 0.2
+        return val_score
+
+    study = optuna.create_study(
+        direction="maximize",
+        sampler=optuna.samplers.TPESampler(seed=42),
+    )
+    study.optimize(objective, n_trials=n_trials, show_progress_bar=False)
+
+    print(f"\n[optuna-smc-sd-mean] Best {optuna_target}: {study.best_value:.4f}")
+    print(f"[optuna-smc-sd-mean] Best params:")
+    for k, v in study.best_params.items():
+        print(f"  {k}: {v}")
+
+    return {
+        "best_params": study.best_params,
+        "best_value":  study.best_value,
+        "study":       study,
+    }

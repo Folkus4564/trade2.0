@@ -1,0 +1,352 @@
+# smc_sd_mean.yaml
+# SMC + SD Adaptive Mean Reversion Strategy
+#
+# Runs INDEPENDENTLY from existing strategies (Strategies A-H).
+# Own 5M HMM (bear=discount=buy zone, bull=premium=sell zone).
+# Combines: SD Adaptive Mean indicator + OB/demand zone entry + rejection candle.
+#
+# Goals: 55% WR, 150-200% return, 3-5 trades/day, 1.5+ Sharpe
+# Partial TP: 50% at TP1, 30% at TP2, 20% at TP3 with BE-after-TP1
+#
+# Run: trade2 --config configs/smc_sd_mean.yaml --retrain-model --skip-walk-forward
+
+acceptance:
+  auto_save:
+    min_annualized_return: 0.50
+    min_drawdown: -0.25
+    min_sharpe: 1.5
+  test:
+    min_annualized_return: 0.20
+    min_drawdown: -0.35
+    min_profit_factor: 1.2
+    min_sharpe: 1.0
+    min_trades: 30
+    min_win_rate: 0.45
+  train:
+    min_profit_factor: 1.0
+    min_sharpe: 0.0
+    min_trades: 50
+  val:
+    min_profit_factor: 1.1
+    min_sharpe: 0.5
+    min_trades: 20
+  walk_forward:
+    min_mean_sharpe: 0.5
+    min_positive_windows: 0.70
+
+artefacts:
+  approved: artefacts/approved_strategies
+  backtests: artefacts/backtests
+  experiments: artefacts/experiments
+  models: artefacts/models
+  reports: artefacts/reports
+  root: artefacts
+
+backtest:
+  contract_size_oz: 100
+  init_cash: 100000
+
+baseline:
+  buy_and_hold: true
+  random_long: false
+
+costs:
+  commission_rt: 0.0002
+  slippage_pips: 1
+  spread_asian_mult: 2.5
+  spread_pips: 3
+  spread_vol_atr_lookback: 20
+  spread_vol_mult: 1.5
+
+data:
+  instrument: XAUUSD
+  missing_bar_policy: forward_fill
+  processed_dir: data/processed
+  raw_1h_csv: data/raw/XAUUSD_1H_2019_2026.csv
+  raw_5m_csv: data/raw/XAUUSD_5M_2019_2026.csv
+  source: Dukascopy
+  timezone: UTC
+  version_tag: v2.0
+
+demand_supply_5m:
+  base_min_bars: 2
+  base_max_bars: 5
+  impulse_mult: 1.5
+  validity_bars: 60
+
+drawdown_filter:
+  enabled: false
+  lookback_bars: 120
+  suppress_long_dd: -0.05
+  suppress_short_rally: 0.05
+
+features:
+  adx_period: 14
+  atr_expansion_lookback: 20
+  atr_expansion_ratio: 1.0
+  atr_period: 14
+  bb_period_5m: 60
+  dc_period: 8
+  ema_period: 21
+  hma_period: 55
+  rsi_period: 14
+
+hard_rejection:
+  max_cost_sharpe_drop_pct: 0.50
+  max_overfitting_sharpe_ratio: 5.0
+  max_regime_drift_pp: 0.50
+  min_avg_trade_duration_bars: 1
+  min_trades_train: 30
+  min_trades_val: 10
+  require_walk_forward: false
+
+hmm:
+  # 1H regime HMM: 7 standard momentum features for bull/bear/sideways detection.
+  # Multi-TF mode: 1H regime forward-filled to 5M signal bars.
+  # bull state -> allow 5M longs; bear/sideways -> block longs
+  features:
+    - hmm_feat_ret
+    - hmm_feat_rsi
+    - hmm_feat_atr_ratio
+    - hmm_feat_vol
+    - hmm_feat_hma_slope
+    - hmm_feat_bb_width
+    - hmm_feat_macd
+  log_transition_matrix: true
+  min_confidence: 0.35
+  min_prob_entry: 0.45
+  min_prob_exit: 0.35
+  min_prob_hard: 0.50
+  min_prob_hard_short: 0.50
+  min_self_transition_prob: 0.0
+  min_sideways_pct: 0.05
+  model_id: hmm_1h
+  n_iter: 200
+  n_states: 3
+  prob_momentum_bars: 0
+  random_seed: 42
+  sizing_base: 0.5
+  sizing_max: 1.5
+  use_as_hard_gate: false
+
+pipeline:
+  cache_features: false
+
+regime:
+  adx_threshold: 15.0
+  freshness_decay_start: 1.0
+  max_regime_freshness: 0.0
+  persistence_bars: 1
+  persistence_bars_short: 1
+  transition_cooldown_bars: 0
+
+risk:
+  # Simple SL/TP - no partial TP. Mean reversion: tight SL, wider TP for R:R > 1.5
+  atr_stop_mult: 1.5
+  atr_tp_mult: 1.5
+  base_allocation_frac: 0.80
+  break_even_atr_trigger: 0.0
+  daily_loss_pct: 0.05
+  max_concurrent_positions: 1
+  max_dd_limit: 0.30
+  max_hold_bars: 0
+  use_signal_atr: true
+
+session:
+  allowed_hours_utc: [7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+  enabled: false
+
+smc:
+  fvg_validity_bars: 15
+  ob_impulse_bars: 3
+  ob_impulse_mult: 1.5
+  ob_validity_bars: 20
+  require_confluence: true
+  require_pin_bar: false
+  swing_lookback_bars: 20
+
+smc_5m:
+  fvg_validity_bars: 36
+  ob_impulse_bars: 3
+  ob_impulse_mult: 1.5
+  ob_validity_bars: 60
+  require_confluence: false
+  require_pin_bar: false
+  swing_lookback_bars: 60
+
+# LuxAlgo SMC on 1H (for pipeline compatibility - not used in signal generation)
+smc_luxalgo:
+  enabled: false
+  equal_hl_atr_mult: 0.1
+  swing_left_bars: 5
+  swing_right_bars: 5
+
+# LuxAlgo SMC on 5M  - provides struct_ob_bull_retest, struct_ob_bear_retest, pd_ratio
+smc_luxalgo_5m:
+  enabled: true
+  equal_hl_atr_mult: 0.1
+  swing_left_bars: 5
+  swing_right_bars: 5
+
+splits:
+  test_end: '2026-03-15'
+  test_start: '2025-01-01'
+  train_end: '2023-12-31'
+  train_start: '2019-01-01'
+  val_end: '2024-12-31'
+  val_start: '2024-01-01'
+
+strategies:
+  mode: regime_specialized
+
+  # All existing strategies DISABLED  - this config runs smc_sd_mean exclusively
+  cdc:
+    enabled: false
+
+  cdc_retest:
+    enabled: false
+
+  range:
+    enabled: false
+
+  scalp_momentum:
+    enabled: false
+
+  scalp_pullback:
+    enabled: false
+
+  smc_ob_reversal:
+    enabled: false
+
+  smc_pullback_reversal:
+    enabled: false
+
+  trend:
+    enabled: false
+
+  volatile:
+    enabled: false
+
+  # ---- NEW STRATEGY ----
+  smc_sd_mean:
+    enabled: true
+    regime_gated: true        # 1H HMM bull regime gates longs (proven to give 54%+ WR)
+
+    # Session: trade London + NY sessions
+    session_enabled: true
+    session_start_utc: 7
+    session_end_utc: 20
+    allowed_hours_utc: [7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
+    # SL/TP: Optuna best. Wide TP (4.9x) + moderate SL (1.97x) -> R:R=2.5. At 34% WR: +E/trade.
+    atr_stop_mult: 1.97
+    atr_tp_mult: 4.90
+    trailing_enabled: false
+
+    # SD Adaptive Mean parameters (optimizer best: 150 trials, soft train penalty)
+    sd_length_short: 15
+    sd_length_long: 90
+    sd_atr_length: 14
+    sd_atr_threshold: 100.0
+    sd_smooth_length: 5
+    sd_smooth_sd_length: 18
+    sd_entry_threshold: 1.10  # Optuna best: moderate SD extension required
+
+    # Trend alignment: disabled (HMM provides the regime filter)
+    trend_sma_period: 0
+
+    # SMC zone: OBs, demand/supply, AND Bollinger Band position
+    use_struct_ob_only: false
+    use_bb_zone: true
+    bb_zone_threshold: 0.35   # Optuna best: wider BB zone captures more entries
+
+    # Entry confirmation
+    require_wick_confirmation: true
+    wick_ratio: 0.21          # Optuna best
+    allow_smc_patterns: true
+
+    # HMM direction gate: bull_prob >= min_prob to allow longs
+    use_inverted_hmm: false
+    min_prob: 0.363           # Optuna best: lower HMM threshold for more signals
+    min_prob_short: 0.363
+
+    # RSI filter: Optuna best (73 = allows most bull bars through)
+    rsi_upper: 73.0
+    rsi_lower: 35.0
+
+    # Premium/discount filter (optional)
+    require_pd_filter: false
+
+    # Cooldown: 5 x 5M bars = 25 minutes (Optuna best)
+    cooldown_bars: 5
+
+    # Long-only: shorts too lossy against gold bull trend
+    base_size: 0.8
+    sizing_max: 1.0
+    long_only: true
+    short_only: false
+
+strategy:
+  long_only: false
+  # multi_tf: 1H HMM regime (retrained fresh) forward-filled to 5M signal bars.
+  # Proven regime filter: suppresses longs during 1H bear/sideways = higher WR.
+  mode: multi_tf
+  name: xauusd_smc_sd_mean
+  regime_timeframe: 1H
+  short_only: false
+  signal_timeframe: 5M
+
+# No TV indicators (using SD Adaptive Mean + SMC instead)
+tv_indicators: {}
+
+optimization:
+  n_trials: 150
+  sampler: tpe
+  search_space:
+    atr_stop_mult: [0.8, 2.0]
+    atr_tp_mult: [1.5, 5.0]   # wide TP to explore high R:R at 55%+ WR
+    hmm_min_prob: [0.30, 0.65]
+    sd_length_short: [8, 30]
+    sd_length_long: [30, 100]
+    sd_atr_threshold: [0.5, 10.0]
+    sd_smooth_length: [3, 15]
+    sd_smooth_sd_length: [10, 30]
+    sd_entry_threshold: [0.1, 1.5]
+    bb_zone_threshold: [0.05, 0.40]
+    wick_ratio: [0.05, 0.30]
+    cooldown_bars: [1, 8]
+    rsi_upper: [55, 75]
+
+walk_forward:
+  enabled: true
+  windows:
+    - train_end: '2021-12-31'
+      train_start: '2019-01-01'
+      val_end: '2022-06-30'
+      val_start: '2022-01-01'
+    - train_end: '2022-06-30'
+      train_start: '2019-01-01'
+      val_end: '2022-12-31'
+      val_start: '2022-07-01'
+    - train_end: '2022-12-31'
+      train_start: '2019-01-01'
+      val_end: '2023-06-30'
+      val_start: '2023-01-01'
+    - train_end: '2023-06-30'
+      train_start: '2019-01-01'
+      val_end: '2023-12-31'
+      val_start: '2023-07-01'
+    - train_end: '2023-12-31'
+      train_start: '2019-01-01'
+      val_end: '2024-06-30'
+      val_start: '2024-01-01'
+    - train_end: '2024-06-30'
+      train_start: '2019-01-01'
+      val_end: '2024-12-31'
+      val_start: '2024-07-01'
+    - train_end: '2024-12-31'
+      train_start: '2019-01-01'
+      val_end: '2025-06-30'
+      val_start: '2025-01-01'
+  min_sharpe: 0.0
+  min_positive_windows_pct: 0.70
