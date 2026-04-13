@@ -276,3 +276,21 @@ Combined HMM*XGB sizing (geometric mean) + lag fix + TP2=3.0x + wider scalp_pull
 - scalp_pullback TP=2.0x, v3 thresholds/smoothing, combined HMM*XGB sizing
 - Cost sensitivity 60.5% PASSES
 
+
+## sd_mean_xgb_reversal_v5 | 2026-04-13 | HARD_REJECTED (WR fix attempt, no gain)
+Config: `configs/experiments/sd_mean_xgb_reversal_v5.yaml`
+Based on v4 with three WR fixes: TP1 closer (0.7x), scalp_pullback short thr 0.73, drop hours 10/12/13/22
+- Test: 211.02% return | Sharpe 2.245 | DD -25.25% | WR 44.93% | 11,488 trades (IDENTICAL to v4)
+- Cost sensitivity: 69% drop — FAILS
+- Root cause: WR fixes had zero effect; signal-level WR was already 63.6% (TP2 BE drag is the issue)
+
+## sd_mean_xgb_reversal_v6 | 2026-04-13 | APPROVED (Strategy Q)
+Config: `configs/experiments/sd_mean_xgb_reversal_v6.yaml`
+Single TP at 1.5x ATR eliminates BE drag; bigger sizing; scalp_pullback long-only
+- Test: **254.45%** return | Sharpe 2.359 | DD -30.13% | WR **57.91%** | 4,053 trades
+- Cost sensitivity 2x: Sharpe 1.104 (53.2% drop — PASSES <65% threshold)
+- Train: 5.91% / 0.296 | Val: -11.06% / -0.185
+- Key insight: signal WR was 63.6% all along; partial TP BE exits suppressed reported WR to 44.9%
+- Single TP WR reflects true signal quality; EV per trade +22% vs partial TP
+- Changes vs v4: single TP [1.5], base_allocation_frac 4->5, sizing_max 2->2.5, scalp_pullback long_only
+- Approved folder: artefacts/approved_strategies/xauusd_5m_sd_xgb_reversal_v6_2026_04_13/
