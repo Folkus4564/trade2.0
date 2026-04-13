@@ -321,7 +321,54 @@ def smc_sd_mean_strategy(
     base_size  = float(cfg.get("base_size",  0.5))
     sizing_max = float(cfg.get("sizing_max", 1.0))
 
-    if xgb_enabled and has_xgb_long:
+    # Combined HMM*XGB sizing flag: when true, position size = f(xgb_prob * hmm_prob)
+    # This combines:  HMM (regime/confidence layer) × XGB (trade-outcome prediction layer)
+    use_hmm_xgb_combined = bool(xgb_cfg.get("use_hmm_xgb_combined", False))
+
+    if xgb_enabled and has_xgb_long and use_hmm_xgb_combined and has_hmm:
+        # ---------------------------------------------------------------
+        # COMBINED HMM × XGB SIZING
+        # XGB = probability trade wins (TP1 before SL)
+        # HMM = regime confidence (bull_prob for longs, bear_prob for shorts)
+        # Combined scale = geometric_mean(xgb_scale, hmm_scale)
+        # Result: both must be strong for max size; either weak → smaller position
+        # ---------------------------------------------------------------
+        xgb_prob_long  = out["reversal_prob_long"].fillna(xgb_thr_long).clip(0.0, 1.0)
+        xgb_prob_short = (out["reversal_prob_short"].fillna(xgb_thr_short).clip(0.0, 1.0)
+                          if has_xgb_short else pd.Series(xgb_thr_short, index=idx))
+
+        if use_inverted_hmm:
+            hmm_long_conf  = out["bear_prob"].fillna(0.0).clip(0.0, 1.0)
+            hmm_short_conf = out["bull_prob"].fillna(0.0).clip(0.0, 1.0)
+        else:
+            hmm_long_conf  = out["bull_prob"].fillna(0.0).clip(0.0, 1.0)
+            hmm_short_conf = out["bear_prob"].fillna(0.0).clip(0.0, 1.0)
+
+        hmm_floor_long  = float(cfg.get("min_prob",       0.40))
+        hmm_floor_short = float(cfg.get("min_prob_short", 0.40))
+
+        # Scale each component independently to [0, 1]
+        xgb_range_long  = max(1.0 - xgb_thr_long,  1e-9)
+        xgb_range_short = max(1.0 - xgb_thr_short, 1e-9)
+        hmm_range_long  = max(1.0 - hmm_floor_long,  1e-9)
+        hmm_range_short = max(1.0 - hmm_floor_short, 1e-9)
+
+        xgb_scale_long  = (xgb_prob_long  - xgb_thr_long).clip(0.0,  xgb_range_long)  / xgb_range_long
+        xgb_scale_short = (xgb_prob_short - xgb_thr_short).clip(0.0, xgb_range_short) / xgb_range_short
+        hmm_scale_long  = (hmm_long_conf  - hmm_floor_long).clip(0.0,  hmm_range_long)  / hmm_range_long
+        hmm_scale_short = (hmm_short_conf - hmm_floor_short).clip(0.0, hmm_range_short) / hmm_range_short
+
+        # Geometric mean: sqrt(xgb * hmm) — punishes if either is weak
+        combined_long  = np.sqrt(np.maximum(xgb_scale_long  * hmm_scale_long,  0.0))
+        combined_short = np.sqrt(np.maximum(xgb_scale_short * hmm_scale_short, 0.0))
+
+        size_long  = base_size + combined_long  * (sizing_max - base_size)
+        size_short = base_size + combined_short * (sizing_max - base_size)
+
+        # Early-return to skip the standard sizing block below
+        prob_floor_long = prob_floor_short = 0.0  # unused but required by later code
+
+    elif xgb_enabled and has_xgb_long:
         # Use XGB reversal probability for sizing (most predictive)
         # Scale from threshold floor → 1.0 to get full [base_size, sizing_max] range
         prob_floor_long  = xgb_thr_long
@@ -346,12 +393,14 @@ def smc_sd_mean_strategy(
         short_conf = pd_ratio_col.clip(0.0, 1.0)
         prob_floor_long = prob_floor_short = 0.0
 
-    prob_range_long  = max(1.0 - prob_floor_long,  1e-9)
-    prob_range_short = max(1.0 - prob_floor_short, 1e-9)
-    long_excess  = (long_conf  - prob_floor_long).clip(0.0,  prob_range_long)  / prob_range_long
-    short_excess = (short_conf - prob_floor_short).clip(0.0, prob_range_short) / prob_range_short
-    size_long    = base_size + long_excess  * (sizing_max - base_size)
-    size_short   = base_size + short_excess * (sizing_max - base_size)
+    if not (xgb_enabled and has_xgb_long and use_hmm_xgb_combined and has_hmm):
+        # Standard sizing (not combined mode) — use long_conf / short_conf from above
+        prob_range_long  = max(1.0 - prob_floor_long,  1e-9)
+        prob_range_short = max(1.0 - prob_floor_short, 1e-9)
+        long_excess  = (long_conf  - prob_floor_long).clip(0.0,  prob_range_long)  / prob_range_long
+        short_excess = (short_conf - prob_floor_short).clip(0.0, prob_range_short) / prob_range_short
+        size_long    = base_size + long_excess  * (sizing_max - base_size)
+        size_short   = base_size + short_excess * (sizing_max - base_size)
 
     # ================================================================
     # 11. EXITS: Pure SL/TP (delegated to engine)

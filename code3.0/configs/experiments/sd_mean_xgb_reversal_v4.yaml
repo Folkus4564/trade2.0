@@ -1,0 +1,415 @@
+# sd_mean_xgb_reversal_v4.yaml
+# Strategy P candidate: Combined HMM*XGB sizing + lag fix
+#
+# Changes from v3:
+#   1. Combined HMM x XGB sizing (geometric mean of both confidence scores)
+#      HMM = regime/confidence layer, XGB = trade-outcome prediction layer
+#   2. XGB threshold lowered 0.58 -> 0.52 (rely on combined sizing to filter)
+#   3. Sizing range widened: base=0.3, max=2.0 (more differentiation)
+#   4. Lag fix: regime.persistence_bars 3->1, sd_smooth_length 20->10
+#   5. TP2 raised from 2.5x -> 3.0x ATR (larger winners)
+#   6. scalp_pullback thresholds kept from v3 (long=0.76, short=0.68)
+
+strategy:
+  name: xauusd_5m_sd_xgb_reversal_v4
+  mode: multi_tf
+  signal_timeframe: 5M
+  regime_timeframe: 1H
+  long_only: false
+  short_only: false
+
+data:
+  instrument: XAUUSD
+  source: Dukascopy
+  raw_1h_csv: data/raw/XAUUSD_1H_2019_2026.csv
+  raw_4h_csv: data/raw/XAUUSD_4H_2019_2026.csv
+  raw_5m_csv: data/raw/XAUUSD_5M_2019_2026.csv
+  raw_1m_csv: data/raw/XAUUSD_1M_2019_2026.csv
+  timezone: UTC
+  missing_bar_policy: forward_fill
+  processed_dir: data/processed
+  version_tag: v2.0
+  expected_sha256: ''
+  expected_bar_count_1h: 41688
+
+splits:
+  train_start: '2019-01-01'
+  train_end:   '2022-12-31'
+  val_start:   '2023-01-01'
+  val_end:     '2023-12-31'
+  test_start:  '2024-01-01'
+  test_end:    '2026-04-12'
+
+walk_forward:
+  n_windows: 7
+  windows:
+    - {train_start: '2019-01-01', train_end: '2020-12-31', val_start: '2021-01-01', val_end: '2021-06-30'}
+    - {train_start: '2019-01-01', train_end: '2021-12-31', val_start: '2022-01-01', val_end: '2022-06-30'}
+    - {train_start: '2019-01-01', train_end: '2022-06-30', val_start: '2022-07-01', val_end: '2022-12-31'}
+    - {train_start: '2019-01-01', train_end: '2022-12-31', val_start: '2023-01-01', val_end: '2023-06-30'}
+    - {train_start: '2019-01-01', train_end: '2023-06-30', val_start: '2023-07-01', val_end: '2023-12-31'}
+    - {train_start: '2019-01-01', train_end: '2023-12-31', val_start: '2024-01-01', val_end: '2024-06-30'}
+    - {train_start: '2019-01-01', train_end: '2024-06-30', val_start: '2024-07-01', val_end: '2024-12-31'}
+  min_mean_sharpe: 0.0
+  min_positive_pct: 0.5
+
+hmm:
+  n_states: 3
+  n_iter: 200
+  random_seed: 42
+  features:
+    - hmm_feat_ret
+    - hmm_feat_rsi
+    - hmm_feat_atr
+    - hmm_feat_vol
+    - hmm_feat_hma_slope
+    - hmm_feat_bb_width
+    - hmm_feat_macd
+    - ehlers_filter_filt
+    - ehlers_filter_bull
+    - ehlers_filter_bear
+    - supertrend_bull
+    - supertrend_bear
+    - supertrend_value
+    - supertrend_upper
+    - supertrend_lower
+    - ichimoku_tenkan
+    - ichimoku_kijun
+    - ichimoku_senkou_a
+    - ichimoku_senkou_b
+    - ichimoku_chikou
+    - ichimoku_cloud_top
+    - ichimoku_cloud_bottom
+    - ichimoku_price_above_cloud
+    - ichimoku_price_below_cloud
+    - ichimoku_price_in_cloud
+    - ichimoku_tk_cross_up
+    - ichimoku_tk_cross_down
+    - ichimoku_kumo_twist_up
+    - ichimoku_kumo_twist_down
+    - ichimoku_cloud_bullish
+    - ichimoku_cloud_bearish
+    - elder_ray_bull
+    - elder_ray_bear
+    - elder_ray_bull_power
+    - elder_ray_bear_power
+    - elder_ray_ema
+  min_sideways_pct: 0.1
+  use_as_hard_gate: false
+  min_self_transition_prob: 0.8
+  log_transition_matrix: true
+  min_prob_hard: 0.55
+  min_prob_hard_short: 0.55
+  min_prob_entry: 0.55
+  min_prob_exit: 0.5
+  sizing_base: 0.5
+  sizing_max: 1.5
+  min_confidence: 0.45
+  prob_momentum_bars: 0
+
+features:
+  hma_period: 55
+  ema_period: 21
+  atr_period: 14
+  rsi_period: 14
+  adx_period: 14
+  dc_period: 8
+  bb_period_5m: 60
+  atr_expansion_lookback: 20
+  atr_expansion_ratio: 1.0
+
+smc:
+  ob_validity_bars: 20
+  ob_impulse_bars: 3
+  ob_impulse_mult: 1.5
+  fvg_validity_bars: 15
+  swing_lookback_bars: 20
+  require_confluence: true
+  require_pin_bar: false
+
+smc_5m:
+  ob_validity_bars: 60
+  fvg_validity_bars: 36
+  swing_lookback_bars: 60
+  ob_impulse_bars: 3
+  ob_impulse_mult: 1.5
+  require_confluence: true
+  require_pin_bar: false
+  enabled: true
+
+regime:
+  persistence_bars: 1           # faster regime switching (lag fix)
+  persistence_bars_short: 2
+  adx_threshold: 15.0
+  transition_cooldown_bars: 1
+  max_regime_freshness: 0.0
+  freshness_decay_start: 1.0
+
+backtest:
+  init_cash: 100000
+  contract_size_oz: 100
+
+risk:
+  atr_stop_mult: 1.5
+  atr_tp_mult: 1.5
+  max_hold_bars: 0
+  break_even_atr_trigger: 0.0
+  daily_loss_pct: 0.04          # 4% daily loss limit (balance between protection and uptime)
+  max_dd_limit: 0.3
+  base_allocation_frac: 4.0
+  use_signal_atr: false
+  max_concurrent_positions: 5
+  partial_tp:
+    levels: 2
+    tp_factors: [1.0, 3.0]      # raised TP2 to 3.0x for larger winners
+    size_fracs: [0.5, 0.5]
+    be_after_tp1: true
+    fixed_dollar_tps: [10.0, 30.0]
+
+drawdown_filter:
+  enabled: true
+  lookback_bars: 60             # tightened from 120 -> 60 (5 hours) for faster DD suppression
+  suppress_long_dd: -0.04
+  suppress_short_rally: 0.04
+
+costs:
+  spread_pips: 3
+  slippage_pips: 1
+  commission_rt: 0.0002
+  spread_asian_mult: 2.5
+  spread_vol_mult: 1.5
+  spread_vol_atr_lookback: 20
+
+session:
+  enabled: false
+  allowed_hours_utc: [7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
+strategies:
+  mode: regime_specialized
+
+  trend:
+    enabled: false
+    min_prob: 0.77
+    require_dc_breakout: true
+    require_smc_confirm: false
+    require_bos_confirm: false
+    require_macro_trend: true
+    adx_threshold: 15.0
+    atr_expansion_filter: true
+    persistence_bars: 3
+    atr_stop_mult: 2.75
+    atr_tp_mult: 2.0
+    trailing_enabled: false
+    trailing_atr_mult: 1.5
+    max_hold_bars: 0
+    sizing_base: 0.7
+    sizing_max: 1.5
+    session_enabled: true
+    allowed_hours_utc: [7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
+  scalp_momentum:
+    enabled: false
+
+  smc_ob_reversal:
+    enabled: true
+    session_enabled: false
+    use_impulse_ob: true
+    use_struct_ob_only: false
+    hmm_invert_for_reversal: false
+    min_prob_long: 0.65
+    min_prob_short: 0.55     # FIXED: raised from 0.3 -> 0.55 (was causing 0%-WR short days)
+    require_pd_filter: true
+    pd_threshold_long: 0.5
+    pd_threshold_short: 0.45
+    rsi_long_max: 65.0
+    rsi_short_min: 35.0
+    rsi_long_min: 0.0
+    rsi_short_max: 100.0
+    atr_ratio_max: 0.0
+    require_confirmation: false
+    require_sweep: false
+    min_cooldown_bars: 3
+    sizing_base: 0.5
+    sizing_max: 1.0
+    atr_stop_mult: 1.5
+    atr_tp_mult: 1.5
+    max_hold_bars: 0
+    long_only: false
+    short_only: false
+    allowed_hours_utc: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+
+  scalp_pullback:
+    enabled: true
+    session_enabled: false
+    regime_gated: true
+    require_macro_trend: true
+    atr_expansion_filter: true
+    dc_period: 8
+    pullback_lookback_bars: 20
+    pullback_depth_min_atr: 0.0
+    pullback_depth_max_atr: 1.5
+    require_confirmation_bar: true
+    rsi_max_long: 70.0
+    rsi_min_short: 30.0
+    adx_threshold: 0.0
+    atr_stop_mult: 1.5
+    atr_tp_mult: 1.5
+    exit_mode: atr_only
+    long_only: false
+    short_only: false
+    min_prob: 0.65
+    min_prob_long: 0.73
+    min_prob_short: 0.65
+    sizing_base: 0.5
+    sizing_max: 1.5
+    max_hold_bars: 0
+    allowed_hours_utc: [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
+  smc_sd_mean:
+    enabled: true
+    session_enabled: false
+    min_entry_zone: 2
+    sd_entry_threshold: 0.5
+    sd_length_short: 14
+    sd_length_long: 50
+    sd_atr_length: 14
+    sd_atr_threshold: 1.0
+    sd_smooth_length: 10         # faster SD zone response (lag fix)
+    sd_smooth_sd_length: 30
+    require_smc_zone: false
+    use_struct_ob_only: false
+    use_bb_zone: false
+    use_inverted_hmm: false
+    regime_gated: true
+    min_prob: 0.4
+    min_prob_short: 0.40
+    require_wick_confirmation: false
+    allow_smc_patterns: false
+    rsi_upper: 80.0
+    rsi_lower: 20.0
+    trend_sma_period: 0
+    require_pd_filter: false
+    cooldown_bars: 2
+    base_size: 0.3               # wider floor -> more sizing differentiation
+    sizing_max: 2.0              # higher ceiling -> high-confidence gets 2x
+    atr_stop_mult: 1.5
+    atr_tp_mult: 1.5
+    max_hold_bars: 0
+    long_only: false
+    short_only: false
+    allowed_hours_utc: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+    # XGBoost + HMM combined sizing
+    reversal_xgb:
+      enabled: true
+      forward_bars: 20
+      win_multiplier: 0.8
+      min_entry_zone: 2
+      threshold_long: 0.52
+      threshold_short: 0.52
+      use_hmm_xgb_combined: true # geometric_mean(xgb_scale, hmm_scale) for sizing
+      n_estimators: 300
+      max_depth: 4
+      learning_rate: 0.05
+      subsample: 0.8
+      colsample_bytree: 0.8
+      label_tp_mult: 1.0
+      label_sl_mult: 1.5
+
+  range:
+    enabled: false
+  volatile:
+    enabled: false
+  cdc:
+    enabled: false
+  cdc_retest:
+    enabled: false
+  smc_pullback_reversal:
+    enabled: false
+
+acceptance:
+  test:
+    min_annualized_return: 0.2
+    min_sharpe: 0.8
+    min_drawdown: -0.4
+    min_profit_factor: 1.1
+    min_trades: 50
+    min_win_rate: 0.45
+  train:
+    min_sharpe: -0.5
+    min_profit_factor: 0.8
+    min_trades: 50
+  val:
+    min_sharpe: -0.5
+    min_profit_factor: 0.8
+    min_trades: 20
+  walk_forward:
+    min_mean_sharpe: 0.0
+    min_positive_windows: 0.5
+  auto_save:
+    min_annualized_return: 0.3
+    min_sharpe: 1.2
+    min_drawdown: -0.3
+
+hard_rejection:
+  min_avg_trade_duration_bars: 1
+  max_regime_drift_pp: 0.4
+  max_cost_sharpe_drop_pct: 0.65
+  require_walk_forward: false
+  min_trades_train: 50
+  min_trades_val: 20
+  max_overfitting_sharpe_ratio: 60.0
+
+pipeline:
+  cache_features: false
+
+artefacts:
+  root: artefacts
+  models: artefacts/models
+  backtests: artefacts/backtests
+  reports: artefacts/reports
+  experiments: artefacts/experiments
+  approved: artefacts/approved_strategies
+
+smc_luxalgo:
+  enabled: true
+  swing_left_bars: 5
+  swing_right_bars: 5
+  equal_hl_atr_mult: 0.1
+  internal_structure_size: 5
+  swing_structure_size: 50
+  confluence_filter: false
+
+smc_luxalgo_5m:
+  enabled: true
+  swing_left_bars: 10
+  swing_right_bars: 10
+  equal_hl_atr_mult: 0.1
+  internal_structure_size: 5
+  swing_structure_size: 50
+  confluence_filter: false
+
+tv_indicators:
+  luxalgo_fvg_ob:
+    enabled: true
+    ob_lookback: 20
+    integration_mode: hmm
+    filter_column_bull: in_bull_fvg
+    filter_column_bear: in_bear_fvg
+  ehlers_filter:
+    enabled: true
+    filter_column_bear: ehlers_filter_slope
+    filter_column_bull: ehlers_filter_slope
+    integration_mode: hmm
+    period: 20
+  elder_ray:
+    enabled: true
+    filter_column_bear: elder_ray_bear_power
+    filter_column_bull: elder_ray_bull_power
+    integration_mode: hmm
+    period: 13
+  ichimoku:
+    enabled: true
+    integration_mode: hmm
+  supertrend:
+    enabled: true
+    integration_mode: hmm

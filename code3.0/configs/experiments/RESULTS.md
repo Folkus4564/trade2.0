@@ -260,3 +260,19 @@ Based on v1 (scalp_pullback enabled) + trade-outcome XGB labels + raised TP2
 - Key changes vs v2: scalp_pullback re-enabled, TP2 2.5x, XGB thr 0.58, sp_short thr 0.68
 - Approved folder: artefacts/approved_strategies/xauusd_5m_sd_xgb_reversal_v3_2026_04_13/
 
+
+## sd_mean_xgb_reversal_v4 | 2026-04-13 | APPROVED (Strategy P, user override)
+Config: `configs/experiments/sd_mean_xgb_reversal_v4.yaml`
+Combined HMM*XGB sizing (geometric mean) + lag fix + TP2=3.0x + wider scalp_pullback
+- Test: **211.02%** return | Sharpe 2.245 | DD -25.25% | WR 44.93% | 11,488 trades
+- Cost sensitivity 2x: Sharpe 0.695 (69% drop — FAILS 65% threshold, user override)
+- Train: 60.12% / 1.019 | Val: 6.55% / 0.288
+- Combined HMM*XGB sizing: base=0.3, max=2.0, geometric mean(xgb_scale, hmm_scale)
+- XGB retrained with sd_smooth_length=10 features; threshold=0.52
+- Approved folder: artefacts/approved_strategies/xauusd_5m_sd_xgb_reversal_v4_2026_04_13/
+
+## sd_mean_xgb_reversal_v4_tp20 | 2026-04-13 | APPROVED (intermediate run, 135%)
+- Test: 135.27% return | Sharpe 2.396 | DD -16.36% | 10,074 trades
+- scalp_pullback TP=2.0x, v3 thresholds/smoothing, combined HMM*XGB sizing
+- Cost sensitivity 60.5% PASSES
+
