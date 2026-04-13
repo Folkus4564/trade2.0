@@ -1,0 +1,183 @@
+{
+  "strategy_name": "xauusd_hf_macro_sl15_55pct",
+  "date": "2026-03-30",
+  "verdict": "APPROVED",
+  "engine": "multi_concurrent",
+  "max_concurrent_positions": 5,
+  "model": "artefacts/models/golden/hmm_1h_3states_2026_03_17_ret89pct_sh4.10.pkl",
+  "config": "configs/hf_macro_sl15_55pct.yaml",
+  "reproduce": "trade2 --config configs/hf_macro_sl15_55pct.yaml --model-path artefacts/models/golden/hmm_1h_3states_2026_03_17_ret89pct_sh4.10.pkl",
+  "key_innovations": [
+    "require_macro_trend=True on scalp_momentum: longs fire only when HMA rising+price>HMA; shorts only when HMA falling+price<HMA",
+    "scalp SL widened from 1.0x to 1.5x ATR: absorbs 5M noise spikes, reduces SL exits",
+    "scalp TP=1.5x ATR (1:1 R:R): high EV only when WR>55%, enforces entry quality",
+    "base_allocation_frac=0.75 with concurrent=5: 15% per position, 75% total at capacity"
+  ],
+  "architecture": {
+    "mode": "regime_specialized",
+    "sub_strategies": [
+      "trend",
+      "scalp_momentum"
+    ],
+    "hmm_features": 36,
+    "hmm_states": 3,
+    "atr_expansion_filter": true,
+    "atr_expansion_ratio": 1.0,
+    "atr_expansion_lookback": 20,
+    "scalp_sl_atr_mult": 1.5,
+    "scalp_tp_atr_mult": 1.5,
+    "scalp_require_macro_trend": true,
+    "trend_sl_atr_mult": 2.0,
+    "trend_tp_atr_mult": 3.0,
+    "trend_min_prob": 0.77
+  },
+  "train": {
+    "annualized_return": 0.3198,
+    "total_return": 2.5859,
+    "annualized_volatility": 0.118,
+    "sharpe_ratio": 2.0726,
+    "sortino_ratio": 1.7145,
+    "max_drawdown": -0.0744,
+    "calmar_ratio": 4.2978,
+    "n_years": 4.6,
+    "total_trades": 4340,
+    "win_rate": 0.5025,
+    "profit_factor": 1.4701,
+    "avg_win_loss_ratio": 1.4553,
+    "avg_trade_pnl": 59.583,
+    "avg_trade_duration_bars": 76.2,
+    "benchmark_return": 0.109,
+    "alpha_vs_benchmark": 0.2109,
+    "information_ratio": 1.3162,
+    "exit_reasons": {
+      "tp": 1687,
+      "sl": 1334,
+      "signal": 1314,
+      "end_of_data": 5
+    },
+    "random_baseline": {
+      "random_median_sharpe": 0.4861,
+      "random_median_return": 0.0476,
+      "random_p95_sharpe": 1.0712,
+      "n_simulations": 200
+    },
+    "beats_random_baseline": true
+  },
+  "val": {
+    "annualized_return": 0.4159,
+    "total_return": 0.3199,
+    "annualized_volatility": 0.1067,
+    "sharpe_ratio": 2.9378,
+    "sortino_ratio": 2.5612,
+    "max_drawdown": -0.0412,
+    "calmar_ratio": 10.0883,
+    "n_years": 0.8,
+    "total_trades": 723,
+    "win_rate": 0.5422,
+    "profit_factor": 1.6975,
+    "avg_win_loss_ratio": 1.4334,
+    "avg_trade_pnl": 44.25,
+    "avg_trade_duration_bars": 74.37,
+    "benchmark_return": 0.35,
+    "alpha_vs_benchmark": 0.0658,
+    "information_ratio": 0.4186,
+    "exit_reasons": {
+      "tp": 281,
+      "signal": 238,
+      "sl": 204
+    },
+    "random_baseline": {
+      "random_median_sharpe": 1.268,
+      "random_median_return": 0.1358,
+      "random_p95_sharpe": 2.6123,
+      "n_simulations": 200
+    },
+    "beats_random_baseline": true
+  },
+  "test": {
+    "annualized_return": 1.153,
+    "annualized_volatility": 0.1779,
+    "sharpe_ratio": 4.1745,
+    "sortino_ratio": 4.722,
+    "max_drawdown": -0.0965,
+    "calmar_ratio": 11.9527,
+    "n_years": 1.0,
+    "total_trades": 1047,
+    "trades_per_day": 3.35,
+    "win_rate": 0.5568,
+    "profit_factor": 2.0299,
+    "avg_win_loss_ratio": 1.6156,
+    "benchmark_return": 0.9098,
+    "alpha_vs_benchmark": 0.2432,
+    "cost_sensitivity_2x": {
+      "sharpe_ratio": null,
+      "annualized_return": null,
+      "max_drawdown": null
+    }
+  },
+  "walk_forward": {
+    "n_windows": 7,
+    "n_positive": 6,
+    "positive_pct": 0.8571,
+    "mean_sharpe": 0.871,
+    "std_sharpe": 0.76,
+    "windows": [
+      {
+        "window": 1,
+        "val_period": "2021-01-01 to 2021-06-30",
+        "sharpe": 0.428,
+        "return": 0.0555,
+        "win_rate": 0.7027,
+        "total_trades": 37
+      },
+      {
+        "window": 2,
+        "val_period": "2022-01-01 to 2022-06-30",
+        "sharpe": 1.24,
+        "return": 0.1779,
+        "win_rate": 0.5195,
+        "total_trades": 154
+      },
+      {
+        "window": 3,
+        "val_period": "2022-07-01 to 2022-12-31",
+        "sharpe": 1.681,
+        "return": 0.1973,
+        "win_rate": 0.5088,
+        "total_trades": 226
+      },
+      {
+        "window": 4,
+        "val_period": "2023-01-01 to 2023-06-30",
+        "sharpe": 0.736,
+        "return": 0.0871,
+        "win_rate": 0.5189,
+        "total_trades": 185
+      },
+      {
+        "window": 5,
+        "val_period": "2023-07-01 to 2023-12-31",
+        "sharpe": 1.591,
+        "return": 0.1527,
+        "win_rate": 0.5118,
+        "total_trades": 254
+      },
+      {
+        "window": 6,
+        "val_period": "2024-01-01 to 2024-06-30",
+        "sharpe": -0.698,
+        "return": -0.0133,
+        "win_rate": 0.4194,
+        "total_trades": 124
+      },
+      {
+        "window": 7,
+        "val_period": "2024-07-01 to 2024-12-31",
+        "sharpe": 1.12,
+        "return": 0.174,
+        "win_rate": 0.4836,
+        "total_trades": 304
+      }
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "strategy_name": "xauusd_5m_sd_xgb_reversal_v4",
+  "approved_date": "2026-04-13",
+  "approved_by": "user_override",
+  "note": "User explicitly approved despite cost_sensitivity flag (69% drop, threshold 65%)",
+  "test": {
+    "annualized_return": 2.1102,
+    "sharpe_ratio": 2.245,
+    "sortino_ratio": 4.405,
+    "max_drawdown": -0.2525,
+    "calmar_ratio": 8.356,
+    "total_trades": 11488,
+    "win_rate": 0.4493,
+    "profit_factor": 1.225,
+    "avg_win_loss_ratio": 1.501,
+    "cost_sensitivity_2x": {
+      "sharpe_ratio": 0.695,
+      "sharpe_drop_pct": 0.69,
+      "passes": false,
+      "user_override": true
+    }
+  },
+  "train": {
+    "annualized_return": 0.6012,
+    "sharpe_ratio": 1.019,
+    "max_drawdown": -0.4673,
+    "total_trades": 13921,
+    "win_rate": 0.3361
+  },
+  "val": {
+    "annualized_return": 0.0655,
+    "sharpe_ratio": 0.288,
+    "max_drawdown": -0.4041,
+    "total_trades": 3430,
+    "win_rate": 0.3064
+  },
+  "models": {
+    "hmm": "artefacts/models/golden/hmm_1h_3states_2026_03_17_ret89pct_sh4.10.pkl",
+    "reversal_xgb": "reversal_xgb_sd_mean.pkl"
+  },
+  "key_params": {
+    "scalp_pullback_tp": 1.5,
+    "sd_mean_tp2": 3.0,
+    "xgb_threshold": 0.52,
+    "hmm_xgb_combined_sizing": true,
+    "base_size": 0.3,
+    "sizing_max": 2.0,
+    "persistence_bars": 1,
+    "sd_smooth_length": 10
+  }
+}

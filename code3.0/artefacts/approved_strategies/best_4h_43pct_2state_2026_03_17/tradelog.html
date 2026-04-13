@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Trade Log -- Strategy X   43% | 4H 2-State | Legacy</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0d0d0d; color: #e0e0e0; font-family: 'Segoe UI', monospace; font-size: 13px; }
+#header { padding: 14px 20px; background: #141414; border-bottom: 1px solid #222; }
+#header h1 { font-size: 15px; font-weight: 600; color: #64b5f6; margin-bottom: 10px; }
+.stat-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.stat-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 6px; padding: 6px 14px; min-width: 100px; }
+.stat-card .label { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-card .value { font-size: 14px; font-weight: 700; color: #e0e0e0; margin-top: 1px; }
+.stat-card .value.pos { color: #4caf50; }
+.stat-card .value.neg { color: #f44336; }
+.stat-card .value.blue { color: #64b5f6; }
+.stat-card .value.wr { color: #81c784; }
+#body { display: flex; height: calc(100vh - 130px); }
+#left { width: 320px; border-right: 1px solid #1e1e1e; display: flex; flex-direction: column; overflow: hidden; }
+#right { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.tabs { display: flex; background: #111; border-bottom: 1px solid #1e1e1e; }
+.tab { padding: 8px 18px; font-size: 12px; color: #666; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.tab:hover { color: #aaa; }
+.tab.active { color: #64b5f6; border-bottom-color: #64b5f6; }
+#monthly-panel { flex: 1; overflow-y: auto; }
+#monthly-panel::-webkit-scrollbar { width: 5px; }
+#monthly-panel::-webkit-scrollbar-thumb { background: #2a2a2a; }
+.monthly-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+.monthly-table th { background: #181818; color: #666; padding: 6px 10px; text-align: right; border-bottom: 1px solid #222; font-weight: 500; position: sticky; top: 0; z-index: 1; cursor: pointer; }
+.monthly-table th:first-child { text-align: left; }
+.monthly-table th:hover { color: #aaa; }
+.monthly-table td { padding: 5px 10px; text-align: right; border-bottom: 1px solid #181818; }
+.monthly-table td:first-child { text-align: left; color: #aaa; }
+.monthly-table tr:hover td { background: #151515; }
+.monthly-table tr.selected td { background: #0e1a2a; }
+.pnl-pos { color: #4caf50; font-weight: 600; }
+.pnl-neg { color: #f44336; font-weight: 600; }
+#controls { padding: 8px 14px; background: #111; border-bottom: 1px solid #1e1e1e; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+#search-box { background: #1a1a1a; border: 1px solid #2a2a2a; color: #ccc; padding: 5px 10px; border-radius: 5px; font-size: 12px; width: 130px; }
+#search-box::placeholder { color: #444; }
+.filter-btn { background: #1a1a1a; border: 1px solid #2a2a2a; color: #777; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; transition: all 0.15s; }
+.filter-btn:hover { color: #ccc; border-color: #444; }
+.filter-btn.active { background: #1a2a3a; border-color: #64b5f6; color: #64b5f6; }
+.filter-btn.win.active  { background: #0a1f0a; border-color: #4caf50; color: #4caf50; }
+.filter-btn.loss.active { background: #1f0a0a; border-color: #f44336; color: #f44336; }
+#row-count { font-size: 11px; color: #555; margin-left: auto; }
+#table-wrap { flex: 1; overflow: auto; }
+#table-wrap::-webkit-scrollbar { width: 5px; height: 5px; }
+#table-wrap::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+.trade-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+.trade-table th { background: #161616; color: #666; padding: 6px 10px; text-align: right; border-bottom: 1px solid #222; font-weight: 500; position: sticky; top: 0; z-index: 1; cursor: pointer; white-space: nowrap; user-select: none; }
+.trade-table th:first-child, .trade-table th:nth-child(2), .trade-table th:nth-child(3) { text-align: left; }
+.trade-table th:hover { color: #aaa; }
+.trade-table th.sorted-asc::after  { content: ' up'; color: #64b5f6; }
+.trade-table th.sorted-desc::after { content: ' dn'; color: #64b5f6; }
+.trade-table td { padding: 4px 10px; text-align: right; border-bottom: 1px solid #161616; white-space: nowrap; }
+.trade-table td:first-child, .trade-table td:nth-child(2), .trade-table td:nth-child(3) { text-align: left; color: #aaa; }
+.trade-table tr:hover td { background: #141414; }
+.badge { display: inline-block; padding: 1px 7px; border-radius: 3px; font-size: 10px; font-weight: 600; }
+.badge-win   { background: #1a2e1a; color: #4caf50; }
+.badge-loss  { background: #2e1a1a; color: #f44336; }
+.badge-long  { background: #1a2a1a; color: #81c784; }
+.badge-short { background: #2a1a1a; color: #ef9a9a; }
+.badge-tp    { background: #0f1e0f; color: #66bb6a; }
+.badge-sl    { background: #1e0f0f; color: #ef5350; }
+.badge-sig   { background: #1a1a1a; color: #888; }
+.pnl-cell { font-weight: 600; }
+.cum-cell { font-size: 10.5px; }
+</style>
+</head>
+<body>
+<div id="header">
+  <h1>Trade Log -- Strategy X   43% | 4H 2-State | Legacy</h1>
+  <div class="stat-grid" id="stat-grid"></div>
+</div>
+<div id="body">
+  <div id="left">
+    <div class="tabs"><div class="tab active">Monthly Breakdown</div></div>
+    <div id="monthly-panel">
+      <table class="monthly-table" id="monthly-table">
+        <thead><tr>
+          <th onclick="sortMonthly('month')">Month</th>
+          <th onclick="sortMonthly('trades')">Trades</th>
+          <th onclick="sortMonthly('wins')">Wins</th>
+          <th onclick="sortMonthly('wr')">WR%</th>
+          <th onclick="sortMonthly('pnl')">PnL ($)</th>
+          <th onclick="sortMonthly('cum_pnl')">Cum ($)</th>
+        </tr></thead>
+        <tbody id="monthly-body"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="right">
+    <div id="controls">
+      <input id="search-box" type="text" placeholder="Search (date, dir, reason...)" oninput="applyFilters()">
+      <button class="filter-btn active" id="f-all"   onclick="setFilter('all')">All</button>
+      <button class="filter-btn win"    id="f-win"   onclick="setFilter('win')">Wins</button>
+      <button class="filter-btn loss"   id="f-loss"  onclick="setFilter('loss')">Losses</button>
+      <button class="filter-btn"        id="f-long"  onclick="setFilter('long')">Long</button>
+      <button class="filter-btn"        id="f-short" onclick="setFilter('short')">Short</button>
+      <button class="filter-btn"        id="f-tp"    onclick="setFilter('tp')">TP</button>
+      <button class="filter-btn"        id="f-sl"    onclick="setFilter('sl')">SL</button>
+      <span id="row-count"></span>
+    </div>
+    <div id="table-wrap">
+      <table class="trade-table" id="trade-table">
+        <thead><tr>
+          <th onclick="sortBy('num')">#</th>
+          <th onclick="sortBy('entry')">Entry Time</th>
+          <th onclick="sortBy('exit')">Exit Time</th>
+          <th onclick="sortBy('dir')">Dir</th>
+          <th onclick="sortBy('entry_px')">Entry $</th>
+          <th onclick="sortBy('exit_px')">Exit $</th>
+          <th onclick="sortBy('sl')">SL</th>
+          <th onclick="sortBy('tp')">TP</th>
+          <th onclick="sortBy('lots')">Lots</th>
+          <th onclick="sortBy('dur')">Dur</th>
+          <th onclick="sortBy('reason')">Exit</th>
+          <th onclick="sortBy('result')">Result</th>
+          <th onclick="sortBy('pnl')">PnL ($)</th>
+          <th onclick="sortBy('cum_pnl')">Cum ($)</th>
+        </tr></thead>
+        <tbody id="trade-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+const SUMMARY = {"total_trades": 13, "wins": 8, "losses": 5, "win_rate": "61.5%", "annualized_return": "26.0%", "sharpe": "2.39", "max_dd": "-5.7%", "pf": "4.83", "tpd": "0.04", "avg_win": "$2720", "avg_loss": "$-1137", "avg_wl_ratio": "2.39", "best_trade": "$5732", "worst_trade": "$-2037", "total_pnl": "$16074", "long_wr": "61.5%", "short_wr": "N/A", "tp_exits": 0, "sl_exits": 3, "sig_exits": 10, "avg_dur": "48h 22m", "longs": 13, "shorts": 0};
+const MONTHLY = [{"month": "2025-01", "trades": 2, "wins": 2, "wr": "100.0%", "pnl": 7602.0, "cum_pnl": 7602.0, "best": 4144.0, "worst": 3458.0}, {"month": "2025-02", "trades": 3, "wins": 1, "wr": "33.3%", "pnl": -1883.0, "cum_pnl": 5718.0, "best": 1961.0, "worst": -2037.0}, {"month": "2025-03", "trades": 3, "wins": 2, "wr": "66.7%", "pnl": 4713.0, "cum_pnl": 10431.0, "best": 3013.0, "worst": -46.0}, {"month": "2025-08", "trades": 1, "wins": 1, "wr": "100.0%", "pnl": 5732.0, "cum_pnl": 16162.0, "best": 5732.0, "worst": 5732.0}, {"month": "2025-09", "trades": 3, "wins": 1, "wr": "33.3%", "pnl": -1292.0, "cum_pnl": 14870.0, "best": 503.0, "worst": -1740.0}, {"month": "2025-12", "trades": 1, "wins": 1, "wr": "100.0%", "pnl": 1204.0, "cum_pnl": 16074.0, "best": 1204.0, "worst": 1204.0}];
+const TRADES  = [{"num": 1, "entry": "2025-01-16 08:20", "exit": "2025-01-27 12:00", "dir": "long", "entry_px": 2701.69, "exit_px": 2771.43, "sl": 2671.37, "tp": 13709.41, "lots": 1.35, "dur": "140h 40m", "reason": "signal", "result": "WIN", "pnl": 3457.8, "cum_pnl": 3457.8, "month": "2025-01"}, {"num": 2, "entry": "2025-01-30 13:05", "exit": "2025-02-05 08:00", "dir": "long", "entry_px": 2781.97, "exit_px": 2865.09, "sl": 2751.84, "tp": 13713.19, "lots": 1.3961, "dur": "86h 55m", "reason": "signal", "result": "WIN", "pnl": 4143.75, "cum_pnl": 7601.55, "month": "2025-01"}, {"num": 3, "entry": "2025-02-07 14:25", "exit": "2025-02-11 08:00", "dir": "long", "entry_px": 2871.46, "exit_px": 2912.75, "sl": 2829.07, "tp": 18258.41, "lots": 1.3832, "dur": "39h 35m", "reason": "signal", "result": "WIN", "pnl": 1961.42, "cum_pnl": 9562.97, "month": "2025-02"}, {"num": 4, "entry": "2025-02-14 08:20", "exit": "2025-02-14 15:25", "dir": "long", "entry_px": 2937.16, "exit_px": 2897.29, "sl": 2897.34, "tp": 17369.27, "lots": 1.479, "dur": "7h 5m", "reason": "sl", "result": "LOSS", "pnl": -2036.92, "cum_pnl": 7526.06, "month": "2025-02"}, {"num": 5, "entry": "2025-02-19 09:20", "exit": "2025-02-25 15:30", "dir": "long", "entry_px": 2945.53, "exit_px": 2909.42, "sl": 2909.46, "tp": 16034.92, "lots": 1.4511, "dur": "98h 10m", "reason": "sl", "result": "LOSS", "pnl": -1807.93, "cum_pnl": 5718.13, "month": "2025-02"}, {"num": 6, "entry": "2025-03-07 07:45", "exit": "2025-03-13 16:00", "dir": "long", "entry_px": 2915.04, "exit_px": 2977.18, "sl": 2873.18, "tp": 18097.35, "lots": 1.4268, "dur": "53h 15m", "reason": "signal", "result": "WIN", "pnl": 3013.15, "cum_pnl": 8731.27, "month": "2025-03"}, {"num": 7, "entry": "2025-03-18 12:10", "exit": "2025-03-21 04:00", "dir": "long", "entry_px": 3030.42, "exit_px": 3030.08, "sl": 2995.39, "tp": 15753.85, "lots": 1.4679, "dur": "14h 50m", "reason": "signal", "result": "LOSS", "pnl": -45.87, "cum_pnl": 8685.4, "month": "2025-03"}, {"num": 8, "entry": "2025-03-27 08:10", "exit": "2025-03-28 04:00", "dir": "long", "entry_px": 3037.3, "exit_px": 3074.03, "sl": 3001.83, "tp": 15892.0, "lots": 1.4672, "dur": "18h 50m", "reason": "signal", "result": "WIN", "pnl": 1745.23, "cum_pnl": 10430.64, "month": "2025-03"}, {"num": 9, "entry": "2025-08-21 12:35", "exit": "2025-09-01 04:00", "dir": "long", "entry_px": 3344.94, "exit_px": 3474.22, "sl": 3314.13, "tp": 14481.27, "lots": 1.4907, "dur": "128h 25m", "reason": "signal", "result": "WIN", "pnl": 5731.8, "cum_pnl": 16162.43, "month": "2025-08"}, {"num": 10, "entry": "2025-09-08 12:55", "exit": "2025-09-08 20:00", "dir": "long", "entry_px": 3624.12, "exit_px": 3636.56, "sl": 3574.29, "tp": 21719.22, "lots": 1.5558, "dur": "7h 5m", "reason": "signal", "result": "WIN", "pnl": 502.86, "cum_pnl": 16665.3, "month": "2025-09"}, {"num": 11, "entry": "2025-09-16 08:15", "exit": "2025-09-17 22:05", "dir": "long", "entry_px": 3696.07, "exit_px": 3655.98, "sl": 3656.06, "tp": 18221.19, "lots": 1.575, "dur": "27h 50m", "reason": "sl", "result": "LOSS", "pnl": -1740.03, "cum_pnl": 14925.27, "month": "2025-09"}, {"num": 12, "entry": "2025-09-29 11:45", "exit": "2025-09-29 12:00", "dir": "long", "entry_px": 3827.37, "exit_px": 3825.77, "sl": 3770.65, "tp": 24407.8, "lots": 0.8864, "dur": "15m", "reason": "signal", "result": "LOSS", "pnl": -54.78, "cum_pnl": 14870.49, "month": "2025-09"}, {"num": 13, "entry": "2025-12-11 10:05", "exit": "2025-12-11 16:00", "dir": "long", "entry_px": 4222.51, "exit_px": 4256.13, "sl": 4162.35, "tp": 26041.58, "lots": 1.5505, "dur": "5h 55m", "reason": "signal", "result": "WIN", "pnl": 1203.75, "cum_pnl": 16074.24, "month": "2025-12"}];
+
+const cards = [
+  { label: 'Return',        value: SUMMARY.annualized_return, cls: 'blue' },
+  { label: 'Sharpe',        value: SUMMARY.sharpe,            cls: 'blue' },
+  { label: 'Max DD',        value: SUMMARY.max_dd,            cls: 'neg'  },
+  { label: 'Win Rate',      value: SUMMARY.win_rate,          cls: 'wr'   },
+  { label: 'Profit Factor', value: SUMMARY.pf,                cls: 'pos'  },
+  { label: 'Total Trades',  value: SUMMARY.total_trades,      cls: ''     },
+  { label: 'TPD',           value: SUMMARY.tpd,               cls: ''     },
+  { label: 'Total PnL',     value: SUMMARY.total_pnl,         cls: 'pos'  },
+  { label: 'Avg Win',       value: SUMMARY.avg_win,           cls: 'pos'  },
+  { label: 'Avg Loss',      value: SUMMARY.avg_loss,          cls: 'neg'  },
+  { label: 'W/L Ratio',     value: SUMMARY.avg_wl_ratio,      cls: ''     },
+  { label: 'Best Trade',    value: SUMMARY.best_trade,        cls: 'pos'  },
+  { label: 'Worst Trade',   value: SUMMARY.worst_trade,       cls: 'neg'  },
+  { label: 'Long WR',       value: SUMMARY.long_wr,           cls: 'wr'   },
+  { label: 'Short WR',      value: SUMMARY.short_wr,          cls: 'wr'   },
+  { label: 'TP Exits',      value: SUMMARY.tp_exits,          cls: 'pos'  },
+  { label: 'SL Exits',      value: SUMMARY.sl_exits,          cls: 'neg'  },
+  { label: 'Avg Duration',  value: SUMMARY.avg_dur,           cls: ''     },
+];
+const sg = document.getElementById('stat-grid');
+cards.forEach(c => {
+  sg.innerHTML += `<div class="stat-card"><div class="label">${c.label}</div><div class="value ${c.cls}">${c.value}</div></div>`;
+});
+
+let monthSort  = { key: 'month', asc: true };
+let activeMonth = null;
+function renderMonthly() {
+  const body = document.getElementById('monthly-body');
+  const data = [...MONTHLY].sort((a,b) => {
+    const av=a[monthSort.key], bv=b[monthSort.key];
+    if (typeof av==='number') return monthSort.asc ? av-bv : bv-av;
+    return monthSort.asc ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+  });
+  body.innerHTML = data.map(r => {
+    const pos = r.pnl>=0, sel=activeMonth===r.month?'selected':'';
+    return `<tr class="${sel}" onclick="filterByMonth('${r.month}')">
+      <td>${r.month}</td><td>${r.trades}</td><td>${r.wins}</td><td>${r.wr}</td>
+      <td class="${pos?'pnl-pos':'pnl-neg'}">${pos?'+':''}$${r.pnl.toLocaleString()}</td>
+      <td class="${r.cum_pnl>=0?'pnl-pos':'pnl-neg'}">${r.cum_pnl>=0?'+':''}$${r.cum_pnl.toLocaleString()}</td>
+    </tr>`;
+  }).join('');
+}
+function sortMonthly(key) { monthSort={key, asc: monthSort.key===key?!monthSort.asc:true}; renderMonthly(); }
+function filterByMonth(month) {
+  activeMonth = activeMonth===month ? null : month;
+  renderMonthly(); applyFilters();
+}
+renderMonthly();
+
+let tradeSort={key:'num',asc:true}, activeFilter='all';
+function setFilter(f) {
+  activeFilter=f;
+  ['all','win','loss','long','short','tp','sl'].forEach(k => {
+    const b=document.getElementById('f-'+k); if(b) b.classList.toggle('active',k===f);
+  });
+  applyFilters();
+}
+function applyFilters() {
+  const q=document.getElementById('search-box').value.toLowerCase();
+  let data=TRADES.filter(t => {
+    if (activeFilter==='win')   return t.result==='WIN';
+    if (activeFilter==='loss')  return t.result==='LOSS';
+    if (activeFilter==='long')  return t.dir==='long';
+    if (activeFilter==='short') return t.dir==='short';
+    if (activeFilter==='tp')    return t.reason==='tp';
+    if (activeFilter==='sl')    return t.reason==='sl';
+    return true;
+  }).filter(t => {
+    if (activeMonth && t.month!==activeMonth) return false;
+    if (!q) return true;
+    return t.entry.includes(q)||t.exit.includes(q)||t.dir.includes(q)||
+           t.reason.includes(q)||t.result.toLowerCase().includes(q)||String(t.num).includes(q);
+  });
+  data.sort((a,b) => {
+    const av=a[tradeSort.key], bv=b[tradeSort.key];
+    if (typeof av==='number') return tradeSort.asc ? av-bv : bv-av;
+    return tradeSort.asc ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+  });
+  renderTradeTable(data);
+}
+function sortBy(key) {
+  tradeSort={key, asc: tradeSort.key===key?!tradeSort.asc:true};
+  document.querySelectorAll('.trade-table th').forEach(th => th.classList.remove('sorted-asc','sorted-desc'));
+  const headers=['num','entry','exit','dir','entry_px','exit_px','sl','tp','lots','dur','reason','result','pnl','cum_pnl'];
+  const idx=headers.indexOf(key);
+  if (idx>=0) document.querySelectorAll('.trade-table th')[idx].classList.add(tradeSort.asc?'sorted-asc':'sorted-desc');
+  applyFilters();
+}
+function renderTradeTable(data) {
+  document.getElementById('row-count').textContent = data.length+' trades';
+  const body=document.getElementById('trade-body');
+  body.innerHTML = data.map(t => {
+    const win=t.result==='WIN';
+    const pnlCls=win?'pnl-pos':'pnl-neg', cumCls=t.cum_pnl>=0?'pnl-pos':'pnl-neg';
+    const pnlSign=t.pnl>=0?'+':'', cumSign=t.cum_pnl>=0?'+':'';
+    const rb=t.reason==='tp'?'badge-tp':t.reason==='sl'?'badge-sl':'badge-sig';
+    return `<tr class="${win?'win-row':'loss-row'}">
+      <td>${t.num}</td><td>${t.entry}</td><td>${t.exit}</td>
+      <td><span class="badge ${t.dir==='long'?'badge-long':'badge-short'}">${t.dir.toUpperCase()}</span></td>
+      <td>${t.entry_px.toFixed(2)}</td><td>${t.exit_px.toFixed(2)}</td>
+      <td style="color:#888">${t.sl.toFixed(2)}</td><td style="color:#888">${t.tp.toFixed(2)}</td>
+      <td style="color:#888">${t.lots.toFixed(4)}</td><td style="color:#888">${t.dur}</td>
+      <td><span class="badge ${rb}">${t.reason.toUpperCase()}</span></td>
+      <td><span class="badge ${win?'badge-win':'badge-loss'}">${t.result}</span></td>
+      <td class="pnl-cell ${pnlCls}">${pnlSign}$${t.pnl.toFixed(2)}</td>
+      <td class="cum-cell ${cumCls}">${cumSign}$${t.cum_pnl.toFixed(0)}</td>
+    </tr>`;
+  }).join('');
+}
+applyFilters();
+</script>
+</body>
+</html>

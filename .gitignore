@@ -62,3 +62,8 @@ reports/
 reports_v2/
 experiments/
 approved_strategies/
+# Re-allow approved_strategies inside code3.0/artefacts (overrides line above)
+!code3.0/artefacts/approved_strategies/
+!code3.0/artefacts/approved_strategies/**
+!code3.0/artefacts/btcusdt/approved_strategies/
+!code3.0/artefacts/btcusdt/approved_strategies/**

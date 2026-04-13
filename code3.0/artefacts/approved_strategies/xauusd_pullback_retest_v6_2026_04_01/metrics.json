@@ -1,0 +1,113 @@
+{
+  "strategy_name": "xauusd_5m_pullback_retest_v6",
+  "date": "2026-04-01",
+  "verdict": "APPROVED",
+  "train": {
+    "annualized_return": 0.3235,
+    "total_return": 2.6324,
+    "annualized_volatility": 0.1379,
+    "sharpe_ratio": 1.8115,
+    "sortino_ratio": 1.8431,
+    "max_drawdown": -0.0966,
+    "calmar_ratio": 3.3501,
+    "n_years": 4.6,
+    "total_trades": 9006,
+    "win_rate": 0.4949,
+    "profit_factor": 1.293,
+    "avg_win_loss_ratio": 1.3197,
+    "avg_trade_pnl": 29.2292,
+    "avg_trade_duration_bars": 69.01,
+    "benchmark_return": 0.109,
+    "alpha_vs_benchmark": 0.2145,
+    "information_ratio": 1.3393,
+    "exit_reasons": {
+      "tp": 3818,
+      "sl": 2742,
+      "signal": 2441,
+      "end_of_data": 5
+    },
+    "random_baseline": {
+      "random_median_sharpe": 0.5158,
+      "random_median_return": 0.0507,
+      "random_p95_sharpe": 1.0059,
+      "n_simulations": 200
+    },
+    "beats_random_baseline": true
+  },
+  "val": {
+    "annualized_return": 0.4174,
+    "total_return": 0.3211,
+    "annualized_volatility": 0.1281,
+    "sharpe_ratio": 2.4748,
+    "sortino_ratio": 2.6543,
+    "max_drawdown": -0.0459,
+    "calmar_ratio": 9.097,
+    "n_years": 0.8,
+    "total_trades": 1526,
+    "win_rate": 0.5066,
+    "profit_factor": 1.3998,
+    "avg_win_loss_ratio": 1.3636,
+    "avg_trade_pnl": 21.0399,
+    "avg_trade_duration_bars": 67.04,
+    "benchmark_return": 0.35,
+    "alpha_vs_benchmark": 0.0674,
+    "information_ratio": 0.4283,
+    "exit_reasons": {
+      "tp": 643,
+      "sl": 493,
+      "signal": 390
+    },
+    "random_baseline": {
+      "random_median_sharpe": 1.3215,
+      "random_median_return": 0.1401,
+      "random_p95_sharpe": 2.4721,
+      "n_simulations": 200
+    },
+    "beats_random_baseline": true
+  },
+  "test": {
+    "annualized_return": 1.6544,
+    "total_return": 1.6646,
+    "annualized_volatility": 0.2508,
+    "sharpe_ratio": 3.8572,
+    "sortino_ratio": 6.1718,
+    "max_drawdown": -0.1018,
+    "calmar_ratio": 16.2584,
+    "n_years": 1.0,
+    "total_trades": 2065,
+    "win_rate": 0.5516,
+    "profit_factor": 1.7283,
+    "avg_win_loss_ratio": 1.4051,
+    "avg_trade_pnl": 80.6082,
+    "avg_trade_duration_bars": 70.53,
+    "benchmark_return": 0.9098,
+    "alpha_vs_benchmark": 0.7446,
+    "information_ratio": 2.9875,
+    "exit_reasons": {
+      "tp": 948,
+      "sl": 629,
+      "signal": 486,
+      "end_of_data": 2
+    },
+    "random_baseline": {
+      "random_median_sharpe": 1.8977,
+      "random_median_return": 0.3522,
+      "random_p95_sharpe": 3.0758,
+      "n_simulations": 200
+    },
+    "beats_random_baseline": true
+  },
+  "walk_forward": {
+    "mean_sharpe": 0.843,
+    "positive_windows": "6/7",
+    "sharpes": [
+      0.156,
+      0.512,
+      1.805,
+      -0.05,
+      1.499,
+      0.077,
+      1.904
+    ]
+  }
+}

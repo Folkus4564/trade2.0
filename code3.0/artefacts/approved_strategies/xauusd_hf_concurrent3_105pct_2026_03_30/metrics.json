@@ -1,0 +1,77 @@
+{
+  "strategy_name": "xauusd_hf_concurrent3_105pct",
+  "date": "2026-03-30",
+  "verdict": "APPROVED",
+  "engine": "multi_concurrent",
+  "max_concurrent_positions": 3,
+  "model": "artefacts/models/golden/hmm_1h_3states_2026_03_17_ret89pct_sh4.10.pkl",
+  "config": "configs/hf_concurrent3_105pct.yaml",
+  "reproduce": "trade2 --config configs/hf_concurrent3_105pct.yaml --model-path artefacts/models/golden/hmm_1h_3states_2026_03_17_ret89pct_sh4.10.pkl",
+  "architecture": {
+    "mode": "regime_specialized",
+    "sub_strategies": [
+      "trend",
+      "scalp_momentum"
+    ],
+    "hmm_features": 36,
+    "hmm_states": 3,
+    "atr_expansion_filter": true,
+    "atr_expansion_ratio": 1.0,
+    "atr_expansion_lookback": 20
+  },
+  "train": {
+    "annualized_return": 0.2867,
+    "sharpe_ratio": 1.837,
+    "max_drawdown": -0.0779,
+    "profit_factor": 1.352,
+    "total_trades": 4788,
+    "win_rate": 0.4586
+  },
+  "val": {
+    "annualized_return": 0.3029,
+    "sharpe_ratio": 2.183,
+    "max_drawdown": -0.048,
+    "profit_factor": 1.419,
+    "total_trades": 809,
+    "win_rate": 0.4821
+  },
+  "test": {
+    "annualized_return": 1.0544,
+    "total_return": 1.0544,
+    "annualized_volatility": 0.1743,
+    "sharpe_ratio": 3.93,
+    "sortino_ratio": 4.397,
+    "max_drawdown": -0.0998,
+    "calmar_ratio": 10.565,
+    "n_years": 1.22,
+    "total_trades": 1069,
+    "trades_per_day": 3.45,
+    "win_rate": 0.5173,
+    "profit_factor": 1.779,
+    "avg_win_loss_ratio": 1.682,
+    "benchmark_return": 0.9098,
+    "alpha_vs_benchmark": 0.1446,
+    "cost_sensitivity_2x": {
+      "sharpe_ratio": 3.389,
+      "annualized_return": 0.8667,
+      "max_drawdown": -0.1026
+    }
+  },
+  "walk_forward": {
+    "available": true,
+    "n_windows": 7,
+    "mean_return": 0.0924,
+    "std_return": 0.0586,
+    "min_return": 0.0139,
+    "max_return": 0.1788,
+    "mean_sharpe": 0.6882,
+    "std_sharpe": 0.7307,
+    "pct_positive": 1.0,
+    "windows_positive": 7,
+    "window_6_note": "WF window 6 (2024 H1 parabolic rally): positive at 1.39% (concurrent engine fix vs -ve in single-position configs)"
+  },
+  "hard_checks": {
+    "hard_rejected": false,
+    "rejections": {}
+  }
+}
