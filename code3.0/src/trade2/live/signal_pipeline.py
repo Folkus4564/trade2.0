@@ -22,6 +22,12 @@ from trade2.signals.regime import forward_fill_1h_regime
 from trade2.signals.router import route_signals, ffill_tv_cols_to_5m
 from trade2.signals.generator import compute_stops_regime_aware
 
+# Optional — only imported when XGB is active
+try:
+    from trade2.models.reversal_xgb import ReversalXGBModel as _ReversalXGBModel
+except ImportError:
+    _ReversalXGBModel = None
+
 logger = logging.getLogger(__name__)
 
 
@@ -35,9 +41,15 @@ class SignalPipeline:
         # state["signal_long"] == 1 -> open long
     """
 
-    def __init__(self, hmm_model: XAUUSDRegimeModel, config: Dict[str, Any]):
-        self.hmm   = hmm_model
-        self.cfg   = config
+    def __init__(
+        self,
+        hmm_model: XAUUSDRegimeModel,
+        config: Dict[str, Any],
+        xgb_model: Optional[Any] = None,
+    ):
+        self.hmm      = hmm_model
+        self.cfg      = config
+        self.xgb_model = xgb_model   # ReversalXGBModel | None
 
     def run(
         self,
@@ -70,9 +82,10 @@ class SignalPipeline:
             return self._flat_state(df_5m.index[-1] if len(df_5m) > 0 else pd.Timestamp.now(tz="UTC"))
 
         # ---- Step 3: HMM predict ----
+        temperature   = self.cfg.get("hmm", {}).get("temperature", 1.0)
         hmm_labels    = self.hmm.regime_labels(X)
-        hmm_bull_prob = self.hmm.bull_probability(X)
-        hmm_bear_prob = self.hmm.bear_probability(X)
+        hmm_bull_prob = self.hmm.bull_probability(X, temperature)
+        hmm_bear_prob = self.hmm.bear_probability(X, temperature)
 
         # ---- Step 4: 5M features ----
         sig_feat = add_5m_features(df_5m, self.cfg)
@@ -96,13 +109,29 @@ class SignalPipeline:
         # Forward-fill any TV indicator bull/bear columns from 1H to 5M
         df_sig = ffill_tv_cols_to_5m(df_sig, reg_feat)
 
-        # ---- Step 6: Route signals ----
+        # ---- Step 6: XGBoost reversal probabilities (Strategy Q / smc_sd_mean) ----
+        if self.xgb_model is not None:
+            try:
+                df_sig["reversal_prob_long"]  = self.xgb_model.predict_proba_long(df_sig)
+                df_sig["reversal_prob_short"] = self.xgb_model.predict_proba_short(df_sig)
+                logger.debug(
+                    "[SignalPipeline] XGB probs attached: "
+                    "long=%.3f short=%.3f (last bar)",
+                    float(df_sig["reversal_prob_long"].iloc[-1]),
+                    float(df_sig["reversal_prob_short"].iloc[-1]),
+                )
+            except Exception as e:
+                logger.warning("[SignalPipeline] XGB predict failed: %s — reversal probs set to 0.5", e)
+                df_sig["reversal_prob_long"]  = 0.5
+                df_sig["reversal_prob_short"] = 0.5
+
+        # ---- Step 7: Route signals ----
         df_sig = route_signals(df_sig, self.cfg)
 
-        # ---- Step 7: Compute regime-aware SL/TP ----
+        # ---- Step 8: Compute regime-aware SL/TP ----
         df_sig = compute_stops_regime_aware(df_sig, self.cfg)
 
-        # ---- Step 8: Extract last bar ----
+        # ---- Step 9: Extract last bar ----
         if len(df_sig) == 0:
             return self._flat_state(df_5m.index[-1])
 
@@ -133,6 +162,11 @@ class SignalPipeline:
         """Hot-swap the HMM model (used after weekly retrain)."""
         self.hmm = hmm_model
         logger.info("[SignalPipeline] HMM model reloaded")
+
+    def reload_xgb_model(self, xgb_model: Any) -> None:
+        """Hot-swap the XGBoost reversal model."""
+        self.xgb_model = xgb_model
+        logger.info("[SignalPipeline] XGB model reloaded")
 
     # ------------------------------------------------------------------
     # Internal helpers

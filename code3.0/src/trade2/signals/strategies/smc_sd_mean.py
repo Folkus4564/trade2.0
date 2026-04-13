@@ -1,36 +1,34 @@
 """
-signals/strategies/smc_sd_mean.py - SD Adaptive Mean Zone Reversal sub-strategy.
+signals/strategies/smc_sd_mean.py - SMC + SD Adaptive Mean Reversion sub-strategy.
 
 Philosophy:
-  BUY when price is at a GENUINE EXTREME: sd_zone <= -min_entry_zone (e.g. -2 or -3).
-  SELL when price is at a GENUINE EXTREME: sd_zone >= +min_entry_zone.
+  BUY when price is CHEAP (at OB/demand zone AND SD indicator shows extended below mean).
+  SELL when price is EXPENSIVE (at supply/OB zone AND SD indicator shows extended above mean).
 
-  The SD zone (-4..+4) uses dynamic ATR-scaled bands from the Pinescript indicator.
-  Entering at -2 SD gives ~2:1 natural R:R to mean; at -3 SD gives ~3:1 R:R.
-  This is where the ~70% WR on M1 comes from: extreme deviations almost always revert.
+  This is a mean-reversion strategy. The SD Adaptive Mean indicator confirms that price
+  has deviated significantly from its adaptive mean, providing statistical support for
+  the SMC zone entry.
 
-  SMC zones are OPTIONAL additional confirmation (not required by default).
-  Works best on M1 timeframe with frequent extremes and fast mean reversion.
-
-Entry logic:
+Entry logic (all conditions must be true):
 
   LONG:
-    1. SD Zone: sd_zone <= -min_entry_zone  (price deeply below adaptive mean)
-    2. HMM gate (optional): bull_prob >= min_prob OR disabled
-    3. Wick confirmation (optional): bullish bar with lower wick
-    4. SMC zone (optional): OB/demand zone for higher conviction
-    5. Cooldown: no signal within cooldown_bars
+    1. SD Mean: sd_smoothed <= -sd_entry_threshold  (price extended below mean)
+    2. SMC zone: struct_ob_bull_retest OR dz_demand_retest  (at bullish OB or demand zone)
+    3. Rejection candle: Close > Open AND lower wick >= wick_ratio * bar_range
+    4. HMM inverted gate: bear_prob >= min_prob  (bear state = discount = buy zone)
+    5. RSI filter: rsi_14 <= rsi_upper  (not overbought)
+    6. Cooldown: no signal within last cooldown_bars bars
 
   SHORT (mirror):
-    1. SD Zone: sd_zone >= +min_entry_zone
-    2. HMM gate (optional)
-    3. Wick confirmation (optional)
-    4. SMC zone (optional)
-    5. Cooldown
+    1. SD Mean: sd_smoothed >= +sd_entry_threshold
+    2. SMC zone: struct_ob_bear_retest OR dz_supply_retest
+    3. Rejection candle: Close < Open AND upper wick >= wick_ratio * bar_range
+    4. HMM inverted gate: bull_prob >= min_prob_short  (bull state = premium = sell zone)
+    5. RSI filter: rsi_14 >= rsi_lower
+    6. Cooldown
 
-Exits:
-  SL: ATR-based stop (below entry for longs)
-  TP: mean-reversion target = 0 SD line (configurable via atr_tp_mult or use_mean_tp)
+Partial TP: handled by engine via risk.partial_tp config.
+SL/TP: ATR-based, delegated to compute_stops_regime_aware() + engine.
 """
 
 import numpy as np
@@ -73,25 +71,16 @@ def smc_sd_mean_strategy(
         return pd.Series(default, index=idx)
 
     # ================================================================
-    # 1. SD ADAPTIVE MEAN ZONE FILTER (PRIMARY SIGNAL)
-    #    Use sd_zone (-4..+4) for entry — dynamic ATR-scaled bands.
-    #    Zone entry gives natural mean-reversion R:R:
-    #      zone -2 -> TP at 0 = +2 SD gain, SL at -3 = -1 SD loss → 2:1 R:R
-    #      zone -3 -> TP at 0 = +3 SD gain, SL at -4 = -1 SD loss → 3:1 R:R
-    #    This is what drives the ~70% WR on M1 from the Pinescript.
+    # 1. SD ADAPTIVE MEAN FILTER
+    #    Enter only when price is significantly extended from mean.
+    #    sd_smoothed < -threshold -> oversold / cheap -> LONG signal zone
+    #    sd_smoothed > +threshold -> overbought / expensive -> SHORT signal zone
     # ================================================================
-    min_entry_zone = int(cfg.get("min_entry_zone", 2))   # enter when |sd_zone| >= this
+    sd_entry_threshold = float(cfg.get("sd_entry_threshold", 1.0))
     sd_smoothed = _get_float("sd_smoothed", default=0.0)
-    sd_zone     = _get_float("sd_zone",     default=0.0).round().astype(int)
 
-    sd_long_ok  = sd_zone <= -min_entry_zone
-    sd_short_ok = sd_zone >=  min_entry_zone
-
-    # Legacy threshold fallback (if sd_zone unavailable, use raw smoothed value)
-    if sd_long_ok.sum() == 0 and sd_short_ok.sum() == 0:
-        sd_entry_threshold = float(cfg.get("sd_entry_threshold", 0.5))
-        sd_long_ok  = sd_smoothed <= -sd_entry_threshold
-        sd_short_ok = sd_smoothed >=  sd_entry_threshold
+    sd_long_ok  = sd_smoothed <= -sd_entry_threshold
+    sd_short_ok = sd_smoothed >=  sd_entry_threshold
 
     # ================================================================
     # 2. SMC ZONE DETECTION
@@ -114,10 +103,8 @@ def smc_sd_mean_strategy(
     bb_zone_long  = bb_pos_col <= bb_zone_threshold
     bb_zone_short = bb_pos_col >= (1.0 - bb_zone_threshold)
 
-    # require_smc_zone: if False (default), SD zone alone is sufficient — SMC is optional bonus
-    require_smc_zone = cfg.get("require_smc_zone", False)
-    use_struct_only  = cfg.get("use_struct_ob_only", False)
-    use_bb_zone      = cfg.get("use_bb_zone", False)  # off by default — SD zone replaces BB
+    use_struct_only = cfg.get("use_struct_ob_only", False)
+    use_bb_zone     = cfg.get("use_bb_zone", True)  # add BB as extra zone source
 
     if use_struct_only:
         zone_long  = struct_ob_bull | dz_demand
@@ -130,35 +117,34 @@ def smc_sd_mean_strategy(
         zone_long  = zone_long  | bb_zone_long
         zone_short = zone_short | bb_zone_short
 
-    if not require_smc_zone:
-        # SD zone is the primary filter — SMC zone not required
-        zone_long  = pd.Series(True, index=idx)
-        zone_short = pd.Series(True, index=idx)
-
     # ================================================================
-    # 3. HMM REGIME GATE (optional)
-    #    Standard (trend-aligned): bull_prob → longs, bear_prob → shorts
-    #    Inverted (mean-reversion): bear_prob → longs, bull_prob → shorts
-    #    SD zone is the primary quality filter — HMM adds directional confirmation.
+    # 3. HMM INVERTED REGIME GATE
+    #    Reversal/mean-reversion interpretation:
+    #    - High bear_prob -> discount state -> allows LONGS (cheap zone)
+    #    - High bull_prob -> premium state -> allows SHORTS (expensive zone)
     # ================================================================
-    min_prob_long  = float(cfg.get("min_prob",       0.50))
-    min_prob_short = float(cfg.get("min_prob_short", 0.50))
-    regime_gated   = cfg.get("regime_gated", True)   # on by default — HMM improves WR
+    min_prob_long  = float(cfg.get("min_prob",       0.55))
+    min_prob_short = float(cfg.get("min_prob_short", 0.60))
+    regime_gated   = cfg.get("regime_gated", False)
 
     has_hmm = "bear_prob" in out.columns and "bull_prob" in out.columns
-    use_inverted_hmm = cfg.get("use_inverted_hmm", False)  # default: standard trend-aligned
+    use_inverted_hmm = cfg.get("use_inverted_hmm", True)  # default: bear=buy, bull=sell
     if regime_gated and has_hmm:
         if use_inverted_hmm:
-            # Mean-reversion: bear state = price in discount = buy the dip
+            # Mean-reversion interpretation:
+            # bear_prob high = discount/oversold state = buy zone
+            # bull_prob high = premium/overbought state = sell zone
             hmm_long_ok  = out["bear_prob"].fillna(0.0) >= min_prob_long
             hmm_short_ok = out["bull_prob"].fillna(0.0) >= min_prob_short
         else:
-            # Trend-aligned: buy SD extremes in uptrends, sell in downtrends
-            # Bull trend dip to -2 SD = high-conviction pullback entry
+            # Momentum/trend interpretation:
+            # bull_prob high = uptrend = allow longs
+            # bear_prob high = downtrend = allow shorts
             hmm_long_ok  = out["bull_prob"].fillna(0.0) >= min_prob_long
             hmm_short_ok = out["bear_prob"].fillna(0.0) >= min_prob_short
     else:
-        # No HMM gate: SD zone alone is the filter
+        # regime_gated=false: SD mean indicator already acts as the statistical filter.
+        # No HMM gate applied -- all bars pass.
         hmm_long_ok  = pd.Series(True, index=idx)
         hmm_short_ok = pd.Series(True, index=idx)
 
@@ -249,41 +235,15 @@ def smc_sd_mean_strategy(
         in_session = pd.Series(True, index=idx)
 
     # ================================================================
-    # 8. XGB REVERSAL GATE (optional)
-    #    If reversal_prob columns are present (attached by pipeline after
-    #    training ReversalXGBModel), apply as an additional entry filter.
-    #    High XGB prob = model predicts price will reverse from SD extreme.
-    # ================================================================
-    xgb_cfg        = cfg.get("reversal_xgb", {})
-    xgb_enabled    = xgb_cfg.get("enabled", False)
-    xgb_thr_long   = float(xgb_cfg.get("threshold_long",  0.55))
-    xgb_thr_short  = float(xgb_cfg.get("threshold_short", 0.55))
-
-    has_xgb_long  = "reversal_prob_long"  in out.columns
-    has_xgb_short = "reversal_prob_short" in out.columns
-
-    if xgb_enabled and has_xgb_long:
-        xgb_long_ok = out["reversal_prob_long"].fillna(0.0) >= xgb_thr_long
-    else:
-        xgb_long_ok = pd.Series(True, index=idx)
-
-    if xgb_enabled and has_xgb_short:
-        xgb_short_ok = out["reversal_prob_short"].fillna(0.0) >= xgb_thr_short
-    else:
-        xgb_short_ok = pd.Series(True, index=idx)
-
-    # ================================================================
-    # 9. COMBINE: All conditions must be true
+    # 8. COMBINE: All conditions must be true
     # ================================================================
     raw_long  = (
         sd_long_ok  & zone_long  & reject_bull &
-        hmm_long_ok & rsi_long_ok  & pd_long_ok  & trend_long_ok  & in_session &
-        xgb_long_ok
+        hmm_long_ok & rsi_long_ok  & pd_long_ok  & trend_long_ok  & in_session
     )
     raw_short = (
         sd_short_ok & zone_short & reject_bear &
-        hmm_short_ok & rsi_short_ok & pd_short_ok & trend_short_ok & in_session &
-        xgb_short_ok
+        hmm_short_ok & rsi_short_ok & pd_short_ok & trend_short_ok & in_session
     )
 
     if cfg.get("long_only", False):
@@ -292,7 +252,7 @@ def smc_sd_mean_strategy(
         raw_long  = pd.Series(False, index=idx)
 
     # ================================================================
-    # 10. COOLDOWN: Prevent signal clustering at the same zone
+    # 9. COOLDOWN: Prevent signal clustering at the same zone
     # ================================================================
     cooldown_bars = int(cfg.get("cooldown_bars", 6))
 
@@ -312,95 +272,26 @@ def smc_sd_mean_strategy(
     raw_short = _apply_cooldown(raw_short, cooldown_bars)
 
     # ================================================================
-    # 11. POSITION SIZING
-    #     Priority:  XGB reversal prob > HMM prob > fallback pd_ratio
-    #     FIXED BUG: scale from entry threshold floor, not hmm.min_confidence
-    #     This ensures signals at the threshold start at base_size and
-    #     only reach sizing_max at prob=1.0 — giving real differentiation.
+    # 10. POSITION SIZING: HMM probability-scaled
     # ================================================================
-    base_size  = float(cfg.get("base_size",  0.5))
-    sizing_max = float(cfg.get("sizing_max", 1.0))
+    base_size   = float(cfg.get("base_size",   0.8))
+    sizing_max  = float(cfg.get("sizing_max",  1.0))
+    hmm_cfg     = config.get("hmm", {})
+    min_conf    = float(hmm_cfg.get("min_confidence", 0.45))
+    prob_range  = max(1.0 - min_conf, 1e-9)
 
-    # Combined HMM*XGB sizing flag: when true, position size = f(xgb_prob * hmm_prob)
-    # This combines:  HMM (regime/confidence layer) × XGB (trade-outcome prediction layer)
-    use_hmm_xgb_combined = bool(xgb_cfg.get("use_hmm_xgb_combined", False))
-
-    if xgb_enabled and has_xgb_long and use_hmm_xgb_combined and has_hmm:
-        # ---------------------------------------------------------------
-        # COMBINED HMM × XGB SIZING
-        # XGB = probability trade wins (TP1 before SL)
-        # HMM = regime confidence (bull_prob for longs, bear_prob for shorts)
-        # Combined scale = geometric_mean(xgb_scale, hmm_scale)
-        # Result: both must be strong for max size; either weak → smaller position
-        # ---------------------------------------------------------------
-        xgb_prob_long  = out["reversal_prob_long"].fillna(xgb_thr_long).clip(0.0, 1.0)
-        xgb_prob_short = (out["reversal_prob_short"].fillna(xgb_thr_short).clip(0.0, 1.0)
-                          if has_xgb_short else pd.Series(xgb_thr_short, index=idx))
-
-        if use_inverted_hmm:
-            hmm_long_conf  = out["bear_prob"].fillna(0.0).clip(0.0, 1.0)
-            hmm_short_conf = out["bull_prob"].fillna(0.0).clip(0.0, 1.0)
-        else:
-            hmm_long_conf  = out["bull_prob"].fillna(0.0).clip(0.0, 1.0)
-            hmm_short_conf = out["bear_prob"].fillna(0.0).clip(0.0, 1.0)
-
-        hmm_floor_long  = float(cfg.get("min_prob",       0.40))
-        hmm_floor_short = float(cfg.get("min_prob_short", 0.40))
-
-        # Scale each component independently to [0, 1]
-        xgb_range_long  = max(1.0 - xgb_thr_long,  1e-9)
-        xgb_range_short = max(1.0 - xgb_thr_short, 1e-9)
-        hmm_range_long  = max(1.0 - hmm_floor_long,  1e-9)
-        hmm_range_short = max(1.0 - hmm_floor_short, 1e-9)
-
-        xgb_scale_long  = (xgb_prob_long  - xgb_thr_long).clip(0.0,  xgb_range_long)  / xgb_range_long
-        xgb_scale_short = (xgb_prob_short - xgb_thr_short).clip(0.0, xgb_range_short) / xgb_range_short
-        hmm_scale_long  = (hmm_long_conf  - hmm_floor_long).clip(0.0,  hmm_range_long)  / hmm_range_long
-        hmm_scale_short = (hmm_short_conf - hmm_floor_short).clip(0.0, hmm_range_short) / hmm_range_short
-
-        # Geometric mean: sqrt(xgb * hmm) — punishes if either is weak
-        combined_long  = np.sqrt(np.maximum(xgb_scale_long  * hmm_scale_long,  0.0))
-        combined_short = np.sqrt(np.maximum(xgb_scale_short * hmm_scale_short, 0.0))
-
-        size_long  = base_size + combined_long  * (sizing_max - base_size)
-        size_short = base_size + combined_short * (sizing_max - base_size)
-
-        # Early-return to skip the standard sizing block below
-        prob_floor_long = prob_floor_short = 0.0  # unused but required by later code
-
-    elif xgb_enabled and has_xgb_long:
-        # Use XGB reversal probability for sizing (most predictive)
-        # Scale from threshold floor → 1.0 to get full [base_size, sizing_max] range
-        prob_floor_long  = xgb_thr_long
-        prob_floor_short = xgb_thr_short
-        long_conf  = out["reversal_prob_long"].fillna(prob_floor_long).clip(0.0, 1.0)
-        short_conf = out["reversal_prob_short"].fillna(prob_floor_short).clip(0.0, 1.0) if has_xgb_short else pd.Series(prob_floor_short, index=idx)
-    elif has_hmm:
-        # FIXED: use actual min_prob entry threshold as floor (not hmm.min_confidence=0.45)
-        # Previously used min_confidence=0.45 as floor, meaning ANY signal that fired
-        # (at prob>=0.40) already had size >= 0.68. Now scale from the real entry floor.
-        if use_inverted_hmm:
-            long_conf  = out["bear_prob"].fillna(0.0).clip(0.0, 1.0)
-            short_conf = out["bull_prob"].fillna(0.0).clip(0.0, 1.0)
-        else:
-            long_conf  = out["bull_prob"].fillna(0.0).clip(0.0, 1.0)
-            short_conf = out["bear_prob"].fillna(0.0).clip(0.0, 1.0)
-        prob_floor_long  = float(cfg.get("min_prob",       0.40))
-        prob_floor_short = float(cfg.get("min_prob_short", 0.20))
+    if has_hmm:
+        long_conf  = out["bear_prob"].fillna(0.0).clip(0.0, 1.0)
+        short_conf = out["bull_prob"].fillna(0.0).clip(0.0, 1.0)
     else:
         pd_ratio_col = _get_float("pd_ratio", 0.5)
         long_conf  = (1.0 - pd_ratio_col).clip(0.0, 1.0)
         short_conf = pd_ratio_col.clip(0.0, 1.0)
-        prob_floor_long = prob_floor_short = 0.0
 
-    if not (xgb_enabled and has_xgb_long and use_hmm_xgb_combined and has_hmm):
-        # Standard sizing (not combined mode) — use long_conf / short_conf from above
-        prob_range_long  = max(1.0 - prob_floor_long,  1e-9)
-        prob_range_short = max(1.0 - prob_floor_short, 1e-9)
-        long_excess  = (long_conf  - prob_floor_long).clip(0.0,  prob_range_long)  / prob_range_long
-        short_excess = (short_conf - prob_floor_short).clip(0.0, prob_range_short) / prob_range_short
-        size_long    = base_size + long_excess  * (sizing_max - base_size)
-        size_short   = base_size + short_excess * (sizing_max - base_size)
+    long_excess  = (long_conf  - min_conf).clip(0.0, prob_range) / prob_range
+    short_excess = (short_conf - min_conf).clip(0.0, prob_range) / prob_range
+    size_long    = base_size + long_excess  * (sizing_max - base_size)
+    size_short   = base_size + short_excess * (sizing_max - base_size)
 
     # ================================================================
     # 11. EXITS: Pure SL/TP (delegated to engine)
@@ -424,18 +315,15 @@ def smc_sd_mean_strategy(
 
     n_long  = int(raw_long.sum())
     n_short = int(raw_short.sum())
-    zone_dist = pd.Series(sd_zone.values if hasattr(sd_zone, 'values') else sd_zone, index=idx)
-    n_z2_long  = int((zone_dist <= -2).sum())
-    n_z3_long  = int((zone_dist <= -3).sum())
-    n_z2_short = int((zone_dist >= 2).sum())
     if n_long + n_short > 0:
         print(f"  [smc_sd_mean] signals: long={n_long} short={n_short} "
-              f"| zone<=-2L={n_z2_long} zone<=-3L={n_z3_long} zone>=2S={n_z2_short} "
-              f"| hmm_l={int(hmm_long_ok.sum())} sd_l={int(sd_long_ok.sum())} sd_s={int(sd_short_ok.sum())}")
+              f"| zone_bull={int(zone_long.sum())} zone_bear={int(zone_short.sum())} "
+              f"| sd_long={int(sd_long_ok.sum())} sd_short={int(sd_short_ok.sum())}")
     else:
         print(f"  [smc_sd_mean] 0 signals "
-              f"| zone<=-{min_entry_zone}L={int(sd_long_ok.sum())} zone>={min_entry_zone}S={int(sd_short_ok.sum())} "
-              f"| hmm_l={int(hmm_long_ok.sum())} hmm_s={int(hmm_short_ok.sum())} "
-              f"| rsi_l={int(rsi_long_ok.sum())} wick_l={int(reject_bull.sum())}")
+              f"| zone_bull={int(zone_long.sum())} zone_bear={int(zone_short.sum())} "
+              f"| sd_long={int(sd_long_ok.sum())} sd_short={int(sd_short_ok.sum())} "
+              f"| hmm_long={int(hmm_long_ok.sum())} rsi_long={int(rsi_long_ok.sum())} "
+              f"| reject_bull={int(reject_bull.sum())} reject_bear={int(reject_bear.sum())}")
 
     return out

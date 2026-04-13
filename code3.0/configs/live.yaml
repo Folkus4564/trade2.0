@@ -10,22 +10,94 @@ live:
   bar_warmup_5m: 300
 
 strategies:
+  # Strategy A (89%) — folder model is stale 7-feat; config expects 36-feat; using trainTo202412 until retrained
   - name: "hmm1h_smc5m_89pct"
     config_path: "artefacts/approved_strategies/xauusd_mtf_hmm1h_smc5m_2026_03_18/config.yaml"
-    # approved model.pkl has 7 features (stale); use the correct 36-feature golden model
-    model_path:  "artefacts/models/golden/hmm_1h_3states_2026_03_17_ret89pct_sh4.10.pkl"
+    model_path:  "artefacts/models/golden/hmm_1h_3states_2026_04_07_trainTo202412.pkl"
     magic_number: 100001
-    base_allocation_frac: 0.10   # 10% of equity per trade
-    lot_min: 0.1               # lot size at confidence=0.0
-    lot_max: 0.2         # lot size at confidence=1.0
+    base_allocation_frac: 0.10
+    lot_min: 0.03
+    lot_max: 0.05
 
+  # Strategy B (49%) — folder model is correct (36-feat)
   - name: "hmm1h_smc5m_tp2x_49pct"
     config_path: "artefacts/approved_strategies/xauusd_mtf_hmm1h_smc5m_tp2x_49pct_2026_03_18/config.yaml"
     model_path:  "artefacts/approved_strategies/xauusd_mtf_hmm1h_smc5m_tp2x_49pct_2026_03_18/model.pkl"
     magic_number: 100002
     base_allocation_frac: 0.10
-    lot_min: 0.1           # lot size at confidence=0.0
-    lot_max: 0.2          # lot size at confidence=1.0
+    lot_min: 0.03
+    lot_max: 0.05
+
+  # Strategy C (122%) — folder model is stale 7-feat; config expects 36-feat; using trainTo202412 until retrained
+  - name: "hf_r1p0_lb20_122pct"
+    config_path: "artefacts/approved_strategies/xauusd_hf_r1p0_lb20_2026_03_29/config.yaml"
+    model_path:  "artefacts/models/golden/hmm_1h_3states_2026_04_07_trainTo202412.pkl"
+    magic_number: 100003
+    base_allocation_frac: 0.10
+    lot_min: 0.01
+    lot_max: 0.05
+    max_concurrent_positions: 1
+
+  # Strategy D (105%) — folder model is correct (36-feat)
+  - name: "hf_concurrent3_105pct"
+    config_path: "artefacts/approved_strategies/xauusd_hf_concurrent3_105pct_2026_03_30/config.yaml"
+    model_path:  "artefacts/approved_strategies/xauusd_hf_concurrent3_105pct_2026_03_30/model.pkl"
+    magic_number: 100004
+    base_allocation_frac: 0.10
+    lot_min: 0.09
+    lot_max: 0.15
+    max_concurrent_positions: 3
+
+  # Strategy E (115%) — folder model is correct (36-feat)
+  - name: "hf_macro_sl15_115pct"
+    config_path: "artefacts/approved_strategies/xauusd_hf_macro_sl15_55pct_2026_03_30/config.yaml"
+    model_path:  "artefacts/approved_strategies/xauusd_hf_macro_sl15_55pct_2026_03_30/model.pkl"
+    magic_number: 100005
+    base_allocation_frac: 0.75
+    lot_min: 0.05
+    lot_max: 0.10
+    max_concurrent_positions: 5
+
+  # Strategy I (166%) — folder model is stale 7-feat; config expects 36-feat; using trainTo202412 until retrained
+  - name: "pullback_v6_smc_ob_166pct"
+    config_path: "artefacts/approved_strategies/xauusd_5m_pullback_v6_smc_ob_v1_2026_04_05/config.yaml"
+    model_path:  "artefacts/models/golden/hmm_1h_3states_2026_04_07_trainTo202412.pkl"
+    magic_number: 100006
+    base_allocation_frac: 0.75
+    lot_min: 0.25
+    lot_max: 0.5
+    max_concurrent_positions: 5
+
+  # Strategy M (165%) — folder model is correct (36-feat, trained to 2023)
+  - name: "smc_sd_ob_pullback_bidir_165pct"
+    config_path: "artefacts/approved_strategies/xauusd_5m_sd_ob_pullback_bidir_v1_2026_04_06/config.yaml"
+    model_path:  "artefacts/approved_strategies/xauusd_5m_sd_ob_pullback_bidir_v1_2026_04_06/model.pkl"
+    magic_number: 100007
+    base_allocation_frac: 0.75
+    lot_min: 0.5
+    lot_max: 1.0
+    max_concurrent_positions: 5
+
+  # Strategy N (103%) — folder model is correct (36-feat, trained to 2023)
+  - name: "bidir_fixedtp_103pct"
+    config_path: "artefacts/approved_strategies/xauusd_5m_sd_ob_pullback_bidir_fixedtp_2026_04_07/config.yaml"
+    model_path:  "artefacts/approved_strategies/xauusd_5m_sd_ob_pullback_bidir_fixedtp_2026_04_07/model.pkl"
+    magic_number: 100008
+    lot_min: 0.20
+    lot_max: 0.40
+    max_concurrent_positions: 5
+
+  # Strategy Q (254%) — XGBoost reversal gate + combined HMM*XGB sizing
+  # HMM: 36-feat trainTo202412 (most recent); XGB: approved strategy folder pkl
+  - name: "sd_xgb_reversal_v6_254pct"
+    config_path:     "artefacts/approved_strategies/xauusd_5m_sd_xgb_reversal_v6_2026_04_13/config.yaml"
+    model_path:      "artefacts/models/golden/hmm_1h_3states_2026_04_07_trainTo202412.pkl"
+    xgb_model_path:  "artefacts/approved_strategies/xauusd_5m_sd_xgb_reversal_v6_2026_04_13/reversal_xgb_sd_mean.pkl"
+    magic_number: 100009
+    base_allocation_frac: 0.75
+    lot_min: 0.25
+    lot_max: 0.50
+    max_concurrent_positions: 5
 
 reporting:
   interval_hours: 4
@@ -34,12 +106,11 @@ reporting:
 
 retrain:
   enabled: true
-  schedule: "sunday"
-  mode: "warm"              # "warm" = adapt existing model to recent bars; "full" = retrain from scratch
-  warm_update_bars: 6500    # ~9 months of 1H bars used for warm update
-  warm_n_iter: 30           # EM iterations for warm update (fewer than full retrain)
-  close_positions: true     # close open positions before model swap
-  backup_model: true        # auto-backup old model before overwrite
-  live_data_dir: "data/raw" # where accumulated live bars are stored
-  original_1h: "data/raw/XAUUSD_1H_2019_2026_full.csv"
-  original_5m: "data/raw/XAUUSD_5M_2019_2025.csv"
+  schedule: "sunday"          # day to run weekly retrain (sunday or saturday)
+  mode: "full"                # full = retrain from scratch; warm = adapt existing model
+  close_positions: true       # close all open positions before model swap
+  backup_model: true          # backup .pkl before overwriting
+  original_1h: "data/raw/XAUUSD_1H_2019_2024.csv"   # base 1H dataset
+  live_data_dir: "data/raw"   # where DataAccumulator writes live bar CSVs
+  warm_update_bars: 6500      # bars to use in warm mode (~6 months of 1H data)
+  warm_n_iter: 30             # EM iterations for warm update

@@ -455,42 +455,6 @@ def run_pipeline(
         test_sig_df  = test_reg_feat
         freq         = "1h"
 
-    # ---- 5a. Train / load XGBoost reversal model (optional) ----
-    _xgb_cfg = config.get("strategies", {}).get("smc_sd_mean", {}).get("reversal_xgb", {})
-    if _xgb_cfg.get("enabled", False):
-        from trade2.models.reversal_xgb import ReversalXGBModel
-        _xgb_model_path = dirs["models"] / "reversal_xgb_sd_mean.pkl"
-        if retrain_model or not _xgb_model_path.exists():
-            print("[pipeline] Training XGBoost reversal detector on train split...")
-            _xgb_model = ReversalXGBModel(config)
-            _xgb_model.fit(train_sig_df if mode == "multi_tf" else train_sig_df)
-            _xgb_model.save(_xgb_model_path)
-        else:
-            print(f"[pipeline] Loading XGBoost reversal model from {_xgb_model_path}")
-            _xgb_model = ReversalXGBModel.load(_xgb_model_path)
-
-        # Attach reversal_prob columns to all three signal DataFrames
-        def _attach_reversal_probs(df):
-            df = df.copy()
-            df["reversal_prob_long"]  = _xgb_model.predict_proba_long(df)
-            df["reversal_prob_short"] = _xgb_model.predict_proba_short(df)
-            return df
-
-        if mode == "multi_tf":
-            train_sig_df = _attach_reversal_probs(train_sig_df)
-            val_sig_df   = _attach_reversal_probs(val_sig_df)
-            test_sig_df  = _attach_reversal_probs(test_sig_df)
-        else:
-            train_sig_df = _attach_reversal_probs(train_sig_df)
-            val_sig_df   = _attach_reversal_probs(val_sig_df)
-            test_sig_df  = _attach_reversal_probs(test_sig_df)
-
-        # Log prob distribution on test split
-        _tpl = test_sig_df["reversal_prob_long"].dropna()
-        _tps = test_sig_df["reversal_prob_short"].dropna()
-        print(f"  [reversal_xgb] test long  prob: mean={_tpl.mean():.3f} p25={_tpl.quantile(0.25):.3f} p75={_tpl.quantile(0.75):.3f}")
-        print(f"  [reversal_xgb] test short prob: mean={_tps.mean():.3f} p25={_tps.quantile(0.25):.3f} p75={_tps.quantile(0.75):.3f}")
-
     # Generate signals
     print("[pipeline] Generating signals...")
     strategy_mode = "legacy" if legacy_signals else config.get("strategies", {}).get("mode", "legacy")
