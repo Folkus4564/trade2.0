@@ -83,7 +83,17 @@ class StrategyInstance:
         partial_tp_cfg   = self.config.get("risk", {}).get("partial_tp", None)
         fixed_dollar_tps = partial_tp_cfg.get("fixed_dollar_tps", None) if partial_tp_cfg else None
 
-        if fixed_dollar_tps is not None:
+        # A single TP level with size_frac=1.0 is NOT a partial-TP split —
+        # it's a regular single-exit trade.  When max_concurrent > 1 we must
+        # use MultiPositionManager so ATR-based tp_long/tp_short are honoured.
+        _is_real_partial = (
+            fixed_dollar_tps is not None
+            and len(fixed_dollar_tps) > 1   # genuinely more than one TP level
+        )
+        # live.yaml can also force the multi-position manager explicitly
+        _force_multi = bool(strategy_cfg.get("force_multi_position_manager", False))
+
+        if _is_real_partial and not _force_multi:
             self.position_manager = PartialTPPositionManager(
                 connector        = connector,
                 magic            = self.magic,
@@ -93,7 +103,7 @@ class StrategyInstance:
                 size_fracs       = partial_tp_cfg.get("size_fracs", None),
                 be_after_tp1     = partial_tp_cfg.get("be_after_tp1", True),
             )
-        elif self.max_concurrent > 1:
+        elif self.max_concurrent > 1 or _force_multi:
             self.position_manager = MultiPositionManager(
                 connector      = connector,
                 magic          = self.magic,

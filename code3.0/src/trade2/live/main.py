@@ -1,12 +1,13 @@
 """
 live/main.py - CLI entry point for live trading on Exness MT5 demo.
 
-Runs both approved strategies simultaneously in a single 24/5 polling loop.
+Runs all approved strategies simultaneously in a single 24/5 polling loop.
 
 Usage:
-    trade2-live                           # run both strategies
+    trade2-live                           # run all strategies
     trade2-live --strategy-a-only         # run only the 89% strategy
     trade2-live --strategy-b-only         # run only the 49% strategy
+    trade2-live --strategy-e-only         # run only the 115% macro_sl15 strategy
     trade2-live --report                  # generate performance report and exit
     trade2-live --retrain                 # immediate retrain then continue
 """
@@ -80,7 +81,7 @@ def _require_env(key: str) -> str:
 _BANGKOK = timedelta(hours=7)
 
 
-def _sleep_until_next_5m_bar(buffer_sec: float = 2.0) -> None:
+def _sleep_until_next_5m_bar(buffer_sec: float = 1.25) -> None:
     """
     Sleep until just after the next 5M bar close boundary (:00, :05, :10, ...).
 
@@ -189,12 +190,21 @@ def _print_dashboard(df_5m, strategies, live_cfg, replay_trades=None) -> None:
     for strat in strategies:
         label = strat.name.replace("hmm1h_smc5m_", "")
         pm    = strat.position_manager
-        # Get last pipeline state stored on strat (we'll read from position_manager)
-        if pm.ticket is not None:
-            pos_str = (f"OPEN {pm.direction.upper()} | entry={pm.entry_price:.2f} "
-                       f"sl={pm.sl:.2f} tp={pm.tp:.2f} | since {pm.entry_time}")
+        from trade2.live.multi_position_manager import MultiPositionManager
+        if isinstance(pm, MultiPositionManager):
+            n = pm.open_count()
+            if n > 0:
+                pos_str = (f"OPEN {n}/{pm.max_concurrent} | "
+                           f"first={pm.direction.upper()} entry={pm.entry_price:.2f} "
+                           f"sl={pm.sl:.2f} tp={pm.tp:.2f}")
+            else:
+                pos_str = "FLAT"
         else:
-            pos_str = "FLAT"
+            if pm.ticket is not None:
+                pos_str = (f"OPEN {pm.direction.upper()} | entry={pm.entry_price:.2f} "
+                           f"sl={pm.sl:.2f} tp={pm.tp:.2f} | since {pm.entry_time}")
+            else:
+                pos_str = "FLAT"
         print(f"  [{label}]  regime={getattr(strat, '_last_regime', '?')}  "
               f"bull={getattr(strat, '_last_bull_prob', 0.0):.2f}  "
               f"bear={getattr(strat, '_last_bear_prob', 0.0):.2f}  |  {pos_str}")
@@ -213,7 +223,10 @@ def build_connector():
     return MT5Connector(login=login, password=pw, server=server, symbol=symbol)
 
 
-def build_strategy_instances(live_cfg, connector, run_a: bool, run_b: bool):
+def build_strategy_instances(live_cfg, connector,
+                             run_a: bool, run_b: bool, run_c: bool,
+                             run_d: bool, run_e: bool, run_i: bool,
+                             run_m: bool = True, run_q: bool = True):
     """Instantiate StrategyInstance objects for selected strategies."""
     from trade2.live.strategy_instance import StrategyInstance
 
@@ -222,9 +235,21 @@ def build_strategy_instances(live_cfg, connector, run_a: bool, run_b: bool):
 
     for strat_cfg in live_cfg["strategies"]:
         name = strat_cfg["name"]
-        if not run_a and "89pct" in name:
+        if not run_a and "89pct"      in name:
             continue
-        if not run_b and "49pct" in name:
+        if not run_b and "49pct"      in name:
+            continue
+        if not run_c and "122pct"     in name:
+            continue
+        if not run_d and "105pct"     in name:
+            continue
+        if not run_e and "macro_sl15" in name:
+            continue
+        if not run_i and "166pct"     in name:
+            continue
+        if not run_m and "bidir"      in name:
+            continue
+        if not run_q and "254pct"     in name:
             continue
 
         alloc = strat_cfg.get("base_allocation_frac", 0.10)
@@ -238,7 +263,7 @@ def build_strategy_instances(live_cfg, connector, run_a: bool, run_b: bool):
         strategies.append(inst)
 
     if not strategies:
-        raise ValueError("No strategies selected — check --strategy-a-only / --strategy-b-only flags")
+        raise ValueError("No strategies selected — check --strategy-X-only flags")
 
     return strategies
 
@@ -263,6 +288,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="trade2-live: XAUUSD live trading on Exness MT5")
     parser.add_argument("--strategy-a-only", action="store_true", help="Run only the 89% return strategy")
     parser.add_argument("--strategy-b-only", action="store_true", help="Run only the 49% return strategy")
+    parser.add_argument("--strategy-c-only", action="store_true", help="Run only the 122% return strategy")
+    parser.add_argument("--strategy-d-only", action="store_true", help="Run only the 105% concurrent-3 strategy")
+    parser.add_argument("--strategy-e-only", action="store_true", help="Run only the 115% macro_sl15 strategy")
+    parser.add_argument("--strategy-i-only", action="store_true", help="Run only the 166% pullback v6+SMC OB strategy")
+    parser.add_argument("--strategy-m-only", action="store_true", help="Run only the 165% SD+OB+Pullback bidir strategy")
+    parser.add_argument("--strategy-q-only", action="store_true", help="Run only the 254% XGBoost reversal strategy")
     parser.add_argument("--report",          action="store_true", help="Generate performance report and exit")
     parser.add_argument("--retrain",         action="store_true", help="Force immediate HMM retrain (uses mode from config, default=warm)")
     parser.add_argument("--warm-update",    action="store_true", help="Force immediate warm update (adapt existing model to recent bars)")
@@ -290,8 +321,17 @@ def main() -> None:
         live_cfg = yaml.safe_load(f)
 
     # Determine which strategies to run
-    run_a = not args.strategy_b_only
-    run_b = not args.strategy_a_only
+    only_one = (args.strategy_a_only or args.strategy_b_only or args.strategy_c_only
+                or args.strategy_d_only or args.strategy_e_only or args.strategy_i_only
+                or args.strategy_m_only or args.strategy_q_only)
+    run_a = args.strategy_a_only or not only_one
+    run_b = args.strategy_b_only or not only_one
+    run_c = args.strategy_c_only or not only_one
+    run_d = args.strategy_d_only or not only_one
+    run_e = args.strategy_e_only or not only_one
+    run_i = args.strategy_i_only or not only_one
+    run_m = args.strategy_m_only or not only_one
+    run_q = args.strategy_q_only or not only_one
 
     # ------------------------------------------------------------------
     # Connect to MT5
@@ -304,7 +344,7 @@ def main() -> None:
     # ------------------------------------------------------------------
     # Build strategy instances
     # ------------------------------------------------------------------
-    strategies = build_strategy_instances(live_cfg, connector, run_a, run_b)
+    strategies = build_strategy_instances(live_cfg, connector, run_a, run_b, run_c, run_d, run_e, run_i, run_m, run_q)
 
     # ------------------------------------------------------------------
     # Report-only mode
