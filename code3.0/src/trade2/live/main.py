@@ -133,12 +133,21 @@ def _print_dashboard(df_5m, strategies, live_cfg, replay_trades=None) -> None:
         if not sim_df.empty:
             sim_df["source"]     = "replay"
             sim_df["entry_time"] = pd.to_datetime(sim_df["entry_time"], utc=True)
-            # Compute confidence-scaled lots + actual pnl
+            # Build per-strategy lot range from live.yaml
+            _lot_lookup = {
+                s["name"]: (s.get("lot_min", 0.01), s.get("lot_max", 0.02),
+                            int(s.get("max_concurrent_positions", 1)))
+                for s in live_cfg["strategies"]
+            }
             def _replay_lots(row):
+                strat_name = row.get("strategy", "")
+                cfg = next((v for k, v in _lot_lookup.items()
+                            if strat_name == k or k.endswith(strat_name)), None)
+                lot_min, lot_max, max_conc = cfg if cfg else (0.01, 0.02, 1)
                 conf = row.get("bear_prob", 0.0) if row.get("direction") == "short" else row.get("bull_prob", 0.0)
-                raw  = 0.01 + 0.01 * conf
+                raw  = (lot_min + (lot_max - lot_min) * conf) / max_conc
                 lot  = round(round(raw, 2) / 0.01) * 0.01
-                return max(0.01, min(0.02, round(lot, 2)))
+                return max(lot_min / max_conc, min(lot_max / max_conc, round(lot, 2)))
             sim_df["lots"] = sim_df.apply(_replay_lots, axis=1)
             sim_df["pnl"]  = (sim_df["pnl_1lot"] * sim_df["lots"]).round(2)
             all_rows.append(sim_df)
@@ -226,7 +235,8 @@ def build_connector():
 def build_strategy_instances(live_cfg, connector,
                              run_a: bool, run_b: bool, run_c: bool,
                              run_d: bool, run_e: bool, run_i: bool,
-                             run_m: bool = True, run_q: bool = True):
+                             run_m: bool = True, run_n: bool = True,
+                             run_q: bool = True):
     """Instantiate StrategyInstance objects for selected strategies."""
     from trade2.live.strategy_instance import StrategyInstance
 
@@ -247,7 +257,9 @@ def build_strategy_instances(live_cfg, connector,
             continue
         if not run_i and "166pct"     in name:
             continue
-        if not run_m and "bidir"      in name:
+        if not run_m and "bidir" in name and "fixedtp" not in name:
+            continue
+        if not run_n and "fixedtp"    in name:
             continue
         if not run_q and "254pct"     in name:
             continue
@@ -293,6 +305,7 @@ def main() -> None:
     parser.add_argument("--strategy-e-only", action="store_true", help="Run only the 115% macro_sl15 strategy")
     parser.add_argument("--strategy-i-only", action="store_true", help="Run only the 166% pullback v6+SMC OB strategy")
     parser.add_argument("--strategy-m-only", action="store_true", help="Run only the 165% SD+OB+Pullback bidir strategy")
+    parser.add_argument("--strategy-n-only", action="store_true", help="Run only the 103% bidir fixed-TP strategy")
     parser.add_argument("--strategy-q-only", action="store_true", help="Run only the 254% XGBoost reversal strategy")
     parser.add_argument("--report",          action="store_true", help="Generate performance report and exit")
     parser.add_argument("--retrain",         action="store_true", help="Force immediate HMM retrain (uses mode from config, default=warm)")
@@ -323,7 +336,7 @@ def main() -> None:
     # Determine which strategies to run
     only_one = (args.strategy_a_only or args.strategy_b_only or args.strategy_c_only
                 or args.strategy_d_only or args.strategy_e_only or args.strategy_i_only
-                or args.strategy_m_only or args.strategy_q_only)
+                or args.strategy_m_only or args.strategy_n_only or args.strategy_q_only)
     run_a = args.strategy_a_only or not only_one
     run_b = args.strategy_b_only or not only_one
     run_c = args.strategy_c_only or not only_one
@@ -331,6 +344,7 @@ def main() -> None:
     run_e = args.strategy_e_only or not only_one
     run_i = args.strategy_i_only or not only_one
     run_m = args.strategy_m_only or not only_one
+    run_n = args.strategy_n_only or not only_one
     run_q = args.strategy_q_only or not only_one
 
     # ------------------------------------------------------------------
@@ -344,7 +358,7 @@ def main() -> None:
     # ------------------------------------------------------------------
     # Build strategy instances
     # ------------------------------------------------------------------
-    strategies = build_strategy_instances(live_cfg, connector, run_a, run_b, run_c, run_d, run_e, run_i, run_m, run_q)
+    strategies = build_strategy_instances(live_cfg, connector, run_a, run_b, run_c, run_d, run_e, run_i, run_m, run_n, run_q)
 
     # ------------------------------------------------------------------
     # Report-only mode

@@ -4,7 +4,6 @@
 # ============================================================
 
 live:
-  symbol: "XAUUSDc"
   poll_interval_sec: 10
   bar_warmup_1h: 200
   bar_warmup_5m: 300
