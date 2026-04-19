@@ -20,7 +20,8 @@ from pathlib import Path
 
 import pandas as pd
 
-logging.disable(logging.CRITICAL)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
 warnings.filterwarnings("ignore")
 
 _LIVE_DIR  = Path(__file__).parent
