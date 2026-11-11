@@ -1,0 +1,530 @@
+Language="VBSCRIPT"
+'==============================================================================
+' build_robot.CATScript
+' 6-Axis Compact Robot Arm (LR Mate 200iD/4SC style) - approximate
+' Builds P01..P07 as CATParts (Part Design) and RobotArm.CATProduct (home pose).
+'
+' Run in CATIA V5:  Tools > Macro > Macros... > Macro libraries > add this file
+' (or File Selection) > select CATMain > Run.   See ../README.md.
+'
+' World: Z up = J1 axis, +X = reach.  Units mm.  All dimensions approximate.
+' Sketch axes are always set explicitly with Sketch.SetAbsoluteAxisData so the
+' H/V directions never depend on CATIA's plane orientation.  Pad direction
+' follows the sketch normal = H x V.  Symmetric ("Mirrored extent") features
+' take HALF of the total thickness as their length.
+' NOTE: not tested inside CATIA (not available where this was written).
+'==============================================================================
+
+Const SAVE_DIR = "C:\RobotArm"
+Const PI = 3.14159265358979
+
+'------------------------------------------------------------------------------
+' SECTION 1 - generic helpers
+'------------------------------------------------------------------------------
+
+' Create an empty part document and name it
+Function NewPart(pname)
+    Dim doc
+    Set doc = CATIA.Documents.Add("Part")
+    On Error Resume Next
+    doc.Product.PartNumber = pname
+    On Error GoTo 0
+    Set NewPart = doc
+End Function
+
+' Return (create on first use) the geometrical set that stores reference planes
+Function GetPlaneSet(part)
+    Dim hb
+    If part.HybridBodies.Count = 0 Then
+        Set hb = part.HybridBodies.Add()
+        hb.Name = "RefPlanes"
+    Else
+        Set hb = part.HybridBodies.Item(1)
+    End If
+    Set GetPlaneSet = hb
+End Function
+
+' Plane a*x + b*y + c*z = d  (unambiguous offset plane)
+Function PlaneEq(part, a, b, c, d)
+    Dim hb, pl
+    Set hb = GetPlaneSet(part)
+    Set pl = part.HybridShapeFactory.AddNewPlaneEquation(a, b, c, d)
+    hb.AppendHybridShape pl
+    part.Update
+    Set PlaneEq = pl
+End Function
+
+' New sketch on plane object planeRef with explicit axes:
+' origin (ox,oy,oz), H direction (hx,hy,hz), V direction (vx,vy,vz)
+Function NewSketchAxes(part, body, planeRef, sname, ox, oy, oz, hx, hy, hz, vx, vy, vz)
+    Dim ref, sk
+    Set ref = part.CreateReferenceFromObject(planeRef)
+    Set sk = body.Sketches.Add(ref)
+    sk.SetAbsoluteAxisData Array(ox, oy, oz, hx, hy, hz, vx, vy, vz)
+    sk.Name = sname
+    Set NewSketchAxes = sk
+End Function
+
+' Convenience: plane a,b,c,d + sketch with explicit axes in one call
+Function MakeSketch(part, body, sname, a, b, c, d, ox, oy, oz, hx, hy, hz, vx, vy, vz)
+    Dim pl
+    Set pl = PlaneEq(part, a, b, c, d)
+    Set MakeSketch = NewSketchAxes(part, body, pl, sname, ox, oy, oz, hx, hy, hz, vx, vy, vz)
+End Function
+
+'------------------------------------------------------------------------------
+' SECTION 2 - 2D geometry helpers (all use shared Point2D end points)
+'------------------------------------------------------------------------------
+
+Function Pt(f2d, x, y)
+    Set Pt = f2d.CreatePoint(x, y)
+End Function
+
+' Line between two existing points (coordinates only used to create the curve)
+Sub Seg(f2d, x1, y1, x2, y2, p1, p2)
+    Dim ln
+    Set ln = f2d.CreateLine(x1, y1, x2, y2)
+    ln.StartPoint = p1
+    ln.EndPoint = p2
+End Sub
+
+' Counter-clockwise arc a1 -> a2 (radians) about (cx,cy); pc/ps/pe = centre/start/end points
+Sub Arc(f2d, cx, cy, r, a1, a2, pc, ps, pe)
+    Dim c
+    Set c = f2d.CreateCircle(cx, cy, r, a1, a2)
+    c.CenterPoint = pc
+    c.StartPoint = ps
+    c.EndPoint = pe
+End Sub
+
+' Full circle
+Sub DrawCircle(f2d, cx, cy, r)
+    Dim c
+    Set c = f2d.CreateClosedCircle(cx, cy, r)
+End Sub
+
+' Closed polyline from flat array (x0,y0,x1,y1,...)
+Sub PolyClosed(f2d, pts)
+    Dim n, i, pa, pb, firstPt
+    n = (UBound(pts) + 1) / 2
+    Set firstPt = Pt(f2d, pts(0), pts(1))
+    Set pa = firstPt
+    For i = 1 To n - 1
+        Set pb = Pt(f2d, pts(2 * i), pts(2 * i + 1))
+        Seg f2d, pts(2 * i - 2), pts(2 * i - 1), pts(2 * i), pts(2 * i + 1), pa, pb
+        Set pa = pb
+    Next
+    Seg f2d, pts(2 * n - 2), pts(2 * n - 1), pts(0), pts(1), pa, firstPt
+End Sub
+
+' Axis-aligned rectangle x0..x1, y0..y1
+Sub RectXY(f2d, x0, y0, x1, y1)
+    PolyClosed f2d, Array(x0, y0, x1, y0, x1, y1, x0, y1)
+End Sub
+
+' Rounded rectangle centred at (cx,cy), width w, height h, corner radius r
+Sub RoundRect(f2d, cx, cy, w, h, r)
+    Dim x0, x1, y0, y1
+    Dim b1, b2, r1, r2, t1, t2, l1, l2
+    Dim cBR, cTR, cTL, cBL
+    x0 = cx - w / 2: x1 = cx + w / 2
+    y0 = cy - h / 2: y1 = cy + h / 2
+    Set b1 = Pt(f2d, x0 + r, y0): Set b2 = Pt(f2d, x1 - r, y0)
+    Set r1 = Pt(f2d, x1, y0 + r): Set r2 = Pt(f2d, x1, y1 - r)
+    Set t1 = Pt(f2d, x1 - r, y1): Set t2 = Pt(f2d, x0 + r, y1)
+    Set l1 = Pt(f2d, x0, y1 - r): Set l2 = Pt(f2d, x0, y0 + r)
+    Seg f2d, x0 + r, y0, x1 - r, y0, b1, b2
+    Seg f2d, x1, y0 + r, x1, y1 - r, r1, r2
+    Seg f2d, x1 - r, y1, x0 + r, y1, t1, t2
+    Seg f2d, x0, y1 - r, x0, y0 + r, l1, l2
+    Set cBR = Pt(f2d, x1 - r, y0 + r)
+    Set cTR = Pt(f2d, x1 - r, y1 - r)
+    Set cTL = Pt(f2d, x0 + r, y1 - r)
+    Set cBL = Pt(f2d, x0 + r, y0 + r)
+    Arc f2d, x1 - r, y0 + r, r, 1.5 * PI, 2 * PI, cBR, b2, r1
+    Arc f2d, x1 - r, y1 - r, r, 0, 0.5 * PI, cTR, r2, t1
+    Arc f2d, x0 + r, y1 - r, r, 0.5 * PI, PI, cTL, t2, l1
+    Arc f2d, x0 + r, y0 + r, r, PI, 1.5 * PI, cBL, l2, b1
+End Sub
+
+' Vertical stadium: arc centres (cx,cy1) and (cx,cy2) (cy2 > cy1), radius r, lines x = cx +- r
+Sub Stadium(f2d, cx, cy1, cy2, r)
+    Dim pA, pB, pC, pD, cTop, cBot
+    Set pA = Pt(f2d, cx + r, cy1)
+    Set pB = Pt(f2d, cx + r, cy2)
+    Set pC = Pt(f2d, cx - r, cy2)
+    Set pD = Pt(f2d, cx - r, cy1)
+    Seg f2d, cx + r, cy1, cx + r, cy2, pA, pB
+    Seg f2d, cx - r, cy2, cx - r, cy1, pC, pD
+    Set cTop = Pt(f2d, cx, cy2)
+    Set cBot = Pt(f2d, cx, cy1)
+    Arc f2d, cx, cy2, r, 0, PI, cTop, pB, pC
+    Arc f2d, cx, cy1, r, PI, 2 * PI, cBot, pD, pA
+End Sub
+
+'------------------------------------------------------------------------------
+' SECTION 3 - feature helpers
+'------------------------------------------------------------------------------
+
+' Pad of length L along the sketch normal; sym = True -> Mirrored extent, L = HALF thickness
+Function AddPad(part, sk, L, sym)
+    Dim pad
+    Set pad = part.ShapeFactory.AddNewPad(sk, L)
+    If sym Then
+        pad.IsSymmetric = True
+        pad.FirstLimit.Dimension.Value = L
+    End If
+    part.Update
+    Set AddPad = pad
+End Function
+
+' Pocket; sym = True -> Mirrored extent, L = HALF depth
+Function AddPocket(part, sk, L, sym)
+    Dim pk
+    Set pk = part.ShapeFactory.AddNewPocket(sk, L)
+    If sym Then
+        pk.IsSymmetric = True
+        pk.FirstLimit.Dimension.Value = L
+    End If
+    part.Update
+    Set AddPocket = pk
+End Function
+
+' Save part document into SAVE_DIR and close it
+Sub SavePart(doc, fname)
+    doc.SaveAs SAVE_DIR & "\" & fname & ".CATPart"
+    doc.Close
+End Sub
+
+'------------------------------------------------------------------------------
+' SECTION 4 - parts
+'------------------------------------------------------------------------------
+
+' ---- P01_Base : local frame = world, origin floor centre -------------------
+Sub BuildP01()
+    Dim doc, part, body, sk, f2d, pad, pk, sx, sy
+    Set doc = NewPart("P01_Base")
+    Set part = doc.Part
+    Set body = part.MainBody
+    part.InWorkObject = body
+
+    ' Sketch.1 plate: rounded rect 190x190 R12 on z=0, Pad 15 (+Z)
+    Set sk = MakeSketch(part, body, "Sketch_Plate", 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0)
+    Set f2d = sk.OpenEdition()
+    RoundRect f2d, 0, 0, 190, 190, 12
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 15, False)
+
+    ' Sketch.2 holes: 4x D11 at (+-80,+-80), Pocket mirrored half 50
+    Set sk = MakeSketch(part, body, "Sketch_Holes", 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0)
+    Set f2d = sk.OpenEdition()
+    For sx = -1 To 1 Step 2
+        For sy = -1 To 1 Step 2
+            DrawCircle f2d, sx * 80, sy * 80, 5.5
+        Next
+    Next
+    sk.CloseEdition
+    part.Update
+    Set pk = AddPocket(part, sk, 50, True)
+
+    ' Sketch.3 housing: rounded rect 150x150 R20 on z=15, Pad 150 (+Z)
+    Set sk = MakeSketch(part, body, "Sketch_Housing", 0, 0, 1, 15, 0, 0, 15, 1, 0, 0, 0, 1, 0)
+    Set f2d = sk.OpenEdition()
+    RoundRect f2d, 0, 0, 150, 150, 20
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 150, False)
+
+    ' Sketch.4 rear connector box: X -105..-75, Y -45..45 on z=15, Pad 100 (+Z)
+    Set sk = MakeSketch(part, body, "Sketch_Connector", 0, 0, 1, 15, 0, 0, 15, 1, 0, 0, 0, 1, 0)
+    Set f2d = sk.OpenEdition()
+    RectXY f2d, -105, -45, -75, 45
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 100, False)
+
+    SavePart doc, "P01_Base"
+End Sub
+
+' ---- P02_Turret : local origin = world (0,0,165) ----------------------------
+Sub BuildP02()
+    Dim doc, part, body, sk, f2d, pad, p1, p2, p3, p4, pc
+    Set doc = NewPart("P02_Turret")
+    Set part = doc.Part
+    Set body = part.MainBody
+    part.InWorkObject = body
+
+    ' Sketch.1 disk D140 on z=0, Pad 30 (+Z)
+    Set sk = MakeSketch(part, body, "Sketch_Disk", 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0)
+    Set f2d = sk.OpenEdition()
+    DrawCircle f2d, 0, 0, 70
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 30, False)
+
+    ' Sketch.2 shoulder on plane y=0 (H=+X, V=+Z): (-60,30)-(60,30)-(60,165), arc R60 c(0,165), (-60,165)
+    Set sk = MakeSketch(part, body, "Sketch_Shoulder", 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    Set p1 = Pt(f2d, -60, 30)
+    Set p2 = Pt(f2d, 60, 30)
+    Set p3 = Pt(f2d, 60, 165)
+    Set p4 = Pt(f2d, -60, 165)
+    Set pc = Pt(f2d, 0, 165)
+    Seg f2d, -60, 30, 60, 30, p1, p2
+    Seg f2d, 60, 30, 60, 165, p2, p3
+    Seg f2d, -60, 165, -60, 30, p4, p1
+    Arc f2d, 0, 165, 60, 0, PI, pc, p3, p4
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 55, True)
+
+    ' Sketch.3 J2 motor cover: D100 at (0,165) on plane y=-75 (H=+X, V=+Z), mirrored half 20
+    Set sk = MakeSketch(part, body, "Sketch_Cover", 0, 1, 0, -75, 0, -75, 0, 1, 0, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    DrawCircle f2d, 0, 165, 50
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 20, True)
+
+    SavePart doc, "P02_Turret"
+End Sub
+
+' ---- P03_LowerArm : local origin = J2 (world 0,85,330) ----------------------
+Sub BuildP03()
+    Dim doc, part, body, sk, f2d, pad
+    Set doc = NewPart("P03_LowerArm")
+    Set part = doc.Part
+    Set body = part.MainBody
+    part.InWorkObject = body
+
+    ' Sketch.1 stadium on y=0 (H=+X, V=+Z): R50 at (0,0) and (0,260), mirrored half 30
+    Set sk = MakeSketch(part, body, "Sketch_Arm", 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    Stadium f2d, 0, 0, 260, 50
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 30, True)
+
+    ' Sketch.2 hub caps on plane y=30 with H=+Z, V=+X (normal = Z x X = +Y): D70 at h=0 and h=260, Pad 5
+    Set sk = MakeSketch(part, body, "Sketch_Caps", 0, 1, 0, 30, 0, 30, 0, 0, 0, 1, 1, 0, 0)
+    Set f2d = sk.OpenEdition()
+    DrawCircle f2d, 0, 0, 35
+    DrawCircle f2d, 260, 0, 35
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 5, False)
+
+    SavePart doc, "P03_LowerArm"
+End Sub
+
+' ---- P04_ElbowHousing : local origin = J3 (world 0,0,590) -------------------
+Sub BuildP04()
+    Dim doc, part, body, sk, f2d, pad, pA, pB, pC, pD, pCen
+    Set doc = NewPart("P04_ElbowHousing")
+    Set part = doc.Part
+    Set body = part.MainBody
+    part.InWorkObject = body
+
+    ' Sketch.1 on y=0 (H=+X, V=+Z): bottom semicircle R55 c(0,0), (55,0)-(55,65)-(-55,65)-(-55,0); mirrored half 55
+    Set sk = MakeSketch(part, body, "Sketch_Elbow", 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    Set pA = Pt(f2d, 55, 0)
+    Set pB = Pt(f2d, 55, 65)
+    Set pC = Pt(f2d, -55, 65)
+    Set pD = Pt(f2d, -55, 0)
+    Set pCen = Pt(f2d, 0, 0)
+    Seg f2d, 55, 0, 55, 65, pA, pB
+    Seg f2d, 55, 65, -55, 65, pB, pC
+    Seg f2d, -55, 65, -55, 0, pC, pD
+    Arc f2d, 0, 0, 55, PI, 2 * PI, pCen, pD, pA
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 55, True)
+
+    SavePart doc, "P04_ElbowHousing"
+End Sub
+
+' ---- P05_Forearm : local origin on J4 axis at elbow front face (world 55,0,610)
+Sub BuildP05()
+    Dim doc, part, body, sk, f2d, pad, pk, shaft, axisLine
+    Dim q1, q2, q3, q4, pc
+    Set doc = NewPart("P05_Forearm")
+    Set part = doc.Part
+    Set body = part.MainBody
+    part.InWorkObject = body
+
+    ' Sketch.1 shaft profile on y=0 (H=+X, V=+Z), revolved 360 about construction axis V=0
+    Set sk = MakeSketch(part, body, "Sketch_Shaft", 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    PolyClosed f2d, Array(0, 0, 0, 45, 200, 35, 200, 0)
+    Set axisLine = f2d.CreateLine(0, 0, 200, 0)
+    axisLine.Construction = True
+    sk.CenterLine = axisLine
+    sk.CloseEdition
+    part.Update
+    Set shaft = part.ShapeFactory.AddNewShaft(sk)
+    On Error Resume Next
+    shaft.FirstAngle.Value = 360
+    shaft.SecondAngle.Value = 0
+    On Error GoTo 0
+    part.Update
+
+    ' Sketch.2 yoke on y=0: (200,-35)-(235,-35), arc R35 c(235,0) -> (235,35), (235,35)-(200,35), close; mirrored half 40
+    Set sk = MakeSketch(part, body, "Sketch_Yoke", 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    Set q1 = Pt(f2d, 200, -35)
+    Set q2 = Pt(f2d, 235, -35)
+    Set q3 = Pt(f2d, 235, 35)
+    Set q4 = Pt(f2d, 200, 35)
+    Set pc = Pt(f2d, 235, 0)
+    Seg f2d, 200, -35, 235, -35, q1, q2
+    Seg f2d, 235, 35, 200, 35, q3, q4
+    Seg f2d, 200, 35, 200, -35, q4, q1
+    Arc f2d, 235, 0, 35, -0.5 * PI, 0.5 * PI, pc, q2, q3
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 40, True)
+
+    ' Sketch.3 slot: rect X 200..280, Z -50..50 on y=0, Pocket mirrored half 25 (leaves 2 prongs 15 thick)
+    Set sk = MakeSketch(part, body, "Sketch_Slot", 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    RectXY f2d, 200, -50, 280, 50
+    sk.CloseEdition
+    part.Update
+    Set pk = AddPocket(part, sk, 25, True)
+
+    SavePart doc, "P05_Forearm"
+End Sub
+
+' ---- P06_Wrist : local origin = J5 (world 290,0,610) ------------------------
+Sub BuildP06()
+    Dim doc, part, body, sk, f2d, pad, w1, w2, w3, w4, pc
+    Set doc = NewPart("P06_Wrist")
+    Set part = doc.Part
+    Set body = part.MainBody
+    part.InWorkObject = body
+
+    ' Sketch.1 on y=0 (H=+X, V=+Z): (0,-30)-(40,-30)-(40,30)-(0,30), arc R30 c(0,0) through (-30,0); mirrored half 24
+    Set sk = MakeSketch(part, body, "Sketch_Wrist", 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    Set w1 = Pt(f2d, 0, -30)
+    Set w2 = Pt(f2d, 40, -30)
+    Set w3 = Pt(f2d, 40, 30)
+    Set w4 = Pt(f2d, 0, 30)
+    Set pc = Pt(f2d, 0, 0)
+    Seg f2d, 0, -30, 40, -30, w1, w2
+    Seg f2d, 40, -30, 40, 30, w2, w3
+    Seg f2d, 40, 30, 0, 30, w3, w4
+    Arc f2d, 0, 0, 30, 0.5 * PI, 1.5 * PI, pc, w4, w1
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 24, True)
+
+    ' Sketch.2 nose: D50 on plane x=40 (H=+Y, V=+Z, normal +X), Pad 15 (x 40..55)
+    Set sk = MakeSketch(part, body, "Sketch_Nose", 1, 0, 0, 40, 40, 0, 0, 0, 1, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    DrawCircle f2d, 0, 0, 25
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 15, False)
+
+    SavePart doc, "P06_Wrist"
+End Sub
+
+' ---- P07_Flange : local origin = J6 axis (world 345,0,610) ------------------
+Sub BuildP07()
+    Dim doc, part, body, sk, f2d, pad, pk, i, a, hx, hy
+    Set doc = NewPart("P07_Flange")
+    Set part = doc.Part
+    Set body = part.MainBody
+    part.InWorkObject = body
+
+    ' Sketch.1 disk D56 on plane x=0 (H=+Y, V=+Z, normal +X), Pad 12
+    Set sk = MakeSketch(part, body, "Sketch_Flange", 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    DrawCircle f2d, 0, 0, 28
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 12, False)
+
+    ' Sketch.2 tool disk D40 on plane x=12, Pad 3 (face at x=15)
+    Set sk = MakeSketch(part, body, "Sketch_Tool", 1, 0, 0, 12, 12, 0, 0, 0, 1, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    DrawCircle f2d, 0, 0, 20
+    sk.CloseEdition
+    part.Update
+    Set pad = AddPad(part, sk, 3, False)
+
+    ' Sketch.3 bolt holes: 4x D5.5 on PCD 31.5 at 45/135/225/315 deg, plane x=15, Pocket mirrored half 8
+    Set sk = MakeSketch(part, body, "Sketch_Bolts", 1, 0, 0, 15, 15, 0, 0, 0, 1, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    For i = 0 To 3
+        a = (45 + 90 * i) * PI / 180
+        hx = 15.75 * Cos(a)
+        hy = 15.75 * Sin(a)
+        DrawCircle f2d, hx, hy, 2.75
+    Next
+    sk.CloseEdition
+    part.Update
+    Set pk = AddPocket(part, sk, 8, True)
+
+    ' Sketch.4 centre bore D20 on plane x=15, Pocket mirrored half 6
+    Set sk = MakeSketch(part, body, "Sketch_Bore", 1, 0, 0, 15, 15, 0, 0, 0, 1, 0, 0, 0, 1)
+    Set f2d = sk.OpenEdition()
+    DrawCircle f2d, 0, 0, 10
+    sk.CloseEdition
+    part.Update
+    Set pk = AddPocket(part, sk, 6, True)
+
+    SavePart doc, "P07_Flange"
+End Sub
+
+'------------------------------------------------------------------------------
+' SECTION 5 - assembly (home pose, all joints 0)
+'------------------------------------------------------------------------------
+
+' Add a part file to the product and move it by (tx,ty,tz) (identity rotation)
+Sub AddAndPlace(prods, fname, tx, ty, tz)
+    Dim comp
+    prods.AddComponentsFromFiles Array(SAVE_DIR & "\" & fname & ".CATPart"), "All"
+    Set comp = prods.Item(prods.Count)
+    comp.Move.Apply Array(1, 0, 0, 0, 1, 0, 0, 0, 1, tx, ty, tz)
+End Sub
+
+Sub BuildAssembly()
+    Dim pdoc, prods
+    Set pdoc = CATIA.Documents.Add("Product")
+    Set prods = pdoc.Product.Products
+    AddAndPlace prods, "P01_Base", 0, 0, 0
+    AddAndPlace prods, "P02_Turret", 0, 0, 165
+    AddAndPlace prods, "P03_LowerArm", 0, 85, 330
+    AddAndPlace prods, "P04_ElbowHousing", 0, 0, 590
+    AddAndPlace prods, "P05_Forearm", 55, 0, 610
+    AddAndPlace prods, "P06_Wrist", 290, 0, 610
+    AddAndPlace prods, "P07_Flange", 345, 0, 610
+    pdoc.Product.Update
+    pdoc.SaveAs SAVE_DIR & "\RobotArm.CATProduct"
+End Sub
+
+'------------------------------------------------------------------------------
+' SECTION 6 - main
+'------------------------------------------------------------------------------
+Sub CATMain()
+    Dim fso
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If Not fso.FolderExists(SAVE_DIR) Then
+        fso.CreateFolder SAVE_DIR
+    End If
+
+    BuildP01
+    BuildP02
+    BuildP03
+    BuildP04
+    BuildP05
+    BuildP06
+    BuildP07
+    BuildAssembly
+
+    MsgBox "Robot arm built. Files saved in " & SAVE_DIR
+End Sub
