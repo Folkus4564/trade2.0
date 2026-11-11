@@ -73,3 +73,6 @@ DH (modified, approx): d1=330, a2=260, a3=20, d4=290, d6=70.
 - Run generate_drawings.py -> PDF with 8 sheets, views match the numbers above.
 - Static check of the CATScript (balanced Sub/End Sub, every pad references existing sketch).
 - CATIA itself is not available in the container: the macro is untested in CATIA; README tells the user how to run it and what to do if a line errors.
+
+## Completed
+2026-11-11 - commit 2e59e75. Drawings rendered and visually checked; macro statically checked, not run in CATIA.
